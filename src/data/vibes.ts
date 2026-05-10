@@ -62,6 +62,111 @@ export const VIBES: Vibe[] = [
       url: "https://github.com/jayhack/vibe-code-themer",
     },
   },
+  {
+    slug: "thunderdome",
+    name: "Thunderdome",
+    tagline: "Mad Max with a server rack — chrome, damage, voltage.",
+    description:
+      "Adversarial AI agent combat in a blackened steel arena. Scratched chrome lightning bolt with cyan + magenta damage cuts, gunmetal hairline panels, condensed match-poster type, and uppercase mono telemetry. Industrial, hostile, high-contrast, spectator-ready. Best for AI eval dashboards, leaderboards, fight-night landing pages, anything that wants to feel like a stadium and not an app.",
+    tags: ["industrial", "cyberpunk", "brutalist", "high-contrast"],
+    cardGradient:
+      "linear-gradient(135deg, #050505 0%, #1a1d20 35%, #4b545b 60%, #28f0d4 100%)",
+    cardForeground: "light",
+    palette: [
+      { name: "Black Iron", hex: "#050505" },
+      { name: "Gunmetal", hex: "#4B545B" },
+      { name: "Chrome", hex: "#EDF3F7" },
+      { name: "Acid Cyan", hex: "#28F0D4" },
+      { name: "Hot Magenta", hex: "#FF2F7D" },
+      { name: "Burnt Ember", hex: "#C64720" },
+    ],
+    fonts: {
+      display: '"Barlow Condensed", "Inter", sans-serif',
+      body: '"Inter", system-ui, sans-serif',
+      mono: '"JetBrains Mono", ui-monospace, monospace',
+    },
+    motifs: [
+      "Chrome lightning bolt with cyan + magenta chromatic damage cuts",
+      "◢ corner tags on every panel (mono uppercase, Acid Cyan)",
+      "Hairline grid panels with 1px gunmetal gaps — never rounded",
+      "Diagonal damage stripes (~115°) in cyan + magenta at 18% opacity",
+      "Telemetry stat blocks: red team / blue team with matching ring",
+      "Single icon system: the ◢ glyph (BLACK LOWER RIGHT TRIANGLE)",
+    ],
+    kits: [
+      { label: "Tailwind CSS", url: "https://tailwindcss.com" },
+      {
+        label: "Google Fonts: Barlow Condensed, Inter, JetBrains Mono",
+        url: "https://fonts.google.com",
+      },
+      {
+        label: "Reference: thunder-dome.com/design",
+        url: "https://www.thunder-dome.com/design",
+      },
+    ],
+    shapes: [
+      "Logo = SVG bolt M68,0 L8,90 L52,90 L42,160 L112,60 L66,60 Z + chrome fill + ghost copies",
+      "All panels are square-cornered; only pills are rounded-full",
+      "Buttons: square, mono uppercase copy, tracking 0.2em",
+      "No emoji icons; no organic curves; ◢ is the entire icon system",
+    ],
+    previewHtml: "vibes/thunderdome/preview.html",
+    promptMarkdown: "vibes/thunderdome/prompt.md",
+    author: {
+      name: "Inspired by thunder-dome.com",
+      url: "https://www.thunder-dome.com/design",
+    },
+  },
+  {
+    slug: "swiss-editorial",
+    name: "Swiss Editorial",
+    tagline: "Twelve columns, hairline rules, one red accent.",
+    description:
+      "A printed Swiss-design quarterly opened on a desk. Twelve-column grid, generous margins, Helvetica-style sans for everything, italic Newsreader for the rare emphasis, and a single red accent used five times per page maximum. The page should feel governed — restraint as the loudest tool. Best for marketing sites, documentation, editorial blogs, anything that needs to look adult.",
+    tags: ["minimal", "editorial", "typographic", "grid"],
+    cardGradient:
+      "linear-gradient(135deg, #F4F1EC 0%, #F4F1EC 60%, #E3001B 60%, #E3001B 62%, #F4F1EC 62%)",
+    cardForeground: "dark",
+    palette: [
+      { name: "Paper", hex: "#F4F1EC" },
+      { name: "Ink", hex: "#0A0A0A" },
+      { name: "Red", hex: "#E3001B" },
+      { name: "Muted", hex: "#6B6B6B" },
+    ],
+    fonts: {
+      display: '"Inter", "Helvetica Neue", Helvetica, Arial, sans-serif',
+      body: '"Inter", "Helvetica Neue", Helvetica, Arial, sans-serif',
+      mono: '"Newsreader" italic (editorial accents only)',
+    },
+    motifs: [
+      "Twelve-column grid with 24px gap, label/content/metadata rhythm",
+      "Three rule weights only: 1px Ink, 4px Ink, 4px Red",
+      "Numbered markers — № 02, № 03 — with mandatory `№` glyph",
+      "22px Red filled circle with white numeral inside, used at openers",
+      "Index tables with Ink/15% divide-y, never zebra striped",
+      "One Red drop cap per page, max — 4rem, float-left, line-height 0.8",
+      "One 6px Red marker dot in the masthead to signal 'live'",
+    ],
+    kits: [
+      { label: "Tailwind CSS", url: "https://tailwindcss.com" },
+      {
+        label: "Google Fonts: Inter, Newsreader",
+        url: "https://fonts.google.com",
+      },
+    ],
+    shapes: [
+      "Wordmark only — no logo mark; masthead set in Display style",
+      "All components square-cornered (except marker dot + number circle)",
+      "Glyph kit is exactly: №, —, ·, →, and one 6px Red dot",
+      "No drop shadows, no gradients, no decorative SVG icons",
+    ],
+    previewHtml: "vibes/swiss-editorial/preview.html",
+    promptMarkdown: "vibes/swiss-editorial/prompt.md",
+    author: {
+      name: "Vibe Code Themer",
+      url: "https://github.com/jayhack/vibe-code-themer",
+    },
+  },
 ];
 
 export function findVibe(slug: string | undefined): Vibe | undefined {
