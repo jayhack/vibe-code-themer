@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VaporWave — vibe preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Monoton&family=VT323&family=Space+Grotesk:wght@400;500;600;700&family=Audiowide&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --pink: #ff6ad5;
+        --lavender: #c774e8;
+        --violet: #8c52ff;
+        --cyan: #26c6da;
+        --orange: #ff9472;
+        --midnight: #0b0b2b;
+      }
+      html,
+      body {
+        background: var(--midnight);
+        color: #f8f6ff;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+      }
+      .font-display {
+        font-family: "Monoton", "Audiowide", sans-serif;
+        letter-spacing: 0.04em;
+      }
+      .font-mono-pixel {
+        font-family: "VT323", ui-monospace, monospace;
+      }
+      .chrome-text {
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          #ffd1f6 20%,
+          #c774e8 45%,
+          #8c52ff 65%,
+          #26c6da 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow:
+          0 0 18px rgba(255, 106, 213, 0.35),
+          0 0 36px rgba(140, 82, 255, 0.25);
+      }
+      .neon-glow {
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+          0 0 24px rgba(255, 106, 213, 0.45),
+          0 0 48px rgba(140, 82, 255, 0.35);
+      }
+      .grid-floor {
+        position: absolute;
+        inset: 50% 0 0 0;
+        background-image:
+          linear-gradient(
+            to right,
+            rgba(255, 106, 213, 0.55) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(38, 198, 218, 0.6) 1px,
+            transparent 1px
+          );
+        background-size: 60px 60px;
+        transform: perspective(600px) rotateX(60deg);
+        transform-origin: top center;
+        mask-image: linear-gradient(
+          to bottom,
+          black 10%,
+          rgba(0, 0, 0, 0.6) 60%,
+          transparent 100%
+        );
+        animation: scroll-grid 6s linear infinite;
+      }
+      @keyframes scroll-grid {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 0 60px;
+        }
+      }
+      .scanlines::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.04) 0px,
+          rgba(255, 255, 255, 0.04) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+      .sun-bands {
+        background:
+          linear-gradient(
+            180deg,
+            #fff7c2 0%,
+            #ffb84a 22%,
+            #ff6ad5 55%,
+            #8c52ff 100%
+          );
+        position: relative;
+        overflow: hidden;
+      }
+      .sun-bands::after {
+        content: "";
+        position: absolute;
+        inset: 60% 0 0 0;
+        background-image: repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 6px,
+          rgba(11, 11, 43, 0.9) 6px,
+          rgba(11, 11, 43, 0.9) 9px
+        );
+      }
+      .glitch {
+        position: relative;
+        display: inline-block;
+      }
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        opacity: 0.85;
+      }
+      .glitch::before {
+        color: #ff6ad5;
+        transform: translate(2px, 0);
+      }
+      .glitch::after {
+        color: #26c6da;
+        transform: translate(-2px, 0);
+      }
+      .pill {
+        backdrop-filter: blur(10px);
+      }
+      .vhs-bar {
+        background: repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.08) 0,
+          rgba(255, 255, 255, 0.08) 8px,
+          transparent 8px,
+          transparent 16px
+        );
+      }
+      .btn-neon {
+        background: linear-gradient(135deg, #ff6ad5 0%, #8c52ff 100%);
+      }
+      .btn-neon:hover {
+        filter: brightness(1.1);
+      }
+      .checker {
+        background-image:
+          linear-gradient(45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
+          linear-gradient(-45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%),
+          linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%);
+        background-size: 20px 20px;
+        background-position:
+          0 0,
+          0 10px,
+          10px -10px,
+          -10px 0px;
+      }
+    </style>
+  </head>
+
+  <body class="scanlines relative min-h-screen overflow-x-hidden">
+    <!-- HERO -->
+    <section class="relative isolate overflow-hidden">
+      <div class="absolute inset-x-0 top-0 h-px vhs-bar"></div>
+
+      <div class="absolute inset-0 -z-10">
+        <!-- Sun -->
+        <div
+          class="absolute left-1/2 top-32 -translate-x-1/2 sun-bands neon-glow"
+          style="width: 360px; height: 360px; border-radius: 9999px"
+        ></div>
+        <!-- Floor grid -->
+        <div class="grid-floor"></div>
+        <!-- Stars -->
+        <div
+          class="absolute inset-0"
+          style="
+            background-image: radial-gradient(
+                1px 1px at 20% 12%,
+                #fff 99%,
+                transparent
+              ),
+              radial-gradient(1px 1px at 80% 22%, #ffd1f6 99%, transparent),
+              radial-gradient(1px 1px at 35% 30%, #fff 99%, transparent),
+              radial-gradient(1px 1px at 65% 8%, #c774e8 99%, transparent),
+              radial-gradient(1px 1px at 90% 40%, #fff 99%, transparent);
+            opacity: 0.7;
+          "
+        ></div>
+      </div>
+
+      <nav
+        class="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-5"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="block h-7 w-7 rounded-md neon-glow"
+            style="
+              background: conic-gradient(
+                from 220deg,
+                #ff6ad5,
+                #8c52ff,
+                #26c6da,
+                #ff6ad5
+              );
+            "
+          ></span>
+          <span class="font-display text-lg chrome-text">NEONLAB</span>
+        </div>
+        <div
+          class="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 px-1.5 py-1.5 pill text-sm md:flex"
+        >
+          <a class="rounded-full px-3 py-1 hover:bg-white/10" href="#">Tour</a>
+          <a class="rounded-full px-3 py-1 hover:bg-white/10" href="#">Pricing</a>
+          <a class="rounded-full px-3 py-1 hover:bg-white/10" href="#">Docs</a>
+          <a
+            class="rounded-full bg-white text-[#0B0B2B] px-3 py-1 font-semibold"
+            href="#"
+            >Sign in</a
+          >
+        </div>
+      </nav>
+
+      <div class="relative mx-auto max-w-6xl px-6 pb-32 pt-16 text-center">
+        <span
+          class="pill mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.25em]"
+        >
+          <span class="h-1.5 w-1.5 rounded-full bg-[#FF6AD5]"></span>
+          Now broadcasting · v 1.984
+        </span>
+        <h1
+          class="font-display text-6xl leading-none chrome-text md:text-8xl"
+        >
+          <span class="glitch" data-text="VAPORWAVE">VAPORWAVE</span>
+        </h1>
+        <p
+          class="mx-auto mt-8 max-w-xl text-lg text-white/75 md:text-xl"
+          style="font-family: 'Space Grotesk', sans-serif"
+        >
+          A late-night palette of magenta, ultraviolet, and cyan. Chrome type,
+          perspective grids, and just enough scanlines to feel
+          <em class="text-[#FF6AD5]">analog</em>.
+        </p>
+        <div class="mt-10 flex items-center justify-center gap-3">
+          <a
+            href="#"
+            class="btn-neon neon-glow inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold text-white"
+          >
+            Enter the mall
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </a>
+          <a
+            href="#"
+            class="pill inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-semibold text-white/85 hover:bg-white/10"
+          >
+            <span class="font-mono-pixel text-xl leading-none">▶</span>
+            Watch demo
+          </a>
+        </div>
+
+        <p
+          class="font-mono-pixel mt-12 text-2xl text-[#26C6DA]"
+          style="text-shadow: 0 0 12px rgba(38, 198, 218, 0.6)"
+        >
+          &gt; LOAD &quot;A E S T H E T I C&quot;,8,1
+        </p>
+      </div>
+    </section>
+
+    <!-- FEATURE GRID -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-24">
+      <div class="grid gap-4 md:grid-cols-3">
+        <article
+          class="pill rounded-2xl border border-white/10 bg-white/5 p-5"
+        >
+          <div
+            class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg"
+            style="background: linear-gradient(135deg, #ff6ad5, #8c52ff)"
+          >
+            <span class="font-mono-pixel text-xl">◆</span>
+          </div>
+          <h3 class="text-lg font-semibold">Chrome typography</h3>
+          <p class="mt-1 text-sm text-white/70">
+            Monoton + chrome gradient + 1px outline. Looks etched into a
+            cassette label.
+          </p>
+        </article>
+        <article
+          class="pill rounded-2xl border border-white/10 bg-white/5 p-5"
+        >
+          <div
+            class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg"
+            style="background: linear-gradient(135deg, #c774e8, #26c6da)"
+          >
+            <span class="font-mono-pixel text-xl">◐</span>
+          </div>
+          <h3 class="text-lg font-semibold">Perspective grid</h3>
+          <p class="mt-1 text-sm text-white/70">
+            Single floor plane, rotated 60deg, animated. The horizon does the
+            heavy lifting.
+          </p>
+        </article>
+        <article
+          class="pill rounded-2xl border border-white/10 bg-white/5 p-5"
+        >
+          <div
+            class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg"
+            style="background: linear-gradient(135deg, #ff9472, #ff6ad5)"
+          >
+            <span class="font-mono-pixel text-xl">▲</span>
+          </div>
+          <h3 class="text-lg font-semibold">Geometric only</h3>
+          <p class="mt-1 text-sm text-white/70">
+            Triangles, circles, checkerboards. No organic blobs, ever.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- PALETTE STRIP -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-24">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 class="font-display text-2xl chrome-text">PALETTE</h2>
+        <span class="font-mono-pixel text-sm text-white/60">06 swatches</span>
+      </div>
+      <div
+        class="grid grid-cols-3 gap-3 overflow-hidden rounded-2xl md:grid-cols-6"
+      >
+        <div class="font-mono-pixel flex flex-col gap-1 p-4 text-xs" style="background:#FF6AD5;color:#0B0B2B"><span class="font-semibold uppercase tracking-widest">Hot Pink</span><span class="opacity-80">#FF6AD5</span></div>
+        <div class="font-mono-pixel flex flex-col gap-1 p-4 text-xs" style="background:#C774E8;color:#0B0B2B"><span class="font-semibold uppercase tracking-widest">Lavender</span><span class="opacity-80">#C774E8</span></div>
+        <div class="font-mono-pixel flex flex-col gap-1 p-4 text-xs" style="background:#8C52FF;color:#fff"><span class="font-semibold uppercase tracking-widest">Ultraviolet</span><span class="opacity-80">#8C52FF</span></div>
+        <div class="font-mono-pixel flex flex-col gap-1 p-4 text-xs" style="background:#26C6DA;color:#0B0B2B"><span class="font-semibold uppercase tracking-widest">Cyan</span><span class="opacity-80">#26C6DA</span></div>
+        <div class="font-mono-pixel flex flex-col gap-1 p-4 text-xs" style="background:#FF9472;color:#0B0B2B"><span class="font-semibold uppercase tracking-widest">Sunset</span><span class="opacity-80">#FF9472</span></div>
+        <div class="font-mono-pixel flex flex-col gap-1 p-4 text-xs" style="background:#0B0B2B;color:#fff"><span class="font-semibold uppercase tracking-widest">Midnight</span><span class="opacity-80">#0B0B2B</span></div>
+      </div>
+    </section>
+
+    <!-- COMPONENT SHOWCASE -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-24">
+      <div class="grid gap-4 md:grid-cols-2">
+        <!-- Card -->
+        <div
+          class="pill relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6"
+        >
+          <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full sun-bands opacity-70"></div>
+          <p
+            class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#FF6AD5]"
+          >
+            FEATURED RELEASE
+          </p>
+          <h3 class="mt-2 font-display text-3xl chrome-text">FUTURE FUNK 03</h3>
+          <p class="mt-2 max-w-md text-white/70">
+            12 tracks of sample-chopped, side-chained sunset. Limited cassette
+            run of 200.
+          </p>
+          <div class="mt-5 flex items-center gap-3">
+            <button
+              class="btn-neon neon-glow rounded-lg px-4 py-2 text-sm font-semibold"
+            >
+              Pre-order · $24
+            </button>
+            <button
+              class="rounded-lg border border-white/15 px-4 py-2 text-sm font-medium hover:bg-white/10"
+            >
+              Listen
+            </button>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form
+          class="pill rounded-2xl border border-white/10 bg-white/5 p-6"
+          onsubmit="event.preventDefault()"
+        >
+          <p
+            class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#26C6DA]"
+          >
+            JOIN THE BROADCAST
+          </p>
+          <h3 class="mt-2 font-display text-3xl chrome-text">SUBSCRIBE</h3>
+          <label class="mt-5 block text-sm text-white/70">Handle</label>
+          <input
+            type="text"
+            placeholder="@aesthetic"
+            class="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 font-mono-pixel text-lg text-white placeholder-white/30 outline-none focus:border-[#FF6AD5]"
+          />
+          <label class="mt-4 block text-sm text-white/70">Frequency</label>
+          <select
+            class="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-white outline-none focus:border-[#26C6DA]"
+          >
+            <option>Weekly</option>
+            <option>Monthly</option>
+            <option>Whenever the moon is full</option>
+          </select>
+          <button
+            class="btn-neon neon-glow mt-5 w-full rounded-lg px-4 py-2 font-semibold"
+          >
+            Tune in
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="relative border-t border-white/10 py-10 text-center">
+      <div class="mx-auto max-w-6xl px-6">
+        <p class="font-mono-pixel text-sm text-white/55">
+          © MCMXCVII · NEONLAB BROADCASTING · ALL RIGHTS RESERVED
+        </p>
+        <div class="mt-3 flex justify-center gap-3 text-white/55">
+          <span>▲</span>
+          <span>◆</span>
+          <span>◐</span>
+          <span>●</span>
+          <span>■</span>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>
