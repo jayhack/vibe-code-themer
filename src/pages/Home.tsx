@@ -7,19 +7,9 @@ export function Home() {
     <div className="min-h-screen page-backdrop">
       <Header />
 
-      <section className="mx-auto max-w-7xl px-6 pb-10 pt-16 md:pt-24">
+      <section className="mx-auto max-w-7xl px-6 pb-10 pt-8 md:pt-10">
         <div className="flex flex-col items-start gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-3xl">
-            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-medium tracking-wide text-black/60">
-              <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #1d4ed8 0%, #3b82f6 55%, #0ea5e9 100%)",
-                }}
-              />
-              Inspiration board · v0.1
-            </p>
             <h1 className="text-5xl font-extrabold tracking-tight text-black md:text-6xl">
               Design vibes
               <span className="block bg-gradient-to-r from-[#1d4ed8] via-[#3b82f6] to-[#0ea5e9] pb-[0.12em] pt-[0.04em] font-mono text-[1.08em] font-extrabold tabular-nums leading-[1.38] tracking-tight bg-clip-text text-transparent md:text-[1.12em]">
@@ -27,10 +17,10 @@ export function Home() {
               </span>
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-black/65">
-              A curated, ever-growing wall of aesthetics. Click any card to see
-              the live HTML showcase, then copy the prompt to give your coding
-              agent a complete design kit — colors, fonts, motifs, components,
-              and shapes.
+              A clone-and-go library of design themes you can drop straight into
+              your coding agent. Pick a vibe, copy the prompt, and ship a
+              fully-themed UI — colors, fonts, motifs, components, and shapes
+              included.
             </p>
           </div>
 

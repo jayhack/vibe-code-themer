@@ -65,10 +65,10 @@ export function Header({
               ) : null}
             </>
           ) : (
-            <Link to="/" className="group flex shrink-0 items-center gap-3">
-              <BrushLogo className="h-7 w-7" />
-              <span className="font-semibold tracking-tight text-black">
-                Vibe Code Themer
+            <Link to="/" className="group flex shrink-0 items-center gap-2.5">
+              <DittoLogo className="h-7 w-7" />
+              <span className="text-lg font-bold tracking-tight text-black">
+                Ditto
               </span>
             </Link>
           )}
@@ -110,7 +110,7 @@ export function Header({
   );
 }
 
-function BrushLogo({ className }: { className?: string }) {
+function DittoLogo({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 64 64"
@@ -121,11 +121,11 @@ function BrushLogo({ className }: { className?: string }) {
     >
       <defs>
         <linearGradient
-          id="vctBrushGrad"
-          x1="14"
-          y1="14"
-          x2="50"
-          y2="50"
+          id="dittoBlue"
+          x1="10"
+          y1="10"
+          x2="54"
+          y2="56"
           gradientUnits="userSpaceOnUse"
         >
           <stop offset="0%" stopColor="#1d4ed8" />
@@ -133,10 +133,18 @@ function BrushLogo({ className }: { className?: string }) {
           <stop offset="100%" stopColor="#0ea5e9" />
         </linearGradient>
       </defs>
-      <g transform="rotate(-45 32 32)">
-        <rect x="28" y="6" width="8" height="26" rx="4" fill="#0b0b0f" />
-        <rect x="25" y="30" width="14" height="6" rx="2" fill="#0b0b0f" />
-        <path d="M25 36 H39 L36 52 Q32 58 28 52 Z" fill="url(#vctBrushGrad)" />
+      <g fill="url(#dittoBlue)">
+        <ellipse cx="32" cy="40" rx="26" ry="22" />
+        <circle cx="25" cy="17" r="7" />
+        <circle cx="39" cy="17" r="7" />
+        <ellipse
+          cx="57"
+          cy="28"
+          rx="9"
+          ry="6"
+          transform="rotate(-20 57 28)"
+        />
+        <ellipse cx="7" cy="46" rx="9" ry="6" transform="rotate(15 7 46)" />
       </g>
     </svg>
   );
