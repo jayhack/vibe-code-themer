@@ -20,6 +20,22 @@ A vibe is a complete design kit:
 - **CSS libraries** — which framework / icon set / animation library.
 - **Logos & shapes** — the shape language and what's banned.
 
+## The canonical preview structure
+
+Every `preview.html` follows the same shape so the gallery feels coherent.
+**Show the kit, then use the kit:**
+
+1. **Identity** — hero / masthead with the vibe's signature visual.
+2. **Theme specification** — palette → gradients → typography → components.
+   This is the design kit, made visible.
+3. **UX applications** — at least two concrete product mockups (e.g. a
+   leaderboard, a music broadcast, a checkout) with **realistic copy** that
+   show what an on-vibe product actually looks like.
+4. **Footer / colophon**.
+
+Reviewers will reject PRs that skip the theme spec or replace UX applications
+with lorem ipsum. See [`AGENTS.md`](AGENTS.md) for the full contract.
+
 ## Run it locally
 
 ```bash
