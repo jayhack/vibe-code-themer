@@ -56,9 +56,8 @@ Hard rules (your PR will be requested-changes if any of these fail):
 4. **Iframe-safe.** No `top.location` redirects, no autoplay audio, no popups,
    no `window.open`. Assume the file will be embedded in an `<iframe>` on a
    white parent page.
-5. **Looks complete.** Include at minimum: a hero, one feature/section grid,
-   one component (button, card, input, or form), and a footer. Show the vibe,
-   don't just describe it.
+5. **Follows the canonical preview.html structure.** See the section below.
+   Showing the design kit *before* using it is the entire point.
 6. **No tracking.** No analytics scripts, no Google Tag Manager, no Sentry, no
    pixels. Vibes are static art.
 7. **Renders standalone.** Opening the file directly in a browser must work —
@@ -67,10 +66,54 @@ Hard rules (your PR will be requested-changes if any of these fail):
 Soft rules (strongly recommended):
 
 - Render in dark **and** light modes if the vibe supports both.
-- Keep the file under ~25 KB. If you need more, you're probably reaching for
-  an asset that should live next to the HTML in the same directory.
+- Keep the file under ~50 KB. UX applications and a real component shelf
+  push files into the 30–50 KB range, which is fine. If you're reaching for
+  more, you probably want a binary asset that should live next to the HTML
+  in the same directory.
 - Only put assets inside `public/vibes/<slug>/`. Reference them with relative
   paths like `./logo.svg`.
+
+---
+
+## Canonical `preview.html` structure (mandatory)
+
+Every `preview.html` MUST be organized in this exact order, top to bottom, so
+that the gallery feels coherent regardless of which vibe a visitor opens.
+**Show the kit, then use the kit.** Reviewers will reject PRs that skip,
+reorder, or merge these sections.
+
+1. **Identity** — masthead / hero that establishes the vibe name, tagline,
+   and signature visual (logo mark, hero motif, key gradient).
+2. **Theme specification** — the design kit, made visible. This block must
+   contain four labelled sub-sections, in this order:
+   1. **Palette** — every named hex swatch from `prompt.md`, rendered as
+      filled chips with `name` + `hex` shown.
+   2. **Gradients** — each named gradient (brand, surface, accent, etc.)
+      rendered as a strip with the gradient applied and its CSS string or
+      role label visible.
+   3. **Typography** — display / body / mono specimens, each set in the
+      actual font with its role and tracking annotated.
+   4. **Components** — button variants, inputs, badges, cards, and any other
+      core primitives in their default + one alternate state.
+3. **UX applications** — at least **two** (ideally three) concrete product
+   mockups that *use* the kit on real surfaces. The point is to show an
+   agent pasting the prompt elsewhere what an on-vibe product actually
+   looks like, not just decoration. Pick mockups that fit the vibe:
+   - **Thunderdome** → contestant leaderboard, tournament bracket, live
+     match scoreboard.
+   - **VaporWave** → music broadcast / playlist, vintage mall shop, DJ card.
+   - **Swiss Editorial** → magazine masthead + index, subscription form.
+   - **Conserva** → product range, recipe card, "puntos de venta" map.
+
+   Use **realistic copy**, not lorem ipsum. Use plausible names, numbers,
+   timestamps, prices, and statuses. Each application should be one full
+   visual block (not a single button) and should look like a screenshot
+   of a real product the vibe could ship.
+4. **Footer / colophon**.
+
+Section breaks should be visually obvious — a labelled rule, a corner tag,
+a section number, or whatever the vibe's idiom is. The theme specification
+ALWAYS comes before the UX applications. No exceptions.
 
 ---
 
@@ -131,6 +174,9 @@ Run through this checklist (the PR template asks for it):
 - [ ] Clicking the card loads the detail page; iframe renders the preview.
 - [ ] "Copy prompt" copies the full `prompt.md` text.
 - [ ] `preview.html` opens directly in a browser with no console errors.
+- [ ] `preview.html` follows the canonical structure: identity → theme spec
+      (palette, gradients, typography, components) → at least two UX
+      applications with realistic copy → footer.
 - [ ] Prompt is prescriptive — every color, gradient, and font is named.
 - [ ] No tracking, no autoplay, no popups, no broken images.
 

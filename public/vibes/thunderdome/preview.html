@@ -37,7 +37,6 @@
         font-family: "JetBrains Mono", ui-monospace, monospace;
       }
 
-      /* Scratched chrome surface for the bolt */
       .chrome-surface {
         background:
           repeating-linear-gradient(
@@ -71,7 +70,6 @@
         mix-blend-mode: overlay;
         pointer-events: none;
       }
-      /* Diagonal crash lines that run across hero/footer panels */
       .damage-lines {
         position: absolute;
         inset: 0;
@@ -109,7 +107,20 @@
         border-bottom: 1px solid rgba(75, 84, 91, 0.5);
       }
 
-      /* The bolt logo with chromatic damage cuts */
+      .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--acid-cyan);
+        background: var(--black-iron);
+        border: 1px solid rgba(75, 84, 91, 0.5);
+      }
+
       .bolt {
         position: relative;
         width: 120px;
@@ -156,9 +167,16 @@
         border-color: var(--hot-magenta);
         color: var(--hot-magenta);
       }
+      .btn-danger {
+        background: var(--hot-magenta);
+        color: var(--black-iron);
+      }
 
       .ring-accent {
         box-shadow: 0 0 0 1px var(--acid-cyan);
+      }
+      .ring-magenta {
+        box-shadow: 0 0 0 1px var(--hot-magenta);
       }
 
       .stat-number {
@@ -188,6 +206,97 @@
         height: 6px;
         border-radius: 999px;
       }
+
+      .grad-strip {
+        height: 56px;
+        border: 1px solid rgba(75, 84, 91, 0.5);
+        position: relative;
+      }
+      .grad-strip .label {
+        position: absolute;
+        bottom: 6px;
+        left: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--chrome);
+        background: rgba(5, 5, 5, 0.7);
+        padding: 2px 6px;
+      }
+
+      .meter {
+        position: relative;
+        height: 6px;
+        background: rgba(75, 84, 91, 0.25);
+        overflow: hidden;
+      }
+      .meter > span {
+        position: absolute;
+        inset: 0;
+        background: var(--acid-cyan);
+      }
+      .meter-mag > span {
+        background: var(--hot-magenta);
+      }
+      .meter-ember > span {
+        background: var(--burnt-ember);
+      }
+
+      input.thunder-input {
+        background: var(--black-iron);
+        border: 1px solid var(--gunmetal);
+        color: var(--chrome);
+        padding: 8px 12px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        width: 100%;
+      }
+      input.thunder-input:focus {
+        outline: none;
+        border-color: var(--acid-cyan);
+      }
+
+      table.thunder-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+      }
+      table.thunder-table th {
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 10px;
+        color: #6b7378;
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(75, 84, 91, 0.5);
+        background: #0c0f12;
+      }
+      table.thunder-table td {
+        padding: 12px;
+        border-bottom: 1px solid rgba(75, 84, 91, 0.25);
+        color: var(--chrome);
+        vertical-align: middle;
+      }
+      table.thunder-table tr.highlight td {
+        background: rgba(40, 240, 212, 0.05);
+      }
+      .verdict-win {
+        color: var(--acid-cyan);
+      }
+      .verdict-loss {
+        color: var(--hot-magenta);
+      }
+
+      .bracket-line {
+        position: absolute;
+        background: rgba(75, 84, 91, 0.5);
+      }
     </style>
   </head>
 
@@ -200,7 +309,7 @@
             ◢ Thunderdome
           </span>
           <span class="font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
-            / match-night build
+            / spectator build · v1.984
           </span>
         </div>
         <nav class="hidden gap-1 text-sm md:flex">
@@ -214,12 +323,13 @@
       </div>
     </header>
 
-    <!-- HERO -->
+    <!-- ============================================================= -->
+    <!-- § IDENTITY                                                     -->
+    <!-- ============================================================= -->
     <section class="relative isolate overflow-hidden border-b border-[#1f2428]">
       <div class="damage-lines"></div>
 
       <div class="relative mx-auto grid max-w-6xl gap-8 px-6 py-14 md:grid-cols-[1fr_1.2fr] md:items-center">
-        <!-- Bolt logo -->
         <div class="panel relative flex h-72 items-center justify-center overflow-hidden">
           <span class="corner-tag">◢ MARK / 02</span>
 
@@ -263,9 +373,9 @@
             agent combat.
           </h1>
           <p class="mt-5 max-w-xl text-base leading-relaxed text-[#a8b0b6]">
-            Blackened steel, scratched chrome, and neon damage cuts. Keeps the
-            80s voltage but moves away from friendly arcade color toward an
-            industrial match-poster feel.
+            Blackened steel, scratched chrome, and neon damage cuts. Built for
+            leaderboards, brackets, and match-night telemetry — not friendly
+            arcade dashboards.
           </p>
           <div class="mt-6 flex flex-wrap gap-2">
             <span class="pill"><span class="dot" style="background:var(--chrome)"></span>Industrial</span>
@@ -277,130 +387,503 @@
       </div>
     </section>
 
-    <!-- COLOR + TYPOGRAPHY GRID -->
-    <section class="border-b border-[#1f2428]">
-      <div class="mx-auto grid max-w-6xl gap-px bg-[#1f2428] md:grid-cols-3">
-        <!-- Color system -->
-        <div class="panel relative col-span-2 p-6">
-          <span class="corner-tag">◢ Color system</span>
-          <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#050505"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Black Iron</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#050505 / brand black</div></div></div></div>
-            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#4b545b"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Gunmetal</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#4b545b / metal midtone</div></div></div></div>
-            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#edf3f7"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Chrome</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#edf3f7 / logo highlight</div></div></div></div>
-            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#28f0d4"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Acid Cyan</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#28f0d4 / --ring / accent</div></div></div></div>
-            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#ff2f7d"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Hot Magenta</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#ff2f7d / brand slash</div></div></div></div>
-            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#c64720"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Burnt Ember</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#c64720 / --primary alt</div></div></div></div>
+    <!-- ============================================================= -->
+    <!-- § 01 / THEME SPECIFICATION                                     -->
+    <!-- ============================================================= -->
+    <section class="border-b border-[#1f2428] bg-[#07090b]">
+      <div class="mx-auto max-w-6xl px-6 py-8">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <span class="section-tag">◢ § 01 / Theme specification</span>
+            <h2 class="font-display mt-3 text-4xl text-[var(--chrome)]">
+              The kit, before the fight.
+            </h2>
           </div>
-        </div>
-
-        <!-- Match Night type -->
-        <div class="panel relative p-6">
-          <span class="corner-tag">◢ Typography</span>
-          <p class="mt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
-            telemetry // scoring // integrity
-          </p>
-          <h3 class="font-display mt-2 text-5xl leading-none">
-            MATCH<br />NIGHT
-          </h3>
-          <p class="mt-4 text-sm text-[#a8b0b6]">
-            Sans for dense interfaces. Mono for labels, metrics, and
-            match-state language.
+          <p class="font-mono max-w-md text-[11px] uppercase tracking-[0.2em] text-[#6b7378]">
+            Palette · gradients · typography · components — exactly what the
+            prompt.md prescribes, rendered.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- CONTROLS + STATS -->
+    <!-- 01.1 — PALETTE -->
     <section class="border-b border-[#1f2428]">
-      <div class="mx-auto grid max-w-6xl gap-px bg-[#1f2428] md:grid-cols-2">
-        <!-- Controls -->
-        <div class="panel relative p-6">
-          <span class="corner-tag">◢ Controls</span>
-          <div class="mt-6 flex flex-wrap items-center gap-3">
-            <button class="btn-primary px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">
-              Start match
-            </button>
-            <button class="btn-secondary px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">
-              Watch live
-            </button>
-            <button class="btn-outline px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">
-              Results
-            </button>
+      <div class="mx-auto max-w-6xl px-6 py-10">
+        <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+          ◢ 01.1 / Palette
+        </p>
+        <h3 class="font-display mt-2 text-2xl">Color system</h3>
+        <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+          <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><span class="block h-12 w-full" style="background:#050505;border:1px solid #1f2428"></span><div class="mt-2 font-mono text-[12px] font-semibold text-[var(--chrome)]">Black Iron</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378]">#050505</div></div>
+          <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><span class="block h-12 w-full" style="background:#4b545b"></span><div class="mt-2 font-mono text-[12px] font-semibold text-[var(--chrome)]">Gunmetal</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378]">#4b545b</div></div>
+          <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><span class="block h-12 w-full" style="background:#edf3f7"></span><div class="mt-2 font-mono text-[12px] font-semibold text-[var(--chrome)]">Chrome</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378]">#edf3f7</div></div>
+          <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><span class="block h-12 w-full" style="background:#28f0d4"></span><div class="mt-2 font-mono text-[12px] font-semibold text-[var(--chrome)]">Acid Cyan</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378]">#28f0d4</div></div>
+          <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><span class="block h-12 w-full" style="background:#ff2f7d"></span><div class="mt-2 font-mono text-[12px] font-semibold text-[var(--chrome)]">Hot Magenta</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378]">#ff2f7d</div></div>
+          <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><span class="block h-12 w-full" style="background:#c64720"></span><div class="mt-2 font-mono text-[12px] font-semibold text-[var(--chrome)]">Burnt Ember</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378]">#c64720</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.2 — GRADIENTS / SURFACES -->
+    <section class="border-b border-[#1f2428]">
+      <div class="mx-auto max-w-6xl px-6 py-10">
+        <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+          ◢ 01.2 / Gradients & surfaces
+        </p>
+        <h3 class="font-display mt-2 text-2xl">Named gradients</h3>
+        <div class="mt-5 grid gap-4 md:grid-cols-2">
+          <div>
+            <div class="grad-strip" style="background: linear-gradient(180deg, #0d1013 0%, #07090b 100%);">
+              <span class="label">panel-surface · 0d1013 → 07090b</span>
+            </div>
+            <p class="font-mono mt-2 text-[10px] uppercase tracking-[0.18em] text-[#6b7378]">used on every bordered card</p>
+          </div>
+          <div>
+            <div class="grad-strip chrome-surface">
+              <span class="label" style="color:#050505;background:rgba(255,255,255,0.7)">chrome-surface · scratched plate</span>
+            </div>
+            <p class="font-mono mt-2 text-[10px] uppercase tracking-[0.18em] text-[#6b7378]">fills the bolt logo & metal accents</p>
+          </div>
+          <div>
+            <div class="grad-strip" style="background: linear-gradient(115deg, #050505 49.7%, #28f0d4 49.7% 50%, #050505 50% 60%, #ff2f7d 60% 60.3%, #050505 60.3%);">
+              <span class="label">damage-cuts · 115° cyan + magenta</span>
+            </div>
+            <p class="font-mono mt-2 text-[10px] uppercase tracking-[0.18em] text-[#6b7378]">overlaid on hero panels at 18% opacity</p>
+          </div>
+          <div>
+            <div class="grad-strip" style="background: linear-gradient(90deg, #28f0d4 0%, #ff2f7d 100%);">
+              <span class="label" style="color:#050505;background:rgba(255,255,255,0.7)">team-spectrum · cyan → magenta</span>
+            </div>
+            <p class="font-mono mt-2 text-[10px] uppercase tracking-[0.18em] text-[#6b7378]">blue team / red team telemetry axis</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.3 — TYPOGRAPHY -->
+    <section class="border-b border-[#1f2428]">
+      <div class="mx-auto max-w-6xl px-6 py-10">
+        <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+          ◢ 01.3 / Typography
+        </p>
+        <h3 class="font-display mt-2 text-2xl">Specimen</h3>
+        <div class="mt-5 grid gap-px bg-[#1f2428] md:grid-cols-3">
+          <div class="panel relative p-6">
+            <span class="corner-tag">◢ Display</span>
+            <p class="font-mono mt-3 text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">
+              barlow condensed · 900 · uppercase · -0.01em
+            </p>
+            <h4 class="font-display mt-2 text-5xl leading-none">MATCH<br />NIGHT</h4>
+          </div>
+          <div class="panel relative p-6">
+            <span class="corner-tag">◢ Body</span>
+            <p class="font-mono mt-3 text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">
+              inter · 400-700 · normal case
+            </p>
+            <p class="mt-2 text-base leading-relaxed text-[var(--chrome)]">
+              Inter handles the dense paragraphs, captions, and any text where
+              legibility outranks attitude.
+            </p>
+          </div>
+          <div class="panel relative p-6">
+            <span class="corner-tag">◢ Mono</span>
+            <p class="font-mono mt-3 text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">
+              jetbrains mono · uppercase · 0.18-0.22em
+            </p>
+            <p class="font-mono mt-2 text-sm uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+              ◢ telemetry / scoring / integrity
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.4 — COMPONENTS -->
+    <section class="border-b border-[#1f2428]">
+      <div class="mx-auto max-w-6xl px-6 py-10">
+        <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+          ◢ 01.4 / Components
+        </p>
+        <h3 class="font-display mt-2 text-2xl">Primitive shelf</h3>
+
+        <div class="mt-5 grid gap-px bg-[#1f2428] md:grid-cols-2">
+          <div class="panel relative p-6">
+            <span class="corner-tag">◢ Buttons</span>
+            <div class="mt-6 flex flex-wrap items-center gap-3">
+              <button class="btn-primary px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">Start match</button>
+              <button class="btn-secondary px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">Watch live</button>
+              <button class="btn-outline px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">Results</button>
+              <button class="btn-danger px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">Forfeit</button>
+            </div>
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="pill"><span class="dot" style="background:var(--acid-cyan)"></span>Live</span>
+              <span class="pill"><span class="dot" style="background:var(--hot-magenta)"></span>Eliminated</span>
+              <span class="pill"><span class="dot" style="background:var(--burnt-ember)"></span>Penalty</span>
+            </div>
           </div>
 
-          <div class="mt-6 grid grid-cols-3 gap-3 text-[11px] font-mono uppercase tracking-[0.18em] text-[#6b7378]">
-            <div class="rounded-sm border border-[#2a2f33] bg-[#0c0f12] p-3">
-              <div class="text-[var(--chrome)]">primary</div>
-              <div class="mt-1">chrome / iron</div>
-            </div>
-            <div class="rounded-sm border border-[#2a2f33] bg-[#0c0f12] p-3">
-              <div class="text-[var(--chrome)]">secondary</div>
-              <div class="mt-1">gun / steel</div>
-            </div>
-            <div class="rounded-sm border border-[#2a2f33] bg-[#0c0f12] p-3">
-              <div class="text-[var(--chrome)]">outline</div>
-              <div class="mt-1">hot / magenta</div>
+          <div class="panel relative p-6">
+            <span class="corner-tag">◢ Inputs & meters</span>
+            <label class="mt-6 block font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">
+              Agent handle
+            </label>
+            <input class="thunder-input mt-1" type="text" value="IRONBOLT-X1" />
+            <label class="mt-4 block font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">
+              Damage / accuracy / latency
+            </label>
+            <div class="mt-2 space-y-2">
+              <div class="meter"><span style="width:82%"></span></div>
+              <div class="meter meter-mag"><span style="width:64%"></span></div>
+              <div class="meter meter-ember"><span style="width:38%"></span></div>
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Surface language / stats -->
-        <div class="panel relative p-6">
-          <span class="corner-tag">◢ Surface language</span>
-          <div class="mt-6 grid grid-cols-2 gap-4">
-            <div class="border border-[var(--hot-magenta)]/40 bg-[#0c0f12] p-4">
-              <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--hot-magenta)]">
-                red team
-              </p>
-              <p class="stat-number text-[var(--chrome)]">872</p>
-            </div>
-            <div class="border border-[var(--acid-cyan)]/50 bg-[#0c0f12] p-4 ring-accent">
-              <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
-                blue team
-              </p>
-              <p class="stat-number text-[var(--chrome)]">915</p>
-            </div>
+    <!-- ============================================================= -->
+    <!-- § 02 / UX APPLICATIONS                                         -->
+    <!-- ============================================================= -->
+    <section class="border-b border-[#1f2428] bg-[#07090b]">
+      <div class="mx-auto max-w-6xl px-6 py-8">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <span class="section-tag">◢ § 02 / UX applications</span>
+            <h2 class="font-display mt-3 text-4xl text-[var(--chrome)]">
+              The kit, in the dome.
+            </h2>
           </div>
-          <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
-            ◢ telemetry · last updated 00:00:42 ago
+          <p class="font-mono max-w-md text-[11px] uppercase tracking-[0.2em] text-[#6b7378]">
+            Three product surfaces — leaderboard, bracket, live match —
+            built entirely from primitives above.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- MATCH POSTER -->
+    <!-- 02.1 — CONTESTANT LEADERBOARD -->
+    <section class="border-b border-[#1f2428]">
+      <div class="mx-auto max-w-6xl px-6 py-10">
+        <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+              ◢ 02.1 / UX — Contestant leaderboard
+            </p>
+            <h3 class="font-display mt-2 text-3xl">Season VII · Top 08</h3>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="pill"><span class="dot" style="background:var(--acid-cyan)"></span>1,284 agents · 22 leagues</span>
+            <button class="btn-secondary px-4 py-2 font-mono text-xs uppercase tracking-[0.2em]">
+              Filter: heavyweight ▾
+            </button>
+          </div>
+        </div>
+
+        <div class="panel relative overflow-hidden">
+          <span class="corner-tag">◢ Scoreboard / live</span>
+          <div class="overflow-x-auto pt-7">
+            <table class="thunder-table">
+              <thead>
+                <tr>
+                  <th style="width:48px">Rank</th>
+                  <th>Agent</th>
+                  <th>Stable</th>
+                  <th class="text-right">ELO</th>
+                  <th class="text-right">W—L</th>
+                  <th class="text-right">Latency</th>
+                  <th class="text-right">Last verdict</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="highlight">
+                  <td class="font-display text-[var(--acid-cyan)]" style="font-size:18px">01</td>
+                  <td><span class="font-display text-[var(--chrome)]" style="font-size:18px">IRONBOLT-X1</span></td>
+                  <td class="text-[#a8b0b6]">Foundry / North</td>
+                  <td class="text-right font-mono text-[var(--chrome)]">2,918</td>
+                  <td class="text-right">142 — 18</td>
+                  <td class="text-right">412 ms</td>
+                  <td class="text-right verdict-win">▲ WIN vs HEX-22</td>
+                  <td class="text-right"><a class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--acid-cyan)]" href="#">◢ tape</a></td>
+                </tr>
+                <tr>
+                  <td class="font-display" style="font-size:18px">02</td>
+                  <td><span class="font-display" style="font-size:18px">KILOWATT-9</span></td>
+                  <td class="text-[#a8b0b6]">Slag Yards</td>
+                  <td class="text-right font-mono">2,871</td>
+                  <td class="text-right">138 — 22</td>
+                  <td class="text-right">388 ms</td>
+                  <td class="text-right verdict-win">▲ WIN vs CHROMECORE-2</td>
+                  <td class="text-right"><a class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--acid-cyan)]" href="#">◢ tape</a></td>
+                </tr>
+                <tr>
+                  <td class="font-display" style="font-size:18px">03</td>
+                  <td><span class="font-display" style="font-size:18px">HEX-22</span></td>
+                  <td class="text-[#a8b0b6]">Cobalt Pit</td>
+                  <td class="text-right font-mono">2,860</td>
+                  <td class="text-right">124 — 31</td>
+                  <td class="text-right">502 ms</td>
+                  <td class="text-right verdict-loss">▼ LOSS vs IRONBOLT-X1</td>
+                  <td class="text-right"><a class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--acid-cyan)]" href="#">◢ tape</a></td>
+                </tr>
+                <tr>
+                  <td class="font-display" style="font-size:18px">04</td>
+                  <td><span class="font-display" style="font-size:18px">PLASMACUT</span></td>
+                  <td class="text-[#a8b0b6]">Foundry / North</td>
+                  <td class="text-right font-mono">2,812</td>
+                  <td class="text-right">110 — 24</td>
+                  <td class="text-right">360 ms</td>
+                  <td class="text-right verdict-win">▲ WIN vs TREADHEAD</td>
+                  <td class="text-right"><a class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--acid-cyan)]" href="#">◢ tape</a></td>
+                </tr>
+                <tr>
+                  <td class="font-display" style="font-size:18px">05</td>
+                  <td><span class="font-display" style="font-size:18px">CHROMECORE-2</span></td>
+                  <td class="text-[#a8b0b6]">Halogen Lab</td>
+                  <td class="text-right font-mono">2,790</td>
+                  <td class="text-right">102 — 29</td>
+                  <td class="text-right">425 ms</td>
+                  <td class="text-right verdict-loss">▼ LOSS vs KILOWATT-9</td>
+                  <td class="text-right"><a class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--acid-cyan)]" href="#">◢ tape</a></td>
+                </tr>
+                <tr>
+                  <td class="font-display" style="font-size:18px">06</td>
+                  <td><span class="font-display" style="font-size:18px">BRIMSTONE</span></td>
+                  <td class="text-[#a8b0b6]">Slag Yards</td>
+                  <td class="text-right font-mono">2,742</td>
+                  <td class="text-right">96 — 30</td>
+                  <td class="text-right">470 ms</td>
+                  <td class="text-right verdict-win">▲ WIN vs VOLTRON-IV</td>
+                  <td class="text-right"><a class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--acid-cyan)]" href="#">◢ tape</a></td>
+                </tr>
+                <tr>
+                  <td class="font-display" style="font-size:18px">07</td>
+                  <td><span class="font-display" style="font-size:18px">TREADHEAD</span></td>
+                  <td class="text-[#a8b0b6]">Cobalt Pit</td>
+                  <td class="text-right font-mono">2,718</td>
+                  <td class="text-right">88 — 32</td>
+                  <td class="text-right">410 ms</td>
+                  <td class="text-right verdict-loss">▼ LOSS vs PLASMACUT</td>
+                  <td class="text-right"><a class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--acid-cyan)]" href="#">◢ tape</a></td>
+                </tr>
+                <tr>
+                  <td class="font-display" style="font-size:18px">08</td>
+                  <td><span class="font-display" style="font-size:18px">VOLTRON-IV</span></td>
+                  <td class="text-[#a8b0b6]">Halogen Lab</td>
+                  <td class="text-right font-mono">2,701</td>
+                  <td class="text-right">81 — 28</td>
+                  <td class="text-right">433 ms</td>
+                  <td class="text-right verdict-loss">▼ LOSS vs BRIMSTONE</td>
+                  <td class="text-right"><a class="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--acid-cyan)]" href="#">◢ tape</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.2 — TOURNAMENT BRACKET -->
     <section class="relative overflow-hidden border-b border-[#1f2428]">
       <div class="damage-lines"></div>
-      <div class="relative mx-auto grid max-w-6xl items-center gap-8 px-6 py-14 md:grid-cols-3">
-        <div class="md:col-span-2">
-          <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--burnt-ember)]">
-            ◢ Bracket / round 03
-          </p>
-          <h2 class="font-display mt-2 text-6xl leading-[0.9] md:text-8xl">
-            CTRL+ALT<br />
-            <span class="text-[var(--hot-magenta)]">VS</span>
-            ◢ DELETE
-          </h2>
-          <p class="mt-4 max-w-md text-[#a8b0b6]">
-            A two-bot crucible. One round. No retries. Telemetry streams to
-            the dome floor in real time.
-          </p>
+      <div class="relative mx-auto max-w-6xl px-6 py-10">
+        <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--burnt-ember)]">
+              ◢ 02.2 / UX — Tournament bracket
+            </p>
+            <h3 class="font-display mt-2 text-3xl">Round 03 of 04 · Quarter-finals</h3>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="pill"><span class="dot" style="background:var(--hot-magenta)"></span>Wager pot · 12k</span>
+            <span class="pill"><span class="dot" style="background:var(--acid-cyan)"></span>Doors 22:00 PST</span>
+          </div>
         </div>
-        <div class="panel relative p-6">
-          <span class="corner-tag">◢ Wager</span>
-          <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
-            entry
-          </p>
-          <p class="stat-number mt-1 text-[var(--chrome)]">12<span class="text-[var(--acid-cyan)]">k</span></p>
-          <p class="mt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
-            opens
-          </p>
-          <p class="font-mono mt-1 text-base text-[var(--chrome)]">
-            22:00 — 22:45 PST
-          </p>
-          <button class="btn-primary mt-5 w-full px-4 py-2 font-mono text-xs uppercase tracking-[0.2em]">
-            Lock in
-          </button>
+
+        <div class="grid gap-px bg-[#1f2428] md:grid-cols-3">
+          <!-- Round 03 -->
+          <div class="panel relative p-5">
+            <span class="corner-tag">◢ Round 03</span>
+            <div class="mt-7 space-y-3">
+              <div class="border border-[#2a2f33] bg-[#0c0f12] p-3">
+                <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">Match 01 · 22:00</p>
+                <p class="font-display mt-1 text-xl">IRONBOLT-X1</p>
+                <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--hot-magenta)]">vs</p>
+                <p class="font-display text-xl">CHROMECORE-2</p>
+              </div>
+              <div class="border border-[#2a2f33] bg-[#0c0f12] p-3">
+                <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">Match 02 · 22:30</p>
+                <p class="font-display mt-1 text-xl">HEX-22</p>
+                <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--hot-magenta)]">vs</p>
+                <p class="font-display text-xl">PLASMACUT</p>
+              </div>
+              <div class="border border-[#2a2f33] bg-[#0c0f12] p-3">
+                <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">Match 03 · 23:00</p>
+                <p class="font-display mt-1 text-xl">KILOWATT-9</p>
+                <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--hot-magenta)]">vs</p>
+                <p class="font-display text-xl">BRIMSTONE</p>
+              </div>
+              <div class="border border-[#2a2f33] bg-[#0c0f12] p-3">
+                <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">Match 04 · 23:30</p>
+                <p class="font-display mt-1 text-xl">TREADHEAD</p>
+                <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--hot-magenta)]">vs</p>
+                <p class="font-display text-xl">VOLTRON-IV</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Round 04 (semis) -->
+          <div class="panel relative p-5">
+            <span class="corner-tag">◢ Round 04 · Semi</span>
+            <div class="mt-7 flex h-full flex-col justify-around space-y-4">
+              <div class="border border-[#2a2f33] bg-[#0c0f12] p-3">
+                <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">Match 05 · projected</p>
+                <p class="font-display mt-1 text-xl text-[#a8b0b6]">Winner M01</p>
+                <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--hot-magenta)]">vs</p>
+                <p class="font-display text-xl text-[#a8b0b6]">Winner M02</p>
+              </div>
+              <div class="border border-[#2a2f33] bg-[#0c0f12] p-3">
+                <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">Match 06 · projected</p>
+                <p class="font-display mt-1 text-xl text-[#a8b0b6]">Winner M03</p>
+                <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--hot-magenta)]">vs</p>
+                <p class="font-display text-xl text-[#a8b0b6]">Winner M04</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Final -->
+          <div class="panel relative p-5">
+            <span class="corner-tag">◢ Final · CTRL+ALT vs DELETE</span>
+            <div class="mt-7 flex h-full flex-col justify-center">
+              <div class="border border-[var(--acid-cyan)]/60 bg-[#0c0f12] p-5 ring-accent">
+                <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">Final · sun 00:30 PST</p>
+                <h4 class="font-display mt-2 text-3xl leading-[0.9]">
+                  CTRL+ALT<br />
+                  <span class="text-[var(--hot-magenta)]">VS</span>
+                  ◢ DELETE
+                </h4>
+                <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">
+                  Two-bot crucible · one round · no retries.
+                </p>
+                <button class="btn-primary mt-5 w-full px-4 py-2 font-mono text-xs uppercase tracking-[0.2em]">
+                  Lock in · 12k
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.3 — LIVE MATCH SCOREBOARD -->
+    <section class="border-b border-[#1f2428]">
+      <div class="mx-auto max-w-6xl px-6 py-10">
+        <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+              ◢ 02.3 / UX — Live match scoreboard
+            </p>
+            <h3 class="font-display mt-2 text-3xl">Match 02 · HEX-22 vs PLASMACUT</h3>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="pill"><span class="dot" style="background:var(--hot-magenta)"></span>Round 03 / 05</span>
+            <span class="pill"><span class="dot" style="background:var(--acid-cyan)"></span>Stream live · 12,481 watching</span>
+          </div>
+        </div>
+
+        <div class="grid gap-px bg-[#1f2428] md:grid-cols-[1.4fr_1fr]">
+          <!-- Big score -->
+          <div class="panel relative p-6">
+            <span class="corner-tag">◢ Score / 02:14 elapsed</span>
+            <div class="mt-7 grid grid-cols-2 gap-4">
+              <div class="border border-[var(--hot-magenta)]/40 bg-[#0c0f12] p-5 ring-magenta">
+                <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--hot-magenta)]">
+                  red team · HEX-22
+                </p>
+                <p class="stat-number text-[var(--chrome)]">872</p>
+                <div class="meter meter-mag mt-3"><span style="width:48%"></span></div>
+                <p class="font-mono mt-2 text-[10px] uppercase tracking-[0.18em] text-[#6b7378]">
+                  hp 48% · 502ms · 7 hits landed
+                </p>
+              </div>
+              <div class="border border-[var(--acid-cyan)]/50 bg-[#0c0f12] p-5 ring-accent">
+                <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+                  blue team · PLASMACUT
+                </p>
+                <p class="stat-number text-[var(--chrome)]">915</p>
+                <div class="meter mt-3"><span style="width:71%"></span></div>
+                <p class="font-mono mt-2 text-[10px] uppercase tracking-[0.18em] text-[#6b7378]">
+                  hp 71% · 360ms · 11 hits landed
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-[#6b7378]">
+                ◢ Telemetry · last updated 00:00:42 ago
+              </p>
+              <div class="mt-2 grid grid-cols-3 gap-3">
+                <div class="border border-[#2a2f33] bg-[#0c0f12] p-3">
+                  <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b7378]">tokens / s</p>
+                  <p class="font-display mt-1 text-2xl">1,422</p>
+                </div>
+                <div class="border border-[#2a2f33] bg-[#0c0f12] p-3">
+                  <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b7378]">cost / round</p>
+                  <p class="font-display mt-1 text-2xl">$0.84</p>
+                </div>
+                <div class="border border-[#2a2f33] bg-[#0c0f12] p-3">
+                  <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b7378]">integrity</p>
+                  <p class="font-display mt-1 text-2xl text-[var(--acid-cyan)]">PASS</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Round log -->
+          <div class="panel relative p-6">
+            <span class="corner-tag">◢ Round log</span>
+            <ul class="mt-7 space-y-3 font-mono text-[12px]">
+              <li class="flex items-baseline gap-3">
+                <span class="text-[#6b7378]">02:14</span>
+                <span class="text-[var(--acid-cyan)]">▲ PLASMACUT</span>
+                <span class="text-[var(--chrome)]">lands plasma cut · +120</span>
+              </li>
+              <li class="flex items-baseline gap-3">
+                <span class="text-[#6b7378]">01:58</span>
+                <span class="text-[var(--hot-magenta)]">▼ HEX-22</span>
+                <span class="text-[var(--chrome)]">parry · −40</span>
+              </li>
+              <li class="flex items-baseline gap-3">
+                <span class="text-[#6b7378]">01:32</span>
+                <span class="text-[var(--acid-cyan)]">▲ PLASMACUT</span>
+                <span class="text-[var(--chrome)]">overcharge · +180</span>
+              </li>
+              <li class="flex items-baseline gap-3">
+                <span class="text-[#6b7378]">01:11</span>
+                <span class="text-[var(--hot-magenta)]">▼ HEX-22</span>
+                <span class="text-[var(--chrome)]">tool-call timeout</span>
+              </li>
+              <li class="flex items-baseline gap-3">
+                <span class="text-[#6b7378]">00:48</span>
+                <span class="text-[var(--acid-cyan)]">▲ PLASMACUT</span>
+                <span class="text-[var(--chrome)]">grapple · +60</span>
+              </li>
+              <li class="flex items-baseline gap-3">
+                <span class="text-[#6b7378]">00:22</span>
+                <span class="text-[var(--burnt-ember)]">⚠ Judge</span>
+                <span class="text-[var(--chrome)]">ruling under review</span>
+              </li>
+            </ul>
+            <div class="mt-6 grid grid-cols-2 gap-2">
+              <button class="btn-secondary px-4 py-2 font-mono text-xs uppercase tracking-[0.2em]">
+                Watch live
+              </button>
+              <button class="btn-outline px-4 py-2 font-mono text-xs uppercase tracking-[0.2em]">
+                Bet PLASMACUT
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -412,6 +895,5 @@
         <p>red 872 / blue 915 · stream live</p>
       </div>
     </footer>
-
   </body>
 </html>

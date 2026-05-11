@@ -81,12 +81,8 @@
         animation: scroll-grid 6s linear infinite;
       }
       @keyframes scroll-grid {
-        0% {
-          background-position: 0 0;
-        }
-        100% {
-          background-position: 0 60px;
-        }
+        0% { background-position: 0 0; }
+        100% { background-position: 0 60px; }
       }
       .scanlines::after {
         content: "";
@@ -162,9 +158,7 @@
       .btn-neon {
         background: linear-gradient(135deg, #ff6ad5 0%, #8c52ff 100%);
       }
-      .btn-neon:hover {
-        filter: brightness(1.1);
-      }
+      .btn-neon:hover { filter: brightness(1.1); }
       .checker {
         background-image:
           linear-gradient(45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
@@ -172,37 +166,145 @@
           linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%),
           linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%);
         background-size: 20px 20px;
-        background-position:
-          0 0,
-          0 10px,
-          10px -10px,
-          -10px 0px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      }
+
+      .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        font-family: "VT323", monospace;
+        font-size: 14px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #ffd1f6;
+        backdrop-filter: blur(10px);
+      }
+
+      .grad-strip {
+        height: 64px;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .grad-strip .label {
+        position: absolute;
+        bottom: 8px;
+        left: 10px;
+        font-family: "VT323", monospace;
+        font-size: 14px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #fff;
+        background: rgba(11, 11, 43, 0.6);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+
+      /* Album art tiles built from CSS */
+      .album-art {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .album-art .label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px 12px;
+        background: linear-gradient(0deg, rgba(11, 11, 43, 0.85) 0%, transparent 100%);
+      }
+      .album-1 {
+        background: linear-gradient(180deg, #fff7c2 0%, #ffb84a 22%, #ff6ad5 55%, #8c52ff 100%);
+      }
+      .album-2 {
+        background: radial-gradient(circle at 30% 30%, #26c6da 0%, #8c52ff 60%, #0b0b2b 100%);
+      }
+      .album-3 {
+        background:
+          repeating-linear-gradient(45deg, rgba(255,255,255,0.08) 0 8px, transparent 8px 16px),
+          linear-gradient(135deg, #ff6ad5 0%, #c774e8 50%, #26c6da 100%);
+      }
+      .album-4 {
+        background: linear-gradient(135deg, #ff9472 0%, #ff6ad5 50%, #8c52ff 100%);
+      }
+      .album-5 {
+        background:
+          radial-gradient(circle at 70% 30%, rgba(255,255,255,0.4) 0%, transparent 30%),
+          linear-gradient(180deg, #8c52ff 0%, #26c6da 100%);
+      }
+      .album-6 {
+        background:
+          conic-gradient(from 220deg, #ff6ad5, #8c52ff, #26c6da, #ff6ad5);
+      }
+
+      /* Cassette product */
+      .cassette {
+        position: relative;
+        aspect-ratio: 16 / 10;
+        border-radius: 8px;
+        background: linear-gradient(180deg, #2a1a4a 0%, #0b0b2b 100%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        overflow: hidden;
+      }
+      .cassette::before,
+      .cassette::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 18%;
+        aspect-ratio: 1;
+        border-radius: 999px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        background: rgba(11, 11, 43, 0.6);
+        transform: translateY(-50%);
+      }
+      .cassette::before { left: 18%; }
+      .cassette::after { right: 18%; }
+
+      /* VHS product */
+      .vhs-tape {
+        position: relative;
+        aspect-ratio: 4 / 5;
+        border-radius: 4px;
+        background: linear-gradient(180deg, #1a0a3a 0%, #0b0b2b 100%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        overflow: hidden;
+      }
+
+      .ticker {
+        background: rgba(11, 11, 43, 0.6);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
     </style>
   </head>
 
   <body class="scanlines relative min-h-screen overflow-x-hidden">
-    <!-- HERO -->
+    <!-- ============================================================= -->
+    <!-- § IDENTITY                                                     -->
+    <!-- ============================================================= -->
     <section class="relative isolate overflow-hidden">
       <div class="absolute inset-x-0 top-0 h-px vhs-bar"></div>
 
       <div class="absolute inset-0 -z-10">
-        <!-- Sun -->
         <div
           class="absolute left-1/2 top-32 -translate-x-1/2 sun-bands neon-glow"
           style="width: 360px; height: 360px; border-radius: 9999px"
         ></div>
-        <!-- Floor grid -->
         <div class="grid-floor"></div>
-        <!-- Stars -->
         <div
           class="absolute inset-0"
           style="
-            background-image: radial-gradient(
-                1px 1px at 20% 12%,
-                #fff 99%,
-                transparent
-              ),
+            background-image: radial-gradient(1px 1px at 20% 12%, #fff 99%, transparent),
               radial-gradient(1px 1px at 80% 22%, #ffd1f6 99%, transparent),
               radial-gradient(1px 1px at 35% 30%, #fff 99%, transparent),
               radial-gradient(1px 1px at 65% 8%, #c774e8 99%, transparent),
@@ -212,155 +314,80 @@
         ></div>
       </div>
 
-      <nav
-        class="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-5"
-      >
+      <nav class="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <div class="flex items-center gap-3">
           <span
             class="block h-7 w-7 rounded-md neon-glow"
-            style="
-              background: conic-gradient(
-                from 220deg,
-                #ff6ad5,
-                #8c52ff,
-                #26c6da,
-                #ff6ad5
-              );
-            "
+            style="background: conic-gradient(from 220deg, #ff6ad5, #8c52ff, #26c6da, #ff6ad5);"
           ></span>
           <span class="font-display text-lg chrome-text">NEONLAB</span>
         </div>
-        <div
-          class="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 px-1.5 py-1.5 pill text-sm md:flex"
-        >
+        <div class="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 px-1.5 py-1.5 pill text-sm md:flex">
           <a class="rounded-full px-3 py-1 hover:bg-white/10" href="#">Tour</a>
           <a class="rounded-full px-3 py-1 hover:bg-white/10" href="#">Pricing</a>
           <a class="rounded-full px-3 py-1 hover:bg-white/10" href="#">Docs</a>
-          <a
-            class="rounded-full bg-white text-[#0B0B2B] px-3 py-1 font-semibold"
-            href="#"
-            >Sign in</a
-          >
+          <a class="rounded-full bg-white text-[#0B0B2B] px-3 py-1 font-semibold" href="#">Sign in</a>
         </div>
       </nav>
 
       <div class="relative mx-auto max-w-6xl px-6 pb-32 pt-16 text-center">
-        <span
-          class="pill mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.25em]"
-        >
+        <span class="pill mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.25em]">
           <span class="h-1.5 w-1.5 rounded-full bg-[#FF6AD5]"></span>
           Now broadcasting · v 1.984
         </span>
-        <h1
-          class="font-display text-6xl leading-none chrome-text md:text-8xl"
-        >
+        <h1 class="font-display text-6xl leading-none chrome-text md:text-8xl">
           <span class="glitch" data-text="VAPORWAVE">VAPORWAVE</span>
         </h1>
-        <p
-          class="mx-auto mt-8 max-w-xl text-lg text-white/75 md:text-xl"
-          style="font-family: 'Space Grotesk', sans-serif"
-        >
+        <p class="mx-auto mt-8 max-w-xl text-lg text-white/75 md:text-xl" style="font-family: 'Space Grotesk', sans-serif">
           A late-night palette of magenta, ultraviolet, and cyan. Chrome type,
           perspective grids, and just enough scanlines to feel
           <em class="text-[#FF6AD5]">analog</em>.
         </p>
         <div class="mt-10 flex items-center justify-center gap-3">
-          <a
-            href="#"
-            class="btn-neon neon-glow inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold text-white"
-          >
+          <a href="#" class="btn-neon neon-glow inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold text-white">
             Enter the mall
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 12h14" />
               <path d="m12 5 7 7-7 7" />
             </svg>
           </a>
-          <a
-            href="#"
-            class="pill inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-semibold text-white/85 hover:bg-white/10"
-          >
+          <a href="#" class="pill inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-semibold text-white/85 hover:bg-white/10">
             <span class="font-mono-pixel text-xl leading-none">▶</span>
             Watch demo
           </a>
         </div>
 
-        <p
-          class="font-mono-pixel mt-12 text-2xl text-[#26C6DA]"
-          style="text-shadow: 0 0 12px rgba(38, 198, 218, 0.6)"
-        >
+        <p class="font-mono-pixel mt-12 text-2xl text-[#26C6DA]" style="text-shadow: 0 0 12px rgba(38, 198, 218, 0.6)">
           &gt; LOAD &quot;A E S T H E T I C&quot;,8,1
         </p>
       </div>
     </section>
 
-    <!-- FEATURE GRID -->
-    <section class="relative mx-auto max-w-6xl px-6 pb-24">
-      <div class="grid gap-4 md:grid-cols-3">
-        <article
-          class="pill rounded-2xl border border-white/10 bg-white/5 p-5"
-        >
-          <div
-            class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg"
-            style="background: linear-gradient(135deg, #ff6ad5, #8c52ff)"
-          >
-            <span class="font-mono-pixel text-xl">◆</span>
-          </div>
-          <h3 class="text-lg font-semibold">Chrome typography</h3>
-          <p class="mt-1 text-sm text-white/70">
-            Monoton + chrome gradient + 1px outline. Looks etched into a
-            cassette label.
-          </p>
-        </article>
-        <article
-          class="pill rounded-2xl border border-white/10 bg-white/5 p-5"
-        >
-          <div
-            class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg"
-            style="background: linear-gradient(135deg, #c774e8, #26c6da)"
-          >
-            <span class="font-mono-pixel text-xl">◐</span>
-          </div>
-          <h3 class="text-lg font-semibold">Perspective grid</h3>
-          <p class="mt-1 text-sm text-white/70">
-            Single floor plane, rotated 60deg, animated. The horizon does the
-            heavy lifting.
-          </p>
-        </article>
-        <article
-          class="pill rounded-2xl border border-white/10 bg-white/5 p-5"
-        >
-          <div
-            class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg"
-            style="background: linear-gradient(135deg, #ff9472, #ff6ad5)"
-          >
-            <span class="font-mono-pixel text-xl">▲</span>
-          </div>
-          <h3 class="text-lg font-semibold">Geometric only</h3>
-          <p class="mt-1 text-sm text-white/70">
-            Triangles, circles, checkerboards. No organic blobs, ever.
-          </p>
-        </article>
+    <!-- ============================================================= -->
+    <!-- § 01 / THEME SPECIFICATION                                     -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-4 pb-10">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <span class="section-tag">§ 01 / Theme spec</span>
+          <h2 class="mt-4 font-display text-4xl chrome-text md:text-5xl">THE KIT</h2>
+        </div>
+        <p class="font-mono-pixel max-w-md text-lg text-white/70">
+          &gt; PALETTE · GRADIENTS · TYPE · COMPONENTS — exactly what prompt.md
+          prescribes, rendered.
+        </p>
       </div>
     </section>
 
-    <!-- PALETTE STRIP -->
-    <section class="relative mx-auto max-w-6xl px-6 pb-24">
+    <!-- 01.1 — PALETTE -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-12">
       <div class="mb-4 flex items-center justify-between">
-        <h2 class="font-display text-2xl chrome-text">PALETTE</h2>
+        <p class="font-mono-pixel text-lg uppercase tracking-[0.3em] text-[#FF6AD5]">
+          ◆ 01.1 / Palette
+        </p>
         <span class="font-mono-pixel text-sm text-white/60">06 swatches</span>
       </div>
-      <div
-        class="grid grid-cols-3 gap-3 overflow-hidden rounded-2xl md:grid-cols-6"
-      >
+      <div class="grid grid-cols-3 gap-3 overflow-hidden rounded-2xl md:grid-cols-6">
         <div class="font-mono-pixel flex flex-col gap-1 p-4 text-xs" style="background:#FF6AD5;color:#0B0B2B"><span class="font-semibold uppercase tracking-widest">Hot Pink</span><span class="opacity-80">#FF6AD5</span></div>
         <div class="font-mono-pixel flex flex-col gap-1 p-4 text-xs" style="background:#C774E8;color:#0B0B2B"><span class="font-semibold uppercase tracking-widest">Lavender</span><span class="opacity-80">#C774E8</span></div>
         <div class="font-mono-pixel flex flex-col gap-1 p-4 text-xs" style="background:#8C52FF;color:#fff"><span class="font-semibold uppercase tracking-widest">Ultraviolet</span><span class="opacity-80">#8C52FF</span></div>
@@ -370,48 +397,376 @@
       </div>
     </section>
 
-    <!-- COMPONENT SHOWCASE -->
-    <section class="relative mx-auto max-w-6xl px-6 pb-24">
-      <div class="grid gap-4 md:grid-cols-2">
-        <!-- Card -->
-        <div
-          class="pill relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6"
-        >
-          <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full sun-bands opacity-70"></div>
-          <p
-            class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#FF6AD5]"
-          >
-            FEATURED RELEASE
+    <!-- 01.2 — GRADIENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-12">
+      <div class="mb-4">
+        <p class="font-mono-pixel text-lg uppercase tracking-[0.3em] text-[#FF6AD5]">
+          ◆ 01.2 / Required gradients
+        </p>
+      </div>
+      <div class="grid gap-3 md:grid-cols-3">
+        <div>
+          <div class="grad-strip" style="background: linear-gradient(135deg, #ff6ad5 0%, #8c52ff 100%);">
+            <span class="label">brand · 135° pink → violet</span>
+          </div>
+          <p class="font-mono-pixel mt-2 text-sm text-white/60">buttons · logo mark · CTAs</p>
+        </div>
+        <div>
+          <div class="grad-strip" style="background: linear-gradient(180deg, #fff7c2 0%, #ffb84a 22%, #ff6ad5 55%, #8c52ff 100%);">
+            <span class="label">sunset · cream → violet</span>
+          </div>
+          <p class="font-mono-pixel mt-2 text-sm text-white/60">sun disc · hero backgrounds</p>
+        </div>
+        <div>
+          <div class="grad-strip" style="background: linear-gradient(180deg, #ffffff 0%, #ffd1f6 20%, #c774e8 45%, #8c52ff 65%, #26c6da 100%);">
+            <span class="label" style="color:#0B0B2B;background:rgba(255,255,255,0.7)">chrome · headings only</span>
+          </div>
+          <p class="font-mono-pixel mt-2 text-sm text-white/60">background-clip: text + faint glow</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.3 — TYPOGRAPHY -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-12">
+      <div class="mb-4">
+        <p class="font-mono-pixel text-lg uppercase tracking-[0.3em] text-[#26C6DA]">
+          ◆ 01.3 / Typography
+        </p>
+      </div>
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="pill rounded-2xl border border-white/10 bg-white/5 p-5">
+          <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#FF6AD5]">Display</p>
+          <p class="mt-2 font-display text-4xl chrome-text">MONOTON</p>
+          <p class="mt-3 font-mono-pixel text-sm text-white/60">
+            uppercase · letter-spacing 0.04em · always chrome gradient
           </p>
+        </div>
+        <div class="pill rounded-2xl border border-white/10 bg-white/5 p-5">
+          <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#26C6DA]">Body</p>
+          <p class="mt-2 text-2xl text-white" style="font-family:'Space Grotesk',sans-serif">
+            Space Grotesk
+          </p>
+          <p class="mt-3 font-mono-pixel text-sm text-white/60">
+            400 / 500 / 700 · normal case · for paragraphs
+          </p>
+        </div>
+        <div class="pill rounded-2xl border border-white/10 bg-white/5 p-5">
+          <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#FFD1F6]">Pixel mono</p>
+          <p class="mt-2 font-mono-pixel text-3xl text-[#26C6DA]" style="text-shadow:0 0 12px rgba(38,198,218,0.5)">
+            VT323 · &gt; 88
+          </p>
+          <p class="mt-3 font-mono-pixel text-sm text-white/60">
+            timestamps · prices · ASCII shapes
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.4 — COMPONENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-4">
+        <p class="font-mono-pixel text-lg uppercase tracking-[0.3em] text-[#C774E8]">
+          ◆ 01.4 / Components
+        </p>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="pill rounded-2xl border border-white/10 bg-white/5 p-6">
+          <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#FF6AD5]">
+            Buttons & pills
+          </p>
+          <div class="mt-4 flex flex-wrap items-center gap-3">
+            <button class="btn-neon neon-glow rounded-xl px-5 py-2.5 font-semibold text-white">Primary</button>
+            <button class="rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 font-medium hover:bg-white/10">Secondary</button>
+            <button class="rounded-xl border border-[#FF6AD5]/60 bg-transparent px-5 py-2.5 font-medium text-[#FF6AD5] hover:bg-[#FF6AD5]/10">Ghost</button>
+          </div>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="pill inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.25em]">
+              <span class="h-1.5 w-1.5 rounded-full bg-[#FF6AD5]"></span>Live
+            </span>
+            <span class="pill inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.25em]">
+              <span class="h-1.5 w-1.5 rounded-full bg-[#26C6DA]"></span>Cyan tape
+            </span>
+            <span class="pill inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.25em]">
+              <span class="h-1.5 w-1.5 rounded-full bg-[#FF9472]"></span>Sunset
+            </span>
+          </div>
+        </div>
+        <div class="pill rounded-2xl border border-white/10 bg-white/5 p-6">
+          <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#26C6DA]">
+            Inputs & selects
+          </p>
+          <label class="mt-4 block text-sm text-white/70">Handle</label>
+          <input
+            type="text"
+            placeholder="@aesthetic"
+            class="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 font-mono-pixel text-lg text-white placeholder-white/30 outline-none focus:border-[#FF6AD5]"
+          />
+          <label class="mt-3 block text-sm text-white/70">Frequency</label>
+          <select class="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-white outline-none focus:border-[#26C6DA]">
+            <option>Weekly</option>
+            <option>Monthly</option>
+            <option>Whenever the moon is full</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- § 02 / UX APPLICATIONS                                         -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-4 pb-10">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <span class="section-tag">§ 02 / UX applications</span>
+          <h2 class="mt-4 font-display text-4xl chrome-text md:text-5xl">IN THE MALL</h2>
+        </div>
+        <p class="font-mono-pixel max-w-md text-lg text-white/70">
+          &gt; THREE PRODUCT SURFACES — broadcast, mall, subscriber — built
+          from the kit above.
+        </p>
+      </div>
+    </section>
+
+    <!-- 02.1 — MUSIC BROADCAST PLAYLIST -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-5">
+        <p class="font-mono-pixel text-lg uppercase tracking-[0.3em] text-[#FF6AD5]">
+          ◆ 02.1 / UX — Broadcast playlist
+        </p>
+        <h3 class="mt-2 font-display text-3xl chrome-text md:text-4xl">NEONLAB · NIGHT WAVE</h3>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-[1.4fr_1fr]">
+        <!-- Now playing + tracklist -->
+        <div class="pill overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+          <div class="relative flex items-center gap-4 p-5">
+            <div class="album-art h-24 w-24 flex-shrink-0 album-1 neon-glow"></div>
+            <div class="min-w-0 flex-1">
+              <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#FF6AD5]">
+                ▶ NOW PLAYING · 03:42 / 07:21
+              </p>
+              <h4 class="mt-1 truncate font-display text-2xl chrome-text">LISA FRANK 420</h4>
+              <p class="truncate text-white/70">Macintosh Plus · Floral Shoppe (1997)</p>
+              <div class="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
+                <div class="h-full bg-gradient-to-r from-[#FF6AD5] to-[#26C6DA]" style="width: 50%"></div>
+              </div>
+              <div class="mt-3 flex items-center gap-2">
+                <button class="btn-neon neon-glow rounded-lg px-3 py-1.5 text-sm font-semibold">▶ Play</button>
+                <button class="rounded-lg border border-white/15 px-3 py-1.5 text-sm font-medium hover:bg-white/10">Queue</button>
+                <button class="rounded-lg border border-white/15 px-3 py-1.5 text-sm font-medium hover:bg-white/10">♡ Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ticker grid grid-cols-12 gap-3 px-5 py-2 font-mono-pixel text-xs uppercase tracking-[0.3em] text-white/50">
+            <span class="col-span-1">#</span>
+            <span class="col-span-5">Track</span>
+            <span class="col-span-4">Artist</span>
+            <span class="col-span-2 text-right">Time</span>
+          </div>
+
+          <ul class="divide-y divide-white/5">
+            <li class="grid grid-cols-12 items-center gap-3 px-5 py-3 hover:bg-white/5">
+              <span class="col-span-1 font-mono-pixel text-lg text-[#26C6DA]">01</span>
+              <span class="col-span-5 truncate text-white">Diamond</span>
+              <span class="col-span-4 truncate text-white/70">Night Tempo</span>
+              <span class="col-span-2 text-right font-mono-pixel text-white/60">3:42</span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 px-5 py-3 hover:bg-white/5">
+              <span class="col-span-1 font-mono-pixel text-lg text-[#26C6DA]">02</span>
+              <span class="col-span-5 truncate text-white">Resonance</span>
+              <span class="col-span-4 truncate text-white/70">HOME</span>
+              <span class="col-span-2 text-right font-mono-pixel text-white/60">3:32</span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 px-5 py-3 bg-[#FF6AD5]/10">
+              <span class="col-span-1 font-mono-pixel text-lg text-[#FF6AD5]">▶</span>
+              <span class="col-span-5 truncate text-white">Lisa Frank 420</span>
+              <span class="col-span-4 truncate text-white/70">Macintosh Plus</span>
+              <span class="col-span-2 text-right font-mono-pixel text-white">7:21</span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 px-5 py-3 hover:bg-white/5">
+              <span class="col-span-1 font-mono-pixel text-lg text-[#26C6DA]">04</span>
+              <span class="col-span-5 truncate text-white">Closer</span>
+              <span class="col-span-4 truncate text-white/70">Desire</span>
+              <span class="col-span-2 text-right font-mono-pixel text-white/60">4:01</span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 px-5 py-3 hover:bg-white/5">
+              <span class="col-span-1 font-mono-pixel text-lg text-[#26C6DA]">05</span>
+              <span class="col-span-5 truncate text-white">Future Funk 03</span>
+              <span class="col-span-4 truncate text-white/70">Neonlab</span>
+              <span class="col-span-2 text-right font-mono-pixel text-white/60">3:18</span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 px-5 py-3 hover:bg-white/5">
+              <span class="col-span-1 font-mono-pixel text-lg text-[#26C6DA]">06</span>
+              <span class="col-span-5 truncate text-white">Soft Memory</span>
+              <span class="col-span-4 truncate text-white/70">Telepath</span>
+              <span class="col-span-2 text-right font-mono-pixel text-white/60">5:55</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Featured artists / mix info -->
+        <div class="space-y-4">
+          <div class="pill rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#26C6DA]">
+              MIXED BY
+            </p>
+            <h4 class="mt-1 font-display text-2xl chrome-text">DJ ULTRAVIOLET</h4>
+            <p class="mt-2 text-sm text-white/70">
+              Late-night residency · every Thursday from the cassette deck.
+              Currently 12,481 listeners synced.
+            </p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="pill inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.25em]">
+                <span class="h-1.5 w-1.5 rounded-full bg-[#FF6AD5]"></span>On air
+              </span>
+              <span class="font-mono-pixel text-sm text-white/60">22:14 PST</span>
+            </div>
+          </div>
+          <div class="pill rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#FF6AD5]">
+              UP NEXT — 22:30
+            </p>
+            <p class="mt-1 font-display text-xl chrome-text">YUNG BAE</p>
+            <p class="text-sm text-white/70">"Bae City Rollaz" · 28 min mix</p>
+            <button class="btn-neon neon-glow mt-3 w-full rounded-lg px-4 py-2 text-sm font-semibold">
+              Set reminder
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.2 — MALLSOFT SHOP -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p class="font-mono-pixel text-lg uppercase tracking-[0.3em] text-[#26C6DA]">
+            ◆ 02.2 / UX — Mallsoft shop
+          </p>
+          <h3 class="mt-2 font-display text-3xl chrome-text md:text-4xl">VAPORWAVE PLAZA</h3>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="pill inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.25em]">
+            <span class="h-1.5 w-1.5 rounded-full bg-[#FF6AD5]"></span>06 items
+          </span>
+          <span class="pill inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.25em]">
+            Free shipping over $40
+          </span>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-3">
+        <article class="pill overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+          <div class="cassette m-4">
+            <div class="absolute inset-x-3 top-3 h-7 rounded-sm bg-gradient-to-r from-[#FF6AD5] via-[#C774E8] to-[#26C6DA] flex items-center justify-center">
+              <span class="font-display text-[10px] text-[#0B0B2B] tracking-widest">FUTURE FUNK 03</span>
+            </div>
+          </div>
+          <div class="px-5 pb-5">
+            <p class="font-mono-pixel text-xs uppercase tracking-[0.3em] text-[#FF6AD5]">CASSETTE · LIMITED 200</p>
+            <h4 class="mt-1 font-display text-xl chrome-text">FUTURE FUNK 03</h4>
+            <p class="text-sm text-white/70">Neonlab · sample-chopped sunset</p>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="font-mono-pixel text-2xl text-white">$24</span>
+              <button class="btn-neon neon-glow rounded-lg px-3 py-1.5 text-sm font-semibold">Pre-order</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="pill overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+          <div class="vhs-tape m-4">
+            <div class="absolute inset-x-2 top-2 h-3 rounded-sm bg-white/30"></div>
+            <div class="absolute inset-x-3 top-9 bottom-3 rounded-sm sun-bands"></div>
+            <div class="absolute inset-x-3 bottom-2 text-center font-display text-[10px] tracking-widest text-white/80">
+              WAVE MEMORY '88
+            </div>
+          </div>
+          <div class="px-5 pb-5">
+            <p class="font-mono-pixel text-xs uppercase tracking-[0.3em] text-[#26C6DA]">VHS · NTSC · 87 MIN</p>
+            <h4 class="mt-1 font-display text-xl chrome-text">WAVE MEMORY '88</h4>
+            <p class="text-sm text-white/70">Compilation · synthwave artists</p>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="font-mono-pixel text-2xl text-white">$18</span>
+              <button class="btn-neon neon-glow rounded-lg px-3 py-1.5 text-sm font-semibold">Add to cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="pill overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+          <div class="album-art m-4 album-6 neon-glow">
+            <div class="label">
+              <p class="font-display text-sm chrome-text">HYPERBOLIC CRUSH</p>
+              <p class="font-mono-pixel text-xs text-white/70">side a · 22:14</p>
+            </div>
+          </div>
+          <div class="px-5 pb-5">
+            <p class="font-mono-pixel text-xs uppercase tracking-[0.3em] text-[#C774E8]">VINYL · 180g · GATEFOLD</p>
+            <h4 class="mt-1 font-display text-xl chrome-text">HYPERBOLIC CRUSH</h4>
+            <p class="text-sm text-white/70">Telepath · double LP</p>
+            <div class="mt-3 flex items-center justify-between">
+              <span class="font-mono-pixel text-2xl text-white">$34</span>
+              <button class="btn-neon neon-glow rounded-lg px-3 py-1.5 text-sm font-semibold">Add to cart</button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Cart preview -->
+      <div class="mt-4 pill rounded-2xl border border-white/10 bg-white/5 p-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#FF6AD5]">
+              ◆ CART · 02 ITEMS
+            </span>
+            <span class="font-mono-pixel text-sm text-white/60">FUTURE FUNK 03 · WAVE MEMORY '88</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="font-mono-pixel text-2xl text-white">$42.00</span>
+            <button class="btn-neon neon-glow rounded-xl px-5 py-2.5 font-semibold text-white">
+              Checkout →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.3 — DJ SUBSCRIBER CARD -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-20">
+      <div class="mb-5">
+        <p class="font-mono-pixel text-lg uppercase tracking-[0.3em] text-[#FF9472]">
+          ◆ 02.3 / UX — Subscriber card
+        </p>
+        <h3 class="mt-2 font-display text-3xl chrome-text md:text-4xl">JOIN THE BROADCAST</h3>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="pill relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6">
+          <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full sun-bands opacity-70"></div>
+          <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#FF6AD5]">FEATURED RELEASE</p>
           <h3 class="mt-2 font-display text-3xl chrome-text">FUTURE FUNK 03</h3>
           <p class="mt-2 max-w-md text-white/70">
-            12 tracks of sample-chopped, side-chained sunset. Limited cassette
-            run of 200.
+            12 tracks of sample-chopped, side-chained sunset. Cassette run of
+            200 · ships from Tokyo · drops Friday.
           </p>
+          <ul class="mt-4 space-y-1 font-mono-pixel text-sm text-white/70">
+            <li>· 01 — Pacific Palms (3:18)</li>
+            <li>· 02 — Hyperbolic Crush (4:42)</li>
+            <li>· 03 — Soft Memory (5:55)</li>
+            <li>· 04 — Telepath Highway (3:32)</li>
+          </ul>
           <div class="mt-5 flex items-center gap-3">
-            <button
-              class="btn-neon neon-glow rounded-lg px-4 py-2 text-sm font-semibold"
-            >
+            <button class="btn-neon neon-glow rounded-lg px-4 py-2 text-sm font-semibold">
               Pre-order · $24
             </button>
-            <button
-              class="rounded-lg border border-white/15 px-4 py-2 text-sm font-medium hover:bg-white/10"
-            >
+            <button class="rounded-lg border border-white/15 px-4 py-2 text-sm font-medium hover:bg-white/10">
               Listen
             </button>
           </div>
         </div>
 
-        <!-- Form -->
-        <form
-          class="pill rounded-2xl border border-white/10 bg-white/5 p-6"
-          onsubmit="event.preventDefault()"
-        >
-          <p
-            class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#26C6DA]"
-          >
-            JOIN THE BROADCAST
-          </p>
+        <form class="pill rounded-2xl border border-white/10 bg-white/5 p-6" onsubmit="event.preventDefault()">
+          <p class="font-mono-pixel text-sm uppercase tracking-[0.3em] text-[#26C6DA]">JOIN THE BROADCAST</p>
           <h3 class="mt-2 font-display text-3xl chrome-text">SUBSCRIBE</h3>
           <label class="mt-5 block text-sm text-white/70">Handle</label>
           <input
@@ -420,16 +775,27 @@
             class="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 font-mono-pixel text-lg text-white placeholder-white/30 outline-none focus:border-[#FF6AD5]"
           />
           <label class="mt-4 block text-sm text-white/70">Frequency</label>
-          <select
-            class="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-white outline-none focus:border-[#26C6DA]"
-          >
+          <select class="mt-1 w-full rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-white outline-none focus:border-[#26C6DA]">
             <option>Weekly</option>
             <option>Monthly</option>
             <option>Whenever the moon is full</option>
           </select>
-          <button
-            class="btn-neon neon-glow mt-5 w-full rounded-lg px-4 py-2 font-semibold"
-          >
+          <label class="mt-4 block text-sm text-white/70">Delivery</label>
+          <div class="mt-1 grid grid-cols-3 gap-2">
+            <label class="flex cursor-pointer items-center gap-2 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white/80">
+              <input type="radio" name="delivery" class="accent-[#FF6AD5]" checked />
+              Email
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white/80">
+              <input type="radio" name="delivery" class="accent-[#26C6DA]" />
+              RSS
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white/80">
+              <input type="radio" name="delivery" class="accent-[#C774E8]" />
+              Pager
+            </label>
+          </div>
+          <button class="btn-neon neon-glow mt-5 w-full rounded-lg px-4 py-2 font-semibold">
             Tune in
           </button>
         </form>
@@ -451,6 +817,5 @@
         </div>
       </div>
     </footer>
-
   </body>
 </html>
