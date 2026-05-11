@@ -13,10 +13,10 @@ export function VibeCard({ vibe }: Props) {
   return (
     <Link
       to={`/vibe/${vibe.slug}`}
-      className="card-glow group relative flex flex-col overflow-hidden rounded-3xl border border-black/5 bg-white shadow-pop transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_-20px_rgba(11,11,15,0.25)]"
+      className="card-glow group relative flex flex-col rounded-3xl border border-black/5 bg-white shadow-pop transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_80px_-20px_rgba(11,11,15,0.25)]"
     >
       <div
-        className={`relative h-52 overflow-hidden ${fg}`}
+        className={`relative h-52 overflow-hidden rounded-t-3xl ${fg}`}
         style={{ background: vibe.cardGradient }}
       >
         <div className="absolute inset-0 opacity-30 mix-blend-overlay">
@@ -53,7 +53,7 @@ export function VibeCard({ vibe }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-1 items-center justify-between gap-3 px-5 py-4">
+      <div className="flex flex-1 items-center justify-between gap-3 rounded-b-3xl bg-white px-5 py-4">
         <div className="flex -space-x-1.5">
           {vibe.palette.slice(0, 5).map((c) => (
             <span
