@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thunderdome — vibe preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --black-iron: #050505;
+        --gunmetal: #4b545b;
+        --gunmetal-dim: #1a1d20;
+        --chrome: #edf3f7;
+        --acid-cyan: #28f0d4;
+        --hot-magenta: #ff2f7d;
+        --burnt-ember: #c64720;
+      }
+      html,
+      body {
+        background: var(--black-iron);
+        color: var(--chrome);
+        font-family: "Inter", system-ui, sans-serif;
+      }
+      .font-display {
+        font-family: "Barlow Condensed", "Inter", sans-serif;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+      }
+      .font-mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+      }
+
+      /* Scratched chrome surface for the bolt */
+      .chrome-surface {
+        background:
+          repeating-linear-gradient(
+            105deg,
+            rgba(0, 0, 0, 0.18) 0 1px,
+            transparent 1px 4px
+          ),
+          repeating-linear-gradient(
+            85deg,
+            rgba(255, 255, 255, 0.12) 0 1px,
+            transparent 1px 7px
+          ),
+          linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #d6dee5 30%,
+            #6f7a83 55%,
+            #b8c1c9 70%,
+            #2a2f33 100%
+          );
+      }
+      .scanlines::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.04) 0 1px,
+          transparent 1px 3px
+        );
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+      /* Diagonal crash lines that run across hero/footer panels */
+      .damage-lines {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(115deg, transparent 49.7%, rgba(40, 240, 212, 0.18) 49.7% 50%, transparent 50%),
+          linear-gradient(115deg, transparent 60%, rgba(255, 47, 125, 0.18) 60% 60.3%, transparent 60.3%),
+          linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.06) 30% 30.2%, transparent 30.2%);
+        pointer-events: none;
+      }
+      .panel {
+        background: linear-gradient(180deg, #0d1013 0%, #07090b 100%);
+        border: 1px solid rgba(75, 84, 91, 0.5);
+        position: relative;
+      }
+      .panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+      }
+
+      .corner-tag {
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        padding: 4px 10px 5px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--acid-cyan);
+        background: var(--black-iron);
+        border-right: 1px solid rgba(75, 84, 91, 0.5);
+        border-bottom: 1px solid rgba(75, 84, 91, 0.5);
+      }
+
+      /* The bolt logo with chromatic damage cuts */
+      .bolt {
+        position: relative;
+        width: 120px;
+        height: 160px;
+      }
+      .bolt svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.5));
+      }
+      .bolt .ghost-cyan {
+        transform: translate(8px, 4px);
+        color: var(--acid-cyan);
+      }
+      .bolt .ghost-magenta {
+        transform: translate(-8px, 4px);
+        color: var(--hot-magenta);
+      }
+
+      .btn-primary {
+        background: var(--chrome);
+        color: var(--black-iron);
+      }
+      .btn-primary:hover {
+        background: #fff;
+      }
+      .btn-secondary {
+        background: var(--gunmetal-dim);
+        color: var(--chrome);
+        border: 1px solid var(--gunmetal);
+      }
+      .btn-secondary:hover {
+        border-color: var(--acid-cyan);
+        color: var(--acid-cyan);
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--chrome);
+        border: 1px solid var(--gunmetal);
+      }
+      .btn-outline:hover {
+        border-color: var(--hot-magenta);
+        color: var(--hot-magenta);
+      }
+
+      .ring-accent {
+        box-shadow: 0 0 0 1px var(--acid-cyan);
+      }
+
+      .stat-number {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 900;
+        font-size: 5rem;
+        line-height: 0.9;
+        letter-spacing: -0.02em;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--chrome);
+        background: rgba(75, 84, 91, 0.18);
+        border: 1px solid rgba(75, 84, 91, 0.55);
+        border-radius: 999px;
+      }
+      .pill .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+      }
+    </style>
+  </head>
+
+  <body class="scanlines relative min-h-screen overflow-x-hidden">
+    <!-- TOP BAR -->
+    <header class="border-b border-[#1f2428]">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div class="flex items-center gap-3">
+          <span class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+            ◢ Thunderdome
+          </span>
+          <span class="font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
+            / match-night build
+          </span>
+        </div>
+        <nav class="hidden gap-1 text-sm md:flex">
+          <a class="px-3 py-1.5 hover:text-[var(--acid-cyan)]" href="#">Schedule</a>
+          <a class="px-3 py-1.5 hover:text-[var(--acid-cyan)]" href="#">Telemetry</a>
+          <a class="px-3 py-1.5 hover:text-[var(--acid-cyan)]" href="#">Bracket</a>
+          <a class="ml-2 btn-primary px-3 py-1.5 font-mono text-xs uppercase tracking-[0.18em]" href="#">
+            Sign in
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="relative isolate overflow-hidden border-b border-[#1f2428]">
+      <div class="damage-lines"></div>
+
+      <div class="relative mx-auto grid max-w-6xl gap-8 px-6 py-14 md:grid-cols-[1fr_1.2fr] md:items-center">
+        <!-- Bolt logo -->
+        <div class="panel relative flex h-72 items-center justify-center overflow-hidden">
+          <span class="corner-tag">◢ MARK / 02</span>
+
+          <div class="bolt">
+            <svg class="ghost-cyan" viewBox="0 0 120 160" fill="currentColor" aria-hidden>
+              <path d="M68 0 L8 90 L52 90 L42 160 L112 60 L66 60 Z" />
+            </svg>
+            <svg class="ghost-magenta" viewBox="0 0 120 160" fill="currentColor" aria-hidden>
+              <path d="M68 0 L8 90 L52 90 L42 160 L112 60 L66 60 Z" />
+            </svg>
+            <svg viewBox="0 0 120 160" aria-hidden>
+              <defs>
+                <clipPath id="bolt-clip">
+                  <path d="M68 0 L8 90 L52 90 L42 160 L112 60 L66 60 Z" />
+                </clipPath>
+              </defs>
+              <g clip-path="url(#bolt-clip)">
+                <foreignObject x="0" y="0" width="120" height="160">
+                  <div xmlns="http://www.w3.org/1999/xhtml" class="chrome-surface" style="width:120px;height:160px"></div>
+                </foreignObject>
+              </g>
+              <path
+                d="M68 0 L8 90 L52 90 L42 160 L112 60 L66 60 Z"
+                fill="none"
+                stroke="#050505"
+                stroke-width="2"
+                stroke-linejoin="miter"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <div>
+          <span class="pill">
+            <span class="dot" style="background: var(--acid-cyan)"></span>
+            chrome / damage / voltage
+          </span>
+          <h1 class="font-display mt-4 text-5xl leading-[0.9] md:text-7xl">
+            A heavier bolt mark for
+            <span class="text-[var(--acid-cyan)]">adversarial</span>
+            agent combat.
+          </h1>
+          <p class="mt-5 max-w-xl text-base leading-relaxed text-[#a8b0b6]">
+            Blackened steel, scratched chrome, and neon damage cuts. Keeps the
+            80s voltage but moves away from friendly arcade color toward an
+            industrial match-poster feel.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="pill"><span class="dot" style="background:var(--chrome)"></span>Industrial</span>
+            <span class="pill"><span class="dot" style="background:var(--hot-magenta)"></span>Hostile</span>
+            <span class="pill"><span class="dot" style="background:var(--acid-cyan)"></span>High contrast</span>
+            <span class="pill"><span class="dot" style="background:var(--burnt-ember)"></span>Spectator-ready</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLOR + TYPOGRAPHY GRID -->
+    <section class="border-b border-[#1f2428]">
+      <div class="mx-auto grid max-w-6xl gap-px bg-[#1f2428] md:grid-cols-3">
+        <!-- Color system -->
+        <div class="panel relative col-span-2 p-6">
+          <span class="corner-tag">◢ Color system</span>
+          <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#050505"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Black Iron</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#050505 / brand black</div></div></div></div>
+            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#4b545b"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Gunmetal</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#4b545b / metal midtone</div></div></div></div>
+            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#edf3f7"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Chrome</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#edf3f7 / logo highlight</div></div></div></div>
+            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#28f0d4"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Acid Cyan</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#28f0d4 / --ring / accent</div></div></div></div>
+            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#ff2f7d"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Hot Magenta</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#ff2f7d / brand slash</div></div></div></div>
+            <div class="border border-[#2a2f33] bg-[#0c0f12] p-3"><div class="flex items-center gap-3"><span class="block h-10 w-10 border border-black/40" style="background:#c64720"></span><div class="min-w-0"><div class="font-mono text-[12px] font-semibold text-[var(--chrome)] truncate">Burnt Ember</div><div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b7378] truncate">#c64720 / --primary alt</div></div></div></div>
+          </div>
+        </div>
+
+        <!-- Match Night type -->
+        <div class="panel relative p-6">
+          <span class="corner-tag">◢ Typography</span>
+          <p class="mt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
+            telemetry // scoring // integrity
+          </p>
+          <h3 class="font-display mt-2 text-5xl leading-none">
+            MATCH<br />NIGHT
+          </h3>
+          <p class="mt-4 text-sm text-[#a8b0b6]">
+            Sans for dense interfaces. Mono for labels, metrics, and
+            match-state language.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTROLS + STATS -->
+    <section class="border-b border-[#1f2428]">
+      <div class="mx-auto grid max-w-6xl gap-px bg-[#1f2428] md:grid-cols-2">
+        <!-- Controls -->
+        <div class="panel relative p-6">
+          <span class="corner-tag">◢ Controls</span>
+          <div class="mt-6 flex flex-wrap items-center gap-3">
+            <button class="btn-primary px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">
+              Start match
+            </button>
+            <button class="btn-secondary px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">
+              Watch live
+            </button>
+            <button class="btn-outline px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em]">
+              Results
+            </button>
+          </div>
+
+          <div class="mt-6 grid grid-cols-3 gap-3 text-[11px] font-mono uppercase tracking-[0.18em] text-[#6b7378]">
+            <div class="rounded-sm border border-[#2a2f33] bg-[#0c0f12] p-3">
+              <div class="text-[var(--chrome)]">primary</div>
+              <div class="mt-1">chrome / iron</div>
+            </div>
+            <div class="rounded-sm border border-[#2a2f33] bg-[#0c0f12] p-3">
+              <div class="text-[var(--chrome)]">secondary</div>
+              <div class="mt-1">gun / steel</div>
+            </div>
+            <div class="rounded-sm border border-[#2a2f33] bg-[#0c0f12] p-3">
+              <div class="text-[var(--chrome)]">outline</div>
+              <div class="mt-1">hot / magenta</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Surface language / stats -->
+        <div class="panel relative p-6">
+          <span class="corner-tag">◢ Surface language</span>
+          <div class="mt-6 grid grid-cols-2 gap-4">
+            <div class="border border-[var(--hot-magenta)]/40 bg-[#0c0f12] p-4">
+              <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--hot-magenta)]">
+                red team
+              </p>
+              <p class="stat-number text-[var(--chrome)]">872</p>
+            </div>
+            <div class="border border-[var(--acid-cyan)]/50 bg-[#0c0f12] p-4 ring-accent">
+              <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--acid-cyan)]">
+                blue team
+              </p>
+              <p class="stat-number text-[var(--chrome)]">915</p>
+            </div>
+          </div>
+          <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
+            ◢ telemetry · last updated 00:00:42 ago
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATCH POSTER -->
+    <section class="relative overflow-hidden border-b border-[#1f2428]">
+      <div class="damage-lines"></div>
+      <div class="relative mx-auto grid max-w-6xl items-center gap-8 px-6 py-14 md:grid-cols-3">
+        <div class="md:col-span-2">
+          <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--burnt-ember)]">
+            ◢ Bracket / round 03
+          </p>
+          <h2 class="font-display mt-2 text-6xl leading-[0.9] md:text-8xl">
+            CTRL+ALT<br />
+            <span class="text-[var(--hot-magenta)]">VS</span>
+            ◢ DELETE
+          </h2>
+          <p class="mt-4 max-w-md text-[#a8b0b6]">
+            A two-bot crucible. One round. No retries. Telemetry streams to
+            the dome floor in real time.
+          </p>
+        </div>
+        <div class="panel relative p-6">
+          <span class="corner-tag">◢ Wager</span>
+          <p class="mt-4 font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
+            entry
+          </p>
+          <p class="stat-number mt-1 text-[var(--chrome)]">12<span class="text-[var(--acid-cyan)]">k</span></p>
+          <p class="mt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378]">
+            opens
+          </p>
+          <p class="font-mono mt-1 text-base text-[var(--chrome)]">
+            22:00 — 22:45 PST
+          </p>
+          <button class="btn-primary mt-5 w-full px-4 py-2 font-mono text-xs uppercase tracking-[0.2em]">
+            Lock in
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-8">
+      <div class="mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 px-6 font-mono text-[11px] uppercase tracking-[0.22em] text-[#6b7378] sm:flex-row sm:items-center">
+        <p>◢ Thunderdome · spectator build · v1.984</p>
+        <p>red 872 / blue 915 · stream live</p>
+      </div>
+    </footer>
+
+  </body>
+</html>
