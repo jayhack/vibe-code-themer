@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Studio Drop — vibe preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Archivo Black = single-weight display grotesk; Inter = body sans;
+         JetBrains Mono = labels, prices, micro telemetry. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper:     #f1e7d9;
+        --paper-2:   #f7f0e5;
+        --bone:      #e8e0d2;
+        --ink:       #0c0c0c;
+        --charcoal:  #1f1f1f;
+        --stone:     #8c857c;
+        --red:       #ff1820;
+        --red-deep:  #c90f18;
+      }
+      html, body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .display {
+        font-family: "Archivo Black", "Helvetica Neue", Arial, sans-serif;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        line-height: 0.86;
+        text-transform: uppercase;
+      }
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+      }
+      .mono-up {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-weight: 500;
+      }
+      .label {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      /* The single 2px red rule that anchors every section. */
+      .red-rule {
+        height: 2px;
+        background: var(--red);
+      }
+      .ink-rule {
+        height: 1px;
+        background: var(--ink);
+      }
+
+      /* Pagination dots used in the masthead corner (●○○) */
+      .pag-dot {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        border: 1.5px solid var(--ink);
+        background: transparent;
+      }
+      .pag-dot.is-active {
+        background: var(--ink);
+      }
+      .pag-dot.is-red {
+        background: var(--red);
+        border-color: var(--red);
+      }
+
+      /* Underlined-on-active nav link */
+      .nav-link {
+        position: relative;
+        padding-bottom: 4px;
+        color: var(--charcoal);
+      }
+      .nav-link.is-active {
+        color: var(--red);
+      }
+      .nav-link.is-active::after {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        height: 1.5px;
+        background: var(--red);
+      }
+      .nav-link:hover { color: var(--red); }
+
+      /* Buttons */
+      .btn-primary {
+        background: var(--red);
+        color: #fff;
+        padding: 13px 22px;
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn-primary:hover { background: var(--red-deep); }
+      .btn-secondary {
+        background: transparent;
+        color: var(--ink);
+        padding: 12px 21px;
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 11px;
+        font-weight: 500;
+        border: 1px solid var(--ink);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn-secondary:hover { background: var(--ink); color: var(--paper); }
+      .link-red {
+        color: var(--red);
+        border-bottom: 1px solid var(--red);
+        padding-bottom: 2px;
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      /* Pills / category tags */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--red);
+      }
+      .pill .pill-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--red);
+        border-radius: 999px;
+        display: inline-block;
+      }
+
+      /* Section opener number — large red numeral */
+      .section-no {
+        font-family: "Archivo Black", sans-serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        line-height: 0.9;
+        color: var(--red);
+        letter-spacing: -0.04em;
+      }
+
+      /* The two-bar studio mark — original glyph used in place of any
+         ++ / monogram. Pair of filled rectangles with a narrow gap. */
+      .mark {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      /* Product image card — neutral bone surface, image inside */
+      .product-img {
+        background: var(--bone);
+        aspect-ratio: 4 / 5;
+        position: relative;
+        overflow: hidden;
+      }
+      .product-img.is-red { background: var(--red); }
+      .product-img.is-ink { background: var(--ink); }
+
+      /* The circular red "VIEW MORE" badge that overlaps a product photo */
+      .badge-disc {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 92px;
+        height: 92px;
+        border-radius: 999px;
+        background: var(--red);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      /* Apparel silhouettes — all rendered as inline SVG inside this
+         positioner. SVG paths are intrinsically symmetric: both sleeves /
+         handles come from mirrored vertices on a single path, so arms
+         always sit at the same height. */
+      .silhouette {
+        position: absolute;
+        inset: 8%;
+        width: 84%;
+        height: 84%;
+        color: currentColor;
+        fill: currentColor;
+        pointer-events: none;
+      }
+
+      /* Stepper for product detail qty */
+      .qty {
+        display: inline-grid;
+        grid-template-columns: 36px 44px 36px;
+        align-items: center;
+        border-top: 1px solid var(--ink);
+        border-bottom: 1px solid var(--ink);
+        font-family: "Inter", sans-serif;
+      }
+      .qty button {
+        padding: 10px 0;
+        background: transparent;
+      }
+      .qty .qty-val {
+        text-align: center;
+        font-weight: 500;
+      }
+
+      /* Sold-out strikethrough text */
+      .sold {
+        position: relative;
+        color: var(--red);
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 13px;
+      }
+      .sold::after {
+        content: "";
+        position: absolute;
+        left: -4px; right: -4px; top: 50%;
+        height: 2px;
+        background: var(--red);
+        transform: translateY(-1px);
+      }
+
+      /* Subtle paper grain to keep the cream from going flat */
+      .grain {
+        background-color: var(--paper);
+        background-image:
+          radial-gradient(circle at 18% 22%, rgba(12, 12, 12, 0.018) 0 1px, transparent 1.5px),
+          radial-gradient(circle at 72% 64%, rgba(201, 15, 24, 0.025) 0 1px, transparent 1.5px),
+          radial-gradient(circle at 48% 90%, rgba(12, 12, 12, 0.018) 0 1px, transparent 1.5px);
+        background-size: 5px 5px, 7px 7px, 9px 9px;
+      }
+
+      /* A wedge / corner-cut diagonal that mirrors the gallery card */
+      .red-wedge {
+        background: linear-gradient(
+          135deg,
+          var(--paper) 0%,
+          var(--paper) 55%,
+          var(--red) 55%,
+          var(--red) 58%,
+          var(--paper) 58%,
+          var(--paper) 100%
+        );
+      }
+    </style>
+  </head>
+
+  <body class="grain min-h-screen overflow-x-hidden">
+
+    <!-- ============================================================= -->
+    <!-- § IDENTITY                                                     -->
+    <!-- ============================================================= -->
+    <section class="relative">
+      <!-- Top nav -->
+      <nav class="mx-auto flex max-w-7xl items-center justify-between px-8 pt-7">
+        <div class="flex items-center gap-3">
+          <!-- Twin-bar studio mark -->
+          <svg class="mark" viewBox="0 0 30 12" width="34" height="14" aria-hidden="true">
+            <rect x="0" y="0" width="12" height="12" fill="#ff1820"/>
+            <rect x="18" y="0" width="12" height="12" fill="#ff1820"/>
+          </svg>
+        </div>
+        <div class="hidden items-center gap-10 md:flex">
+          <a href="#" class="nav-link mono-up text-[12px] is-active">Shop</a>
+          <a href="#" class="nav-link mono-up text-[12px]">Bag (00)</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="pag-dot is-active"></span>
+          <span class="pag-dot"></span>
+          <span class="pag-dot is-red"></span>
+        </div>
+      </nav>
+
+      <!-- Massive masthead wordmark -->
+      <div class="relative mx-auto max-w-7xl px-8 pt-8">
+        <h1 class="display flex items-start text-[var(--red)]" style="font-size:clamp(5rem, 17vw, 14rem);">
+          <span>STUDIO DROP</span>
+          <span class="mono ml-2 mt-3 text-[clamp(1.25rem,2.4vw,2rem)] text-[var(--red)]">®</span>
+        </h1>
+      </div>
+
+      <!-- 2px red rule, then a four-column meta strip -->
+      <div class="mx-auto max-w-7xl px-8 pt-3">
+        <div class="red-rule"></div>
+      </div>
+
+      <div class="mx-auto max-w-7xl px-8 pt-5">
+        <div class="grid grid-cols-12 gap-6">
+          <div class="col-span-12 md:col-span-2">
+            <p class="label text-[var(--red)]">Studio Drop</p>
+          </div>
+          <div class="col-span-12 md:col-span-5">
+            <p class="label text-[var(--red)]">Why</p>
+            <p class="mt-1 max-w-md text-[13.5px] leading-[1.55] text-[var(--ink)]">
+              Studio Drop is a quarterly merchandise release from a four-person
+              type studio in Lisbon. Each drop documents a quiet obsession —
+              kerning, baselines, the em-dash — and prints it on apparel that
+              would survive a print review.
+            </p>
+          </div>
+          <div class="col-span-6 md:col-span-3">
+            <p class="label text-[var(--red)]">Visit studio</p>
+            <p class="mt-1 text-[13.5px] leading-[1.55] text-[var(--ink)]">studio-drop.press</p>
+            <p class="mt-3 label text-[var(--red)]">Shipping &amp; Returns</p>
+          </div>
+          <div class="col-span-6 md:col-span-2 md:text-right">
+            <p class="label text-[var(--red)]">© 2026</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- bottom hairline ink rule that closes the identity block -->
+      <div class="mx-auto mt-10 max-w-7xl px-8">
+        <div class="ink-rule opacity-20"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- § 01 / THEME SPECIFICATION                                     -->
+    <!-- ============================================================= -->
+    <section class="mx-auto max-w-7xl px-8 pt-16">
+      <div class="grid grid-cols-12 gap-6 items-end">
+        <div class="col-span-12 md:col-span-2">
+          <p class="section-no">§01</p>
+          <p class="mt-2 label text-[var(--red)]">Theme spec</p>
+        </div>
+        <div class="col-span-12 md:col-span-7">
+          <h2 class="display text-[clamp(2.5rem,5.5vw,4.5rem)] text-[var(--ink)]">
+            The kit, <span class="text-[var(--red)]">on the page</span>.
+          </h2>
+        </div>
+        <div class="col-span-12 md:col-span-3">
+          <p class="text-[13.5px] leading-[1.55] text-[var(--ink)]">
+            Palette · Gradients · Typography · Components — verbatim from
+            <span class="mono text-[var(--red)]">prompt.md</span>. The drop
+            ships if and only if every product page can be built from this.
+          </p>
+        </div>
+      </div>
+      <div class="red-rule mt-8"></div>
+    </section>
+
+    <!-- 01.1 PALETTE -->
+    <section class="mx-auto max-w-7xl px-8 pt-10">
+      <div class="mb-4 flex items-baseline justify-between">
+        <p class="label text-[var(--red)]">◼◼ 01.1 / Palette</p>
+        <span class="mono text-[11px] text-[var(--stone)]">08 swatches · no substitutions</span>
+      </div>
+      <div class="grid grid-cols-4 gap-px bg-[var(--ink)]/15 md:grid-cols-8">
+        <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#f1e7d9;color:#0c0c0c">
+          <span class="label">Paper</span><span class="mono text-[var(--stone)]">#F1E7D9</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#f7f0e5;color:#0c0c0c">
+          <span class="label">Paper II</span><span class="mono text-[var(--stone)]">#F7F0E5</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#e8e0d2;color:#0c0c0c">
+          <span class="label">Bone</span><span class="mono text-[var(--stone)]">#E8E0D2</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#8c857c;color:#f1e7d9">
+          <span class="label">Stone</span><span class="mono opacity-80">#8C857C</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#0c0c0c;color:#f1e7d9">
+          <span class="label">Ink</span><span class="mono opacity-80">#0C0C0C</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#1f1f1f;color:#f1e7d9">
+          <span class="label">Charcoal</span><span class="mono opacity-80">#1F1F1F</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#ff1820;color:#f1e7d9">
+          <span class="label">Red Hot</span><span class="mono opacity-90">#FF1820</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#c90f18;color:#f1e7d9">
+          <span class="label">Red Deep</span><span class="mono opacity-90">#C90F18</span>
+        </div>
+      </div>
+      <p class="mt-3 mono text-[11px] text-[var(--stone)]">
+        Red Hot + Red Deep combined occupy &lt;6% of any rendered surface · the rest is paper or ink.
+      </p>
+    </section>
+
+    <!-- 01.2 GRADIENTS / FIELDS -->
+    <section class="mx-auto max-w-7xl px-8 pt-12">
+      <div class="mb-4">
+        <p class="label text-[var(--red)]">◼◼ 01.2 / Fields &amp; the one gradient</p>
+      </div>
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div>
+          <div class="h-20" style="background:#ff1820"></div>
+          <p class="mt-2 mono text-[11px] text-[var(--stone)]">flat · #FF1820 · primary brand red, ~3% of surface</p>
+        </div>
+        <div>
+          <div class="h-20" style="background:#0c0c0c"></div>
+          <p class="mt-2 mono text-[11px] text-[var(--stone)]">flat · #0C0C0C · product photo backdrop</p>
+        </div>
+        <div>
+          <div class="h-20" style="background:#e8e0d2"></div>
+          <p class="mt-2 mono text-[11px] text-[var(--stone)]">flat · #E8E0D2 · product photo backdrop (default)</p>
+        </div>
+        <div>
+          <div class="red-wedge h-20"></div>
+          <p class="mt-2 mono text-[11px] text-[var(--stone)]">linear-gradient(135deg, paper 55%, red 55–58%, paper 58%)</p>
+        </div>
+        <div>
+          <div class="h-20" style="background:linear-gradient(180deg,#f1e7d9 0%,#f1e7d9 calc(100% - 2px),#ff1820 calc(100% - 2px),#ff1820 100%)"></div>
+          <p class="mt-2 mono text-[11px] text-[var(--stone)]">the 2px red rule · used as section anchor</p>
+        </div>
+        <div>
+          <div class="h-20" style="background:linear-gradient(90deg,#0c0c0c 0 24%,#f1e7d9 24% 50%,#0c0c0c 50% 74%,#ff1820 74% 100%)"></div>
+          <p class="mt-2 mono text-[11px] text-[var(--stone)]">never — multi-stop blends are not in the system.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.3 TYPOGRAPHY -->
+    <section class="mx-auto max-w-7xl px-8 pt-12">
+      <div class="mb-4">
+        <p class="label text-[var(--red)]">◼◼ 01.3 / Typography</p>
+      </div>
+      <div class="grid grid-cols-1 gap-px bg-[var(--ink)]/15 md:grid-cols-3">
+        <div class="bg-[var(--paper-2)] p-6">
+          <p class="mono-up text-[10px] text-[var(--red)]">Display</p>
+          <p class="display mt-3 text-[clamp(2.5rem,4.5vw,4rem)] text-[var(--ink)]">ARCHIVO BLACK</p>
+          <p class="mono mt-3 text-[11px] text-[var(--stone)]">
+            single weight · uppercase · -0.05em · line-height 0.86
+          </p>
+        </div>
+        <div class="bg-[var(--paper-2)] p-6">
+          <p class="mono-up text-[10px] text-[var(--red)]">Body</p>
+          <p class="mt-3 text-2xl text-[var(--ink)]" style="font-family:'Inter',sans-serif">
+            Inter — sentence case
+          </p>
+          <p class="mono mt-3 text-[11px] text-[var(--stone)]">
+            400 / 500 / 600 / 700 · 13–16px paragraphs · line-height 1.55
+          </p>
+        </div>
+        <div class="bg-[var(--paper-2)] p-6">
+          <p class="mono-up text-[10px] text-[var(--red)]">Mono</p>
+          <p class="mono mt-3 text-2xl uppercase tracking-[0.18em] text-[var(--ink)]">JETBRAINS · $34</p>
+          <p class="mono mt-3 text-[11px] text-[var(--stone)]">
+            uppercase · tracking 0.18em · prices · labels · the ® mark
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.4 COMPONENTS -->
+    <section class="mx-auto max-w-7xl px-8 pt-12 pb-16">
+      <div class="mb-4">
+        <p class="label text-[var(--red)]">◼◼ 01.4 / Components</p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-px bg-[var(--ink)]/15 md:grid-cols-2">
+        <!-- Buttons + pills -->
+        <div class="bg-[var(--paper-2)] p-6">
+          <p class="mono-up text-[10px] text-[var(--red)]">Buttons</p>
+          <div class="mt-5 flex flex-wrap items-center gap-3">
+            <button class="btn-primary">Add to bag · $34<span>→</span></button>
+            <button class="btn-secondary">Return to shop</button>
+            <a href="#" class="link-red">Shipping &amp; returns →</a>
+          </div>
+          <div class="mt-6 flex flex-wrap gap-4">
+            <span class="pill"><span class="pill-dot"></span>Apparel</span>
+            <span class="pill"><span class="pill-dot"></span>Drop 04</span>
+            <span class="pill"><span class="pill-dot"></span>Made in Porto</span>
+            <span class="pill"><span class="pill-dot"></span>Edition of 200</span>
+          </div>
+          <p class="mono mt-5 text-[11px] text-[var(--stone)]">
+            // Square corners only · uppercase mono on every CTA · tracking 0.18em
+          </p>
+        </div>
+
+        <!-- Inputs -->
+        <div class="bg-[var(--paper-2)] p-6">
+          <p class="mono-up text-[10px] text-[var(--red)]">Inputs &amp; selects</p>
+          <label class="mono-up mt-5 block text-[10px] text-[var(--stone)]">Email</label>
+          <input
+            type="email"
+            placeholder="HELLO@STUDIO-DROP.PRESS"
+            class="mt-1 block w-full border-0 border-b border-[var(--ink)] bg-transparent py-2 text-[14px] outline-none placeholder:mono placeholder:text-[var(--stone)] focus:border-[var(--red)]"
+          />
+          <label class="mono-up mt-5 block text-[10px] text-[var(--stone)]">Size</label>
+          <select class="mt-1 block w-full border-0 border-b border-[var(--ink)] bg-transparent py-2 text-[14px] outline-none focus:border-[var(--red)]">
+            <option>S — fits 36–38</option>
+            <option>M — fits 38–40</option>
+            <option>L — fits 40–42</option>
+            <option>XL — fits 42–44</option>
+          </select>
+          <div class="mt-5 inline-flex items-center gap-3">
+            <span class="mono-up text-[10px] text-[var(--stone)]">Quantity</span>
+            <div class="qty">
+              <button>−</button>
+              <span class="qty-val">1</span>
+              <button>+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- § 02 / UX APPLICATIONS                                         -->
+    <!-- ============================================================= -->
+    <section class="mx-auto max-w-7xl px-8 pt-12">
+      <div class="grid grid-cols-12 gap-6 items-end">
+        <div class="col-span-12 md:col-span-2">
+          <p class="section-no">§02</p>
+          <p class="mt-2 label text-[var(--red)]">UX applications</p>
+        </div>
+        <div class="col-span-12 md:col-span-7">
+          <h2 class="display text-[clamp(2.5rem,5.5vw,4.5rem)] text-[var(--ink)]">
+            Three surfaces, <span class="text-[var(--red)]">same kit</span>.
+          </h2>
+        </div>
+        <div class="col-span-12 md:col-span-3">
+          <p class="text-[13.5px] leading-[1.55] text-[var(--ink)]">
+            Drop shop · product detail · studio about. Each is built only
+            from §01 — no new colors, no new components.
+          </p>
+        </div>
+      </div>
+      <div class="red-rule mt-8"></div>
+    </section>
+
+    <!-- 02.1 — DROP SHOP -->
+    <section class="mx-auto max-w-7xl px-8 pt-10">
+      <p class="label text-[var(--red)]">◼◼ 02.1 / UX — Drop shop</p>
+      <h3 class="display mt-3 text-[clamp(2rem,4vw,3.25rem)] text-[var(--ink)]">DROP 04 — FOR PRINTERS &amp; PEDANTS</h3>
+
+      <!-- 4-up product grid -->
+      <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+
+        <!-- Product 1: Printer's Devil Tee — bone bg -->
+        <a href="#" class="block">
+          <div class="product-img" style="color:#0c0c0c">
+            <svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg>
+            <span class="absolute left-3 top-3 mono-up text-[10px] text-[var(--red)]">№ 04 / 01</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <p class="text-[15px] font-medium text-[var(--ink)]">Printer's Devil Tee</p>
+            <p class="mono text-[14px] text-[var(--ink)]">$34.00</p>
+          </div>
+          <p class="mt-1 pill"><span class="pill-dot"></span>Apparel</p>
+        </a>
+
+        <!-- Product 2: Baseline 12 Cap — bone bg -->
+        <a href="#" class="block">
+          <div class="product-img" style="color:#0c0c0c">
+            <svg class="silhouette" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 30 80 Q 30 20 100 20 Q 170 20 170 80 L 170 92 L 30 92 Z M 30 92 L 196 102 L 196 110 L 30 100 Z"/></svg>
+            <span class="absolute left-3 top-3 mono-up text-[10px] text-[var(--red)]">№ 04 / 02</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <p class="text-[15px] font-medium text-[var(--ink)]">Baseline 12 Cap</p>
+            <p class="mono text-[14px] text-[var(--ink)]">$26.00</p>
+          </div>
+          <p class="mt-1 pill"><span class="pill-dot"></span>Apparel</p>
+        </a>
+
+        <!-- Product 3: Offset Crew — red bg + VIEW MORE disc -->
+        <a href="#" class="block">
+          <div class="product-img is-red" style="color:#0c0c0c">
+            <svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg>
+            <span class="absolute left-3 top-3 mono-up text-[10px] text-[var(--paper)]">№ 04 / 03</span>
+            <span class="badge-disc">View<br/>more</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <p class="text-[15px] font-medium text-[var(--ink)]">Offset Crew · HH04</p>
+            <p class="mono text-[14px] text-[var(--ink)]">$58.00</p>
+          </div>
+          <p class="mt-1 pill"><span class="pill-dot"></span>Apparel · Limited</p>
+        </a>
+
+        <!-- Product 4: Drop Case Tote — bone bg -->
+        <a href="#" class="block">
+          <div class="product-img" style="color:#0c0c0c">
+            <svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="30" y="55" width="140" height="175"/><path d="M 50 55 C 50 8 80 8 80 55" stroke="currentColor" stroke-width="10" fill="none"/><path d="M 120 55 C 120 8 150 8 150 55" stroke="currentColor" stroke-width="10" fill="none"/></svg>
+            <span class="absolute left-3 top-3 mono-up text-[10px] text-[var(--red)]">№ 04 / 04</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <p class="text-[15px] font-medium text-[var(--ink)]">Drop Case Tote</p>
+            <p class="mono text-[14px] text-[var(--ink)]">$24.00</p>
+          </div>
+          <p class="mt-1 pill"><span class="pill-dot"></span>Apparel</p>
+        </a>
+
+        <!-- Row 2 -->
+
+        <!-- Product 5: Margin Hoodie — ink bg -->
+        <a href="#" class="block">
+          <div class="product-img is-ink" style="color:#f1e7d9">
+            <svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg>
+            <span class="absolute left-3 top-3 mono-up text-[10px] text-[var(--red)]">№ 04 / 05</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <p class="text-[15px] font-medium text-[var(--ink)]">Margin Hoodie · Ink</p>
+            <p class="mono text-[14px] text-[var(--ink)]">$84.00</p>
+          </div>
+          <p class="mt-1 pill"><span class="pill-dot"></span>Apparel</p>
+        </a>
+
+        <!-- Product 6: Specimen No. 02 — bone bg -->
+        <a href="#" class="block">
+          <div class="product-img" style="color:#0c0c0c">
+            <svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg>
+            <span class="absolute left-3 top-3 mono-up text-[10px] text-[var(--red)]">№ 04 / 06</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <p class="text-[15px] font-medium text-[var(--ink)]">Specimen No. 02</p>
+            <p class="mono text-[14px] text-[var(--ink)]">$34.00</p>
+          </div>
+          <p class="mt-1 pill"><span class="pill-dot"></span>Apparel</p>
+        </a>
+
+        <!-- Product 7: Em-Dash Keychain — bone bg -->
+        <a href="#" class="block">
+          <div class="product-img" style="color:#0c0c0c">
+            <svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><circle cx="100" cy="55" r="32" stroke="#d5cdc0" stroke-width="8" fill="none"/><rect x="80" y="85" width="40" height="150"/></svg>
+            <span class="absolute left-3 top-3 mono-up text-[10px] text-[var(--red)]">№ 04 / 07</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <p class="text-[15px] font-medium text-[var(--ink)]">Em-Dash Keychain</p>
+            <p class="mono text-[14px] text-[var(--ink)]">$14.00</p>
+          </div>
+          <p class="mt-1 pill"><span class="pill-dot"></span>Hardware</p>
+        </a>
+
+        <!-- Product 8: Press Tote · Cream — bone bg -->
+        <a href="#" class="block">
+          <div class="product-img" style="color:#1f1f1f">
+            <svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="30" y="55" width="140" height="175"/><path d="M 50 55 C 50 8 80 8 80 55" stroke="currentColor" stroke-width="10" fill="none"/><path d="M 120 55 C 120 8 150 8 150 55" stroke="currentColor" stroke-width="10" fill="none"/></svg>
+            <span class="absolute left-3 top-3 mono-up text-[10px] text-[var(--red)]">№ 04 / 08</span>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between">
+            <p class="text-[15px] font-medium text-[var(--ink)]">Press Tote · Cream</p>
+            <p class="mono text-[14px] text-[var(--ink)]">$24.00</p>
+          </div>
+          <p class="mt-1 pill"><span class="pill-dot"></span>Apparel</p>
+        </a>
+
+      </div>
+
+      <!-- Drop strip footer -->
+      <div class="mt-10 grid grid-cols-12 gap-6 border-t border-[var(--ink)]/15 pt-5">
+        <p class="col-span-6 md:col-span-3 mono-up text-[10px] text-[var(--red)]">
+          ◼◼  Drop 04 · 12 items
+        </p>
+        <p class="col-span-6 md:col-span-6 mono-up text-[10px] text-[var(--stone)]">
+          Ships from Porto · arrives in 6–8 working days · made in editions of 200
+        </p>
+        <p class="col-span-12 md:col-span-3 mono-up text-[10px] text-[var(--ink)] md:text-right">
+          Page 01 / 03
+        </p>
+      </div>
+    </section>
+
+    <!-- 02.2 — PRODUCT DETAIL -->
+    <section class="mx-auto max-w-7xl px-8 pt-20">
+      <p class="label text-[var(--red)]">◼◼ 02.2 / UX — Product detail</p>
+      <h3 class="display mt-3 text-[clamp(2rem,4vw,3.25rem)] text-[var(--ink)]">PRODUCT — № 04 / 03</h3>
+
+      <div class="mt-8 grid grid-cols-12 gap-8">
+
+        <!-- Image -->
+        <div class="col-span-12 md:col-span-6">
+          <div class="product-img is-red" style="color:#0c0c0c; aspect-ratio: 4 / 5">
+            <svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg>
+            <span class="absolute left-4 top-4 mono-up text-[11px] text-[var(--paper)]">№ 04 / 03</span>
+            <span class="absolute right-4 bottom-4 mono-up text-[11px] text-[var(--paper)]">
+              FRONT · 01 OF 04
+            </span>
+          </div>
+          <div class="mt-3 grid grid-cols-4 gap-3">
+            <div class="product-img is-red" style="color:#0c0c0c; aspect-ratio: 1; border:1px solid #0c0c0c"><svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg></div>
+            <div class="product-img" style="color:#0c0c0c; aspect-ratio: 1"><svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg></div>
+            <div class="product-img is-ink" style="color:#f1e7d9; aspect-ratio: 1"><svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg></div>
+            <div class="product-img" style="color:#0c0c0c; aspect-ratio: 1"><svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg></div>
+          </div>
+        </div>
+
+        <!-- Detail panel -->
+        <div class="col-span-12 md:col-span-6">
+          <a href="#" class="mono-up text-[11px] text-[var(--charcoal)]">← Return to shop</a>
+          <h4 class="display mt-5 text-[clamp(2.5rem,5vw,4rem)] text-[var(--red)]">
+            Offset Crew
+          </h4>
+          <p class="mono mt-2 text-[15px] text-[var(--ink)]">$58.00</p>
+
+          <p class="mt-5 max-w-md text-[14.5px] leading-[1.6] text-[var(--ink)]">
+            A 14oz fleece crew screen-printed with a single Red Hot square — the
+            patch you'd find on a galley proof when something needs another pass.
+            Inside seam carries a tiny ® mark and the drop number.
+          </p>
+
+          <!-- Size selector -->
+          <p class="mono-up mt-7 text-[11px] text-[var(--stone)]">Size</p>
+          <div class="mt-2 flex flex-wrap items-center gap-2">
+            <button class="border border-[var(--ink)] px-4 py-2 text-[12px] font-medium">S</button>
+            <button class="border border-[var(--ink)] bg-[var(--ink)] px-4 py-2 text-[12px] font-medium text-[var(--paper)]">M</button>
+            <button class="border border-[var(--ink)] px-4 py-2 text-[12px] font-medium">L</button>
+            <button class="border border-[var(--ink)] px-4 py-2 text-[12px] font-medium text-[var(--stone)] line-through decoration-2 decoration-[var(--red)]">XL</button>
+          </div>
+
+          <!-- Qty + CTA -->
+          <div class="mt-7 flex flex-wrap items-center gap-5">
+            <div class="qty">
+              <button>−</button>
+              <span class="qty-val">1</span>
+              <button>+</button>
+            </div>
+            <button class="btn-primary">Add to bag · $58<span>→</span></button>
+          </div>
+
+          <!-- Spec list -->
+          <ul class="mt-8 divide-y divide-[var(--ink)]/15 border-t border-[var(--ink)]/15">
+            <li class="grid grid-cols-12 items-baseline py-3">
+              <span class="col-span-4 label text-[var(--stone)]">Material</span>
+              <span class="col-span-8 text-[13.5px]">14oz combed cotton fleece · brushed interior</span>
+            </li>
+            <li class="grid grid-cols-12 items-baseline py-3">
+              <span class="col-span-4 label text-[var(--stone)]">Print</span>
+              <span class="col-span-8 text-[13.5px]">Plastisol · Red Hot · single-pass screen on chest</span>
+            </li>
+            <li class="grid grid-cols-12 items-baseline py-3">
+              <span class="col-span-4 label text-[var(--stone)]">Made in</span>
+              <span class="col-span-8 text-[13.5px]">Porto, Portugal · edition of 200</span>
+            </li>
+            <li class="grid grid-cols-12 items-baseline py-3">
+              <span class="col-span-4 label text-[var(--stone)]">Ships</span>
+              <span class="col-span-8 text-[13.5px]">Within 48 hours · 6–8 working days globally</span>
+            </li>
+          </ul>
+
+          <!-- Cross-sell strip -->
+          <div class="mt-8 grid grid-cols-3 gap-3">
+            <div>
+              <div class="product-img" style="color:#0c0c0c"><svg class="silhouette" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 30 80 Q 30 20 100 20 Q 170 20 170 80 L 170 92 L 30 92 Z M 30 92 L 196 102 L 196 110 L 30 100 Z"/></svg></div>
+              <p class="mt-2 text-[12.5px]">Baseline 12 Cap</p>
+              <p class="mono text-[11px] text-[var(--stone)]">$26.00</p>
+            </div>
+            <div>
+              <div class="product-img" style="color:#0c0c0c"><svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="30" y="55" width="140" height="175"/><path d="M 50 55 C 50 8 80 8 80 55" stroke="currentColor" stroke-width="10" fill="none"/><path d="M 120 55 C 120 8 150 8 150 55" stroke="currentColor" stroke-width="10" fill="none"/></svg></div>
+              <p class="mt-2 text-[12.5px]">Drop Case Tote</p>
+              <p class="mono text-[11px] text-[var(--stone)]">$24.00</p>
+            </div>
+            <div>
+              <div class="product-img is-ink" style="color:#f1e7d9"><svg class="silhouette" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M 50 25 L 73 15 Q 100 40 127 15 L 150 25 L 167 32 L 196 78 L 196 108 L 152 102 L 152 230 L 48 230 L 48 102 L 4 108 L 4 78 L 33 32 Z"/></svg></div>
+              <p class="mt-2 text-[12.5px]">Margin Hoodie</p>
+              <p class="mono text-[11px] text-[var(--stone)]">$84.00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.3 — STUDIO / ABOUT -->
+    <section class="mx-auto max-w-7xl px-8 pt-20 pb-16">
+      <p class="label text-[var(--red)]">◼◼ 02.3 / UX — Studio &amp; mailing list</p>
+      <h3 class="display mt-3 text-[clamp(2rem,4vw,3.25rem)] text-[var(--ink)]">STUDIO — A FOUR-PERSON PRESS</h3>
+
+      <div class="mt-8 grid grid-cols-12 gap-8">
+
+        <!-- About body -->
+        <div class="col-span-12 md:col-span-7">
+          <p class="label text-[var(--red)]">Atelier</p>
+          <div class="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
+            <p class="text-[14.5px] leading-[1.65] text-[var(--ink)]">
+              Studio Drop is a four-person type studio working out of a
+              converted printer's shop on Rua de Santa Catarina. We design
+              one typeface family a year, run a small letterpress on
+              Tuesdays, and ship merchandise four times a year to keep the
+              lights on. The drops let us argue about kerning in public.
+            </p>
+            <p class="text-[14.5px] leading-[1.65] text-[var(--ink)]">
+              The kit on this page — paper cream, ink black, one ruthless
+              red — is the same kit we apply to the studio identity, to the
+              type specimen books, to the website you're reading. Every
+              product is a footnote to that system.
+            </p>
+          </div>
+
+          <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div class="border-t-2 border-[var(--red)] pt-2">
+              <p class="display text-3xl text-[var(--ink)]">04</p>
+              <p class="label mt-1 text-[var(--stone)]">Designers in residence</p>
+            </div>
+            <div class="border-t-2 border-[var(--red)] pt-2">
+              <p class="display text-3xl text-[var(--ink)]">12</p>
+              <p class="label mt-1 text-[var(--stone)]">Items per drop</p>
+            </div>
+            <div class="border-t-2 border-[var(--red)] pt-2">
+              <p class="display text-3xl text-[var(--ink)]">200</p>
+              <p class="label mt-1 text-[var(--stone)]">Edition size</p>
+            </div>
+            <div class="border-t-2 border-[var(--red)] pt-2">
+              <p class="display text-3xl text-[var(--ink)]">2019</p>
+              <p class="label mt-1 text-[var(--stone)]">Year founded</p>
+            </div>
+          </div>
+
+          <!-- People list -->
+          <ul class="mt-10 divide-y divide-[var(--ink)]/15 border-t border-[var(--ink)]/15">
+            <li class="grid grid-cols-12 items-baseline py-3">
+              <span class="col-span-1 mono-up text-[10px] text-[var(--red)]">№ 01</span>
+              <span class="col-span-5 text-[14px]">Sara Ferreira</span>
+              <span class="col-span-4 label text-[var(--stone)]">Type design · founding</span>
+              <span class="col-span-2 mono text-[11px] text-[var(--stone)] text-right">Porto</span>
+            </li>
+            <li class="grid grid-cols-12 items-baseline py-3">
+              <span class="col-span-1 mono-up text-[10px] text-[var(--red)]">№ 02</span>
+              <span class="col-span-5 text-[14px]">Henrique Sá</span>
+              <span class="col-span-4 label text-[var(--stone)]">Print &amp; production</span>
+              <span class="col-span-2 mono text-[11px] text-[var(--stone)] text-right">Lisbon</span>
+            </li>
+            <li class="grid grid-cols-12 items-baseline py-3">
+              <span class="col-span-1 mono-up text-[10px] text-[var(--red)]">№ 03</span>
+              <span class="col-span-5 text-[14px]">Inês Pinto</span>
+              <span class="col-span-4 label text-[var(--stone)]">Identity &amp; web</span>
+              <span class="col-span-2 mono text-[11px] text-[var(--stone)] text-right">Porto</span>
+            </li>
+            <li class="grid grid-cols-12 items-baseline py-3">
+              <span class="col-span-1 mono-up text-[10px] text-[var(--red)]">№ 04</span>
+              <span class="col-span-5 text-[14px]">Marco Lemos</span>
+              <span class="col-span-4 label text-[var(--stone)]">Drops &amp; logistics</span>
+              <span class="col-span-2 mono text-[11px] text-[var(--stone)] text-right">Porto</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Mailing list panel -->
+        <aside class="col-span-12 md:col-span-5">
+          <div class="bg-[var(--ink)] p-7 text-[var(--paper)]">
+            <p class="mono-up text-[10px] text-[var(--red)]">◼◼ Mailing list</p>
+            <h4 class="display mt-3 text-[clamp(1.75rem,3.2vw,2.5rem)]">
+              Hear when <span class="text-[var(--red)]">drop 05</span> ships.
+            </h4>
+            <p class="mt-4 max-w-sm text-[14px] leading-[1.6] text-[var(--paper)]/80">
+              One letter per quarter, sent the morning a new drop opens.
+              No tracking, no analytics, no resending if you forget to
+              click. We're a four-person studio, not a brand funnel.
+            </p>
+
+            <form class="mt-6" onsubmit="event.preventDefault()">
+              <label class="mono-up block text-[10px] text-[var(--paper)]/60">Email</label>
+              <input
+                type="email"
+                placeholder="HELLO@STUDIO-DROP.PRESS"
+                class="mt-1 block w-full border-0 border-b border-[var(--paper)]/40 bg-transparent py-2 font-mono text-[14px] uppercase tracking-[0.12em] text-[var(--paper)] placeholder:text-[var(--paper)]/40 outline-none focus:border-[var(--red)]"
+              />
+              <button type="submit" class="btn-primary mt-6 w-full justify-center">
+                Subscribe · drop 05
+                <span>→</span>
+              </button>
+              <p class="mono mt-4 text-[11px] text-[var(--paper)]/50">
+                // We honour unsubscribes within 24h · GDPR-safe · zero retargeting
+              </p>
+            </form>
+
+            <div class="mt-7 border-t border-[var(--paper)]/15 pt-5">
+              <p class="mono-up text-[10px] text-[var(--paper)]/60">Studio · Porto</p>
+              <p class="mt-2 text-[13px]">Rua de Santa Catarina, 412</p>
+              <p class="text-[13px]">4000-444 Porto · Portugal</p>
+              <p class="mono mt-3 text-[11px] text-[var(--paper)]/60">+351 22 000 1234</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- § COLOPHON / FOOTER                                            -->
+    <!-- ============================================================= -->
+    <footer class="mx-auto max-w-7xl px-8 pt-10 pb-12">
+      <div class="red-rule"></div>
+      <div class="mt-6 grid grid-cols-12 items-end gap-6">
+        <div class="col-span-12 md:col-span-6">
+          <h2 class="display text-[clamp(3.5rem,12vw,9rem)] text-[var(--red)] leading-[0.88]">
+            STUDIO DROP<span class="mono ml-1 align-top text-[clamp(1rem,2vw,1.75rem)]">®</span>
+          </h2>
+        </div>
+        <div class="col-span-6 md:col-span-2">
+          <p class="label text-[var(--red)]">Colophon</p>
+          <p class="mt-2 text-[12.5px] leading-[1.55]">
+            Set in Archivo Black, Inter &amp; JetBrains Mono. Hand-built,
+            no analytics.
+          </p>
+        </div>
+        <div class="col-span-6 md:col-span-2">
+          <p class="label text-[var(--red)]">Studio</p>
+          <p class="mt-2 text-[12.5px] leading-[1.55]">Porto · Lisbon</p>
+          <p class="text-[12.5px] leading-[1.55]">studio-drop.press</p>
+        </div>
+        <div class="col-span-12 md:col-span-2 md:text-right">
+          <p class="label text-[var(--red)]">© 2026</p>
+          <p class="mt-2 mono text-[11px] text-[var(--stone)]">All rights reserved</p>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>

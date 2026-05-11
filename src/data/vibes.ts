@@ -286,6 +286,69 @@ export const VIBES: Vibe[] = [
       url: "https://github.com/jayhack/vibe-code-themer",
     },
   },
+  {
+    slug: "studio-drop",
+    name: "Studio Drop",
+    tagline: "Cream paper, heavy grotesk masthead, one ruthless red.",
+    description:
+      "A small type studio's seasonal merch catalog, reissued for the browser. Massive Archivo Black mastheads spill edge-to-edge in Red Hot, a 2px red rule anchors every section, and product photos sit on flat Bone or flat Ink — never gradient. The twin-bar studio mark `◼◼` replaces every monogram. Realistic apparel copy, `№ 04 / 03` drop numbers, pagination dots, and ruthless typographic hierarchy. Best for design-studio merch shops, drop sites, fashion-editorial mockups, anything that should feel printed and confident.",
+    tags: ["editorial", "streetwear", "grotesk", "minimal"],
+    cardGradient:
+      "linear-gradient(135deg, #F1E7D9 0%, #F1E7D9 55%, #FF1820 55%, #FF1820 58%, #F1E7D9 58%, #F1E7D9 100%)",
+    cardForeground: "dark",
+    palette: [
+      { name: "Paper", hex: "#F1E7D9" },
+      { name: "Paper II", hex: "#F7F0E5" },
+      { name: "Bone", hex: "#E8E0D2" },
+      { name: "Stone", hex: "#8C857C" },
+      { name: "Ink", hex: "#0C0C0C" },
+      { name: "Charcoal", hex: "#1F1F1F" },
+      { name: "Red Hot", hex: "#FF1820" },
+      { name: "Red Deep", hex: "#C90F18" },
+    ],
+    fonts: {
+      display: '"Archivo Black", "Helvetica Neue", Arial, sans-serif',
+      body: '"Inter", system-ui, sans-serif',
+      mono: '"JetBrains Mono", ui-monospace, monospace',
+    },
+    motifs: [
+      "Massive Archivo Black masthead wordmark in Red Hot with mono ® superscript",
+      "2px Red Hot rule anchoring every section — never thicker, never dashed",
+      "Twin-bar studio mark ◼◼ (two filled rectangles) replaces every monogram",
+      "Pagination dots (●○● in Ink + Red Hot) top-right of the masthead row",
+      "Section labels as `◼◼ 01.1 / Palette` in mono uppercase Red Hot",
+      "One Red Hot-backdrop product photo per row of four — the visual punch",
+      "Circular red `VIEW MORE` disc overlapping one product image, mono uppercase",
+      "Realistic apparel copy — drop numbers `№ 04 / 03`, `Printer's Devil Tee`, `$34.00`",
+      "Underlined active nav (1.5px Red Hot, 4px below text)",
+      "Flat fields only — no gradients beyond the card-hero diagonal",
+    ],
+    kits: [
+      { label: "Tailwind CSS", url: "https://tailwindcss.com" },
+      {
+        label: "Google Fonts: Archivo Black, Inter, JetBrains Mono",
+        url: "https://fonts.google.com",
+      },
+      {
+        label: "Reference: type-studio merch catalogs (HelloHello Outfit, OFFF, Pentagram shop)",
+        url: "https://outfit.hellohello.is/",
+      },
+    ],
+    shapes: [
+      "Logo mark = twin-bar SVG `◼◼` (two filled rectangles, 12px gap), Red Hot",
+      "All corners square — only pagination dots and the VIEW MORE disc are round",
+      "Buttons: square, mono uppercase, tracking 0.18em, Red Hot fill or Ink outline",
+      "Inputs: bottom-border-only (1px Ink), focus = Red Hot border",
+      "Category pill = `● APPAREL` (6px Red dot + mono uppercase Red text), no bg, no border",
+      "Banned: drop shadows, gradients, glass / blur, emoji, monograms, `++` marks, icon libraries",
+    ],
+    previewHtml: "vibes/studio-drop/preview.html",
+    promptMarkdown: "vibes/studio-drop/prompt.md",
+    author: {
+      name: "Inspired by outfit.hellohello.is",
+      url: "https://outfit.hellohello.is/",
+    },
+  },
 ];
 
 export function findVibe(slug: string | undefined): Vibe | undefined {
