@@ -22,7 +22,7 @@ export function Home() {
             </p>
             <h1 className="text-5xl font-extrabold tracking-tight text-black md:text-6xl">
               Design vibes
-              <span className="block bg-gradient-to-r from-[#FF6AD5] via-[#8C52FF] to-[#26C6DA] bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-[#1d4ed8] to-[#0ea5e9] pb-[0.125em] pt-[0.04em] font-mono text-[1.06em] font-semibold tabular-nums leading-[1.38] tracking-tight bg-clip-text text-transparent md:text-[1.1em]">
                 for coding agents.
               </span>
             </h1>
