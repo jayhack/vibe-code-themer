@@ -1,0 +1,1223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mirage — vibe preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unica+One&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bone:        #F4E8C8;
+        --dune:        #E7D29A;
+        --spice:       #C26A2A;
+        --crimson:     #E0303F;
+        --crimson-hi:  #FF6B73;
+        --crimson-lo:  #8A0E18;
+        --emerald:     #1FA956;
+        --emerald-d:   #0E6D3A;
+        --sky:         #5BA3D9;
+        --obsidian:    #1A1410;
+      }
+      html, body {
+        background: var(--bone);
+        color: var(--emerald-d);
+        font-family: "Manrope", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .font-display {
+        font-family: "Unica One", "Audiowide", sans-serif;
+        letter-spacing: 0.04em;
+        line-height: 0.92;
+        text-transform: uppercase;
+      }
+      .font-mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+      .italic-heritage {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 500;
+        color: var(--crimson);
+      }
+      .label {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        font-size: 11px;
+      }
+      .mono-label {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 11px;
+      }
+
+      /* --- Surfaces & gradients --- */
+      .wing-iridescence {
+        background: linear-gradient(135deg, #F4E8C8 0%, #F6BE6F 22%, #E0303F 42%, #5BA3D9 62%, #1FA956 80%, #0E6D3A 100%);
+      }
+      .heat-haze-bg {
+        background: linear-gradient(180deg, #F4E8C8 0%, #F6D080 35%, #E7D29A 70%, #F4E8C8 100%);
+      }
+      .dune-horizon {
+        background: linear-gradient(180deg, #F4E8C8 0%, #E7D29A 60%, #C26A2A 100%);
+      }
+      .scale-bg {
+        background: linear-gradient(140deg, #1FA956 0%, #0E6D3A 100%);
+      }
+      .crimson-scope {
+        background: radial-gradient(circle at 50% 50%, #FF6B73 0%, #E0303F 40%, #8A0E18 100%);
+      }
+
+      /* --- Heat haze animation overlay --- */
+      .heat-haze::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          90deg,
+          rgba(91, 163, 217, 0.30) 0px,
+          rgba(91, 163, 217, 0.30) 1px,
+          transparent 1px,
+          transparent 28px
+        );
+        mix-blend-mode: multiply;
+        mask-image: linear-gradient(to top, black 0%, black 30%, transparent 100%);
+        animation: shimmer 2.4s linear infinite;
+      }
+      @keyframes shimmer {
+        0% { background-position: 0 0; }
+        100% { background-position: 14px -32px; }
+      }
+
+      /* --- Compound-eye hex background (SVG pattern in CSS) --- */
+      .hex-eye {
+        background-color: var(--bone);
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='32' viewBox='0 0 36 32'><polygon points='18,2 33,10 33,24 18,32 3,24 3,10' fill='none' stroke='%231FA956' stroke-opacity='0.18' stroke-width='1'/></svg>");
+      }
+      .hex-eye-dense {
+        background-color: var(--bone);
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='20' viewBox='0 0 22 20'><polygon points='11,1 20,6 20,15 11,20 2,15 2,6' fill='none' stroke='%231FA956' stroke-opacity='0.10' stroke-width='1'/></svg>");
+      }
+
+      /* --- Sand grain --- */
+      .sand-grain {
+        background-color: var(--bone);
+        background-image:
+          radial-gradient(rgba(194, 106, 42, 0.10) 1px, transparent 1px),
+          radial-gradient(rgba(14, 109, 58, 0.08) 1px, transparent 1px);
+        background-size: 7px 7px, 11px 11px;
+        background-position: 0 0, 3px 4px;
+      }
+
+      /* --- Cards & shadows --- */
+      .stamp-card {
+        background: var(--bone);
+        border: 1px solid var(--obsidian);
+        box-shadow: 4px 4px 0 var(--emerald-d);
+      }
+      .stamp-card-dune {
+        background: var(--dune);
+        border: 1px solid var(--obsidian);
+        box-shadow: 4px 4px 0 var(--emerald-d);
+      }
+      .stamp-card-emerald {
+        background: var(--emerald-d);
+        color: var(--bone);
+        border: 1px solid var(--obsidian);
+        box-shadow: 4px 4px 0 var(--crimson);
+      }
+
+      /* --- Reticle (signature glyph) --- */
+      .reticle {
+        width: 18px;
+        height: 18px;
+        flex: 0 0 auto;
+        display: inline-block;
+        vertical-align: -3px;
+      }
+
+      /* --- Buttons --- */
+      .btn-primary {
+        background: var(--crimson);
+        color: var(--bone);
+        border: 1px solid var(--obsidian);
+        box-shadow: 4px 4px 0 var(--emerald-d);
+        padding: 12px 22px;
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 12px;
+        transition: transform .08s ease, box-shadow .08s ease, background .15s ease;
+      }
+      .btn-primary:hover { background: var(--emerald-d); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--emerald-d); }
+      .btn-secondary {
+        background: var(--bone);
+        color: var(--emerald-d);
+        border: 1px solid var(--emerald);
+        padding: 12px 22px;
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 12px;
+      }
+      .btn-secondary:hover { background: var(--dune); }
+      .btn-ghost {
+        background: transparent;
+        color: var(--spice);
+        border: none;
+        padding: 12px 22px;
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 12px;
+        border-bottom: 1px solid transparent;
+      }
+      .btn-ghost:hover { border-bottom-color: var(--spice); }
+
+      /* --- Inputs --- */
+      .input-mirage {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid var(--emerald);
+        padding: 8px 2px;
+        color: var(--obsidian);
+        font-family: "Manrope", sans-serif;
+        font-size: 14px;
+        width: 100%;
+        outline: none;
+      }
+      .input-mirage:focus { border-bottom-color: var(--crimson); }
+      .input-mirage::placeholder { color: rgba(26,20,16,0.4); }
+
+      /* --- Pills --- */
+      .pill-mirage {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px 5px;
+        border: 1px solid var(--emerald);
+        border-radius: 999px;
+        background: var(--bone);
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        font-size: 10px;
+        color: var(--emerald-d);
+      }
+      .pill-dot {
+        width: 6px; height: 6px; border-radius: 999px; flex: 0 0 auto;
+      }
+
+      /* --- Dune-horizon rule --- */
+      .horizon-rule {
+        position: relative;
+        height: 2px;
+        background: var(--emerald);
+      }
+      .horizon-rule::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 10px; height: 10px;
+        background: var(--crimson);
+        border: 1px solid var(--obsidian);
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      /* --- Corner tag (◆ FIELD UNIT etc) --- */
+      .corner-tag {
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        background: var(--obsidian);
+        color: var(--bone);
+        padding: 4px 10px 5px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 10px;
+        z-index: 2;
+      }
+      .corner-tag .crimson { color: var(--crimson); }
+
+      /* --- CLI block --- */
+      .cli {
+        background: var(--obsidian);
+        color: var(--bone);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        padding: 18px 22px;
+        border: 1px solid var(--emerald-d);
+      }
+      .cli .prompt { color: var(--emerald); }
+      .cli .ok { color: var(--emerald); }
+      .cli .warn { color: var(--crimson-hi); }
+      .cli .info { color: var(--sky); }
+      .cli .muted { color: rgba(244, 232, 200, 0.55); }
+      .cli .cursor {
+        display: inline-block;
+        width: 8px; height: 14px;
+        background: var(--crimson);
+        margin-left: 2px;
+        vertical-align: -2px;
+        animation: blink 1.1s steps(2) infinite;
+      }
+      @keyframes blink { 50% { opacity: 0; } }
+
+      /* --- Spiral logo (monogram) --- */
+      .monogram {
+        position: relative;
+        width: 56px; height: 56px;
+        border: 1px solid var(--obsidian);
+        box-shadow: 4px 4px 0 var(--crimson);
+      }
+
+      /* --- Hex stat cell --- */
+      .hex-cell {
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      }
+
+      /* --- Wing panel vein overlay --- */
+      .wing-veins {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      /* --- Number circle (field journal marker) --- */
+      .num-marker {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px; height: 22px;
+        border-radius: 999px;
+        background: var(--crimson);
+        color: var(--bone);
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        flex: 0 0 auto;
+      }
+
+      /* --- Table row marker --- */
+      .row-active { background: rgba(224, 48, 63, 0.08); }
+    </style>
+  </head>
+
+  <body class="relative min-h-screen overflow-x-hidden sand-grain">
+    <!-- Reusable SVG defs -->
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <!-- Reticle -->
+        <symbol id="reticle" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10.5" fill="none" stroke="#1FA956" stroke-width="1"/>
+          <line x1="12" y1="1" x2="12" y2="9" stroke="#E0303F" stroke-width="1"/>
+          <line x1="12" y1="15" x2="12" y2="23" stroke="#E0303F" stroke-width="1"/>
+          <line x1="1" y1="12" x2="9" y2="12" stroke="#E0303F" stroke-width="1"/>
+          <line x1="15" y1="12" x2="23" y2="12" stroke="#E0303F" stroke-width="1"/>
+          <rect x="9.5" y="9.5" width="5" height="5" transform="rotate(45 12 12)" fill="#E0303F"/>
+        </symbol>
+        <!-- Sandstorm spiral (logo body) -->
+        <symbol id="spiral" viewBox="0 0 64 64">
+          <path d="M32 8 C50 8 54 28 40 38 C30 45 18 40 18 30 C18 22 26 18 32 22 C36 25 36 30 32 32"
+                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="32" cy="32" r="3.5" fill="#E0303F"/>
+        </symbol>
+        <!-- Olive-branch style dingbat replaced by dragonfly wing fan -->
+        <symbol id="wing-fan" viewBox="0 0 120 24">
+          <ellipse cx="32" cy="12" rx="28" ry="6" transform="rotate(-12 32 12)" fill="none" stroke="#1FA956" stroke-width="1"/>
+          <ellipse cx="88" cy="12" rx="28" ry="6" transform="rotate(12 88 12)" fill="none" stroke="#1FA956" stroke-width="1"/>
+          <circle cx="60" cy="12" r="3" fill="#E0303F"/>
+        </symbol>
+      </defs>
+    </svg>
+
+    <!-- ============================================================= -->
+    <!-- § IDENTITY                                                     -->
+    <!-- ============================================================= -->
+    <section class="relative isolate overflow-hidden heat-haze heat-haze-bg">
+      <!-- Compound-eye hex bg behind hero -->
+      <div class="absolute inset-0 hex-eye opacity-50 pointer-events-none"></div>
+
+      <nav class="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-5 z-10">
+        <div class="flex items-center gap-3">
+          <div class="monogram scale-bg flex items-center justify-center">
+            <svg class="w-9 h-9" style="color: var(--bone)"><use href="#spiral"/></svg>
+          </div>
+          <div>
+            <div class="font-display text-2xl" style="color: var(--emerald-d)">MIRAGE</div>
+            <div class="mono-label" style="color: var(--spice)">FIELD KIT · IV.2026</div>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center gap-7">
+          <a href="#" class="mono-label" style="color: var(--emerald-d)">ATLAS</a>
+          <a href="#" class="mono-label" style="color: var(--emerald-d)">WAYFINDER</a>
+          <a href="#" class="mono-label" style="color: var(--emerald-d)">TRACKER</a>
+          <a href="#" class="mono-label" style="color: var(--emerald-d)">LOGS</a>
+          <a href="#" class="btn-primary">Begin Drift</a>
+        </div>
+      </nav>
+
+      <!-- Dune-horizon under nav -->
+      <div class="relative max-w-6xl mx-auto px-6">
+        <div class="horizon-rule"></div>
+      </div>
+
+      <div class="relative mx-auto max-w-6xl px-6 pb-24 pt-14 z-10">
+        <div class="flex items-start gap-4">
+          <span class="num-marker mt-3">№4</span>
+          <div>
+            <div class="mono-label" style="color: var(--spice)">EXPEDITION JOURNAL · VOLUME IV · BEARING N 217°</div>
+            <h1 class="font-display mt-3" style="color: var(--emerald-d); font-size: clamp(3.5rem, 10vw, 8rem);">
+              SPIRIT<br>
+              OF THE <span class="italic-heritage" style="font-size: 0.85em; letter-spacing: 0; text-transform: none; line-height: 1;">drifting</span><br>
+              DUNES
+            </h1>
+            <svg class="mt-5 h-6 w-32"><use href="#wing-fan"/></svg>
+            <p class="mt-6 max-w-xl text-base md:text-lg" style="color: var(--obsidian)">
+              A field-kit aesthetic for developer tools that feel like
+              expedition gear. Cream paper, emerald ink, ruby lenses, and
+              the stained-glass sweep of compound-eye wings. Built for
+              CLI consoles, agent dashboards, and documentation that
+              should read like notes from a team chasing something they
+              can't quite catch.
+            </p>
+            <div class="mt-8 flex flex-wrap items-center gap-3">
+              <a href="#" class="btn-primary">Open the Codex →</a>
+              <a href="#" class="btn-secondary">Inspect kit</a>
+              <span class="pill-mirage"><span class="pill-dot" style="background: var(--crimson)"></span>Live · 12 drifts</span>
+            </div>
+
+            <!-- Hero telemetry strip -->
+            <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-px bg-[color:var(--obsidian)]/30 border border-[color:var(--obsidian)]">
+              <div class="bg-[color:var(--bone)] p-4">
+                <div class="mono-label" style="color: var(--spice)">EXPEDITIONS</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--emerald-d)">1,847</div>
+              </div>
+              <div class="bg-[color:var(--bone)] p-4">
+                <div class="mono-label" style="color: var(--spice)">OASES INDEXED</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--emerald-d)">4,210</div>
+              </div>
+              <div class="bg-[color:var(--bone)] p-4">
+                <div class="mono-label" style="color: var(--spice)">DRIFT (7D)</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--emerald-d)">+8.4<span class="text-base ml-1" style="color: var(--spice)">nm</span></div>
+              </div>
+              <div class="bg-[color:var(--bone)] p-4">
+                <div class="mono-label" style="color: var(--crimson)">MIRAGES FLAGGED</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--crimson)">89</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- § 01 / THEME SPECIFICATION                                     -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-16 pb-6">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div class="flex items-baseline gap-3">
+          <span class="num-marker">№1</span>
+          <div>
+            <div class="mono-label" style="color: var(--spice)">§ 01 / Theme specification</div>
+            <h2 class="font-display text-5xl mt-2" style="color: var(--emerald-d)">
+              THE <span class="italic-heritage" style="font-size: 0.85em; text-transform: none; letter-spacing: 0;">field</span> KIT
+            </h2>
+          </div>
+        </div>
+        <p class="font-mono max-w-md text-sm" style="color: var(--obsidian)">
+          &gt; PALETTE · GRADIENTS · TYPE · COMPONENTS — exactly what
+          prompt.md prescribes, rendered.
+        </p>
+      </div>
+      <div class="horizon-rule mt-8"></div>
+    </section>
+
+    <!-- 01.1 — PALETTE -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-14">
+      <div class="mb-4 flex items-center justify-between">
+        <div class="mono-label" style="color: var(--spice)">◆ 01.1 / Palette</div>
+        <span class="mono-label" style="color: var(--obsidian)">08 swatches</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-px bg-[color:var(--obsidian)]/30 border border-[color:var(--obsidian)]">
+        <div class="p-4" style="background:#F4E8C8; color: var(--obsidian)">
+          <div class="font-display text-sm">BONE SAND</div>
+          <div class="font-mono text-xs mt-1 opacity-70">#F4E8C8</div>
+          <div class="mono-label mt-3 opacity-50">PAGE BG</div>
+        </div>
+        <div class="p-4" style="background:#E7D29A; color: var(--obsidian)">
+          <div class="font-display text-sm">DUNE</div>
+          <div class="font-mono text-xs mt-1 opacity-70">#E7D29A</div>
+          <div class="mono-label mt-3 opacity-50">ALT SURFACE</div>
+        </div>
+        <div class="p-4" style="background:#C26A2A; color: var(--bone)">
+          <div class="font-display text-sm">SPICE</div>
+          <div class="font-mono text-xs mt-1 opacity-80">#C26A2A</div>
+          <div class="mono-label mt-3 opacity-70">MARKERS</div>
+        </div>
+        <div class="p-4" style="background:#E0303F; color: var(--bone)">
+          <div class="font-display text-sm">CRIMSON LENS</div>
+          <div class="font-mono text-xs mt-1 opacity-80">#E0303F</div>
+          <div class="mono-label mt-3 opacity-70">RETICLE · CTA</div>
+        </div>
+        <div class="p-4" style="background:#1FA956; color: var(--bone)">
+          <div class="font-display text-sm">EMERALD</div>
+          <div class="font-mono text-xs mt-1 opacity-90">#1FA956</div>
+          <div class="mono-label mt-3 opacity-80">BRAND</div>
+        </div>
+        <div class="p-4" style="background:#0E6D3A; color: var(--bone)">
+          <div class="font-display text-sm">EMERALD DEEP</div>
+          <div class="font-mono text-xs mt-1 opacity-80">#0E6D3A</div>
+          <div class="mono-label mt-3 opacity-70">BODY · STAMPS</div>
+        </div>
+        <div class="p-4" style="background:#5BA3D9; color: var(--obsidian)">
+          <div class="font-display text-sm">SKY WASH</div>
+          <div class="font-mono text-xs mt-1 opacity-70">#5BA3D9</div>
+          <div class="mono-label mt-3 opacity-50">FOCUS</div>
+        </div>
+        <div class="p-4" style="background:#1A1410; color: var(--bone)">
+          <div class="font-display text-sm">OBSIDIAN</div>
+          <div class="font-mono text-xs mt-1 opacity-60">#1A1410</div>
+          <div class="mono-label mt-3 opacity-50">INK</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.2 — GRADIENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-14">
+      <div class="mb-4 mono-label" style="color: var(--spice)">◆ 01.2 / Required gradients</div>
+      <div class="grid gap-3 md:grid-cols-3">
+        <div class="stamp-card">
+          <div class="relative h-24 wing-iridescence">
+            <svg class="wing-veins" viewBox="0 0 100 60" preserveAspectRatio="none">
+              <path d="M0 30 Q25 12 55 28 T100 32" stroke="rgba(26,20,16,0.55)" stroke-width="0.4" fill="none"/>
+              <path d="M0 38 Q22 24 50 36 T100 42" stroke="rgba(26,20,16,0.4)" stroke-width="0.3" fill="none"/>
+              <path d="M0 22 Q30 8 60 20 T100 18" stroke="rgba(26,20,16,0.45)" stroke-width="0.35" fill="none"/>
+            </svg>
+          </div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--emerald-d)">WING IRIDESCENCE · 135°</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--obsidian); opacity:.7">hero · card hero · key panels</div>
+          </div>
+        </div>
+        <div class="stamp-card">
+          <div class="h-24 heat-haze-bg"></div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--emerald-d)">HEAT HAZE · 180°</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--obsidian); opacity:.7">page atmosphere · corona</div>
+          </div>
+        </div>
+        <div class="stamp-card">
+          <div class="h-24 dune-horizon"></div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--emerald-d)">DUNE HORIZON · 180°</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--obsidian); opacity:.7">footer · section bottoms</div>
+          </div>
+        </div>
+        <div class="stamp-card">
+          <div class="h-24 scale-bg"></div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--emerald-d)">SCALE · 140°</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--obsidian); opacity:.7">logo · emerald medallions</div>
+          </div>
+        </div>
+        <div class="stamp-card">
+          <div class="h-24 flex items-center justify-center" style="background:var(--obsidian)">
+            <div class="w-20 h-20 rounded-full crimson-scope" style="border: 1px solid var(--bone)"></div>
+          </div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--emerald-d)">CRIMSON SCOPE · RADIAL</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--obsidian); opacity:.7">logo eye · signal indicator</div>
+          </div>
+        </div>
+        <div class="stamp-card-emerald p-4 flex flex-col justify-between">
+          <div class="mono-label" style="color: var(--bone); opacity:.8">DISCIPLINE</div>
+          <p class="font-mono text-sm mt-2 leading-relaxed" style="color: var(--bone)">
+            Crimson Lens lives at <b>&lt; 8%</b> of any surface. It's a
+            reticle, not a flood. When in doubt, remove the red — never
+            add it.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.3 — TYPOGRAPHY -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-14">
+      <div class="mb-4 mono-label" style="color: var(--spice)">◆ 01.3 / Typography</div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <div class="stamp-card p-6">
+          <div class="mono-label" style="color: var(--crimson)">DISPLAY · UNICA ONE 400</div>
+          <p class="font-display text-6xl mt-3" style="color: var(--emerald-d)">MIRAGE</p>
+          <p class="font-mono text-xs mt-3" style="color: var(--obsidian); opacity:.7">
+            uppercase · letter-spacing 0.04em · line-height 0.92<br>
+            hero size clamp(3.5rem, 10vw, 8rem)
+          </p>
+        </div>
+        <div class="stamp-card p-6">
+          <div class="mono-label" style="color: var(--crimson)">BODY · MANROPE 400–800</div>
+          <p class="text-2xl mt-3" style="color: var(--obsidian); font-weight:500">
+            The spirit drifts where the wind goes — never against it.
+          </p>
+          <p class="text-base mt-2" style="color: var(--obsidian); opacity:.8">
+            Sentence case for paragraphs. Labels in 700 uppercase at
+            11–12px, tracking 0.22em, Spice or Emerald Deep.
+          </p>
+        </div>
+        <div class="stamp-card p-6">
+          <div class="mono-label" style="color: var(--crimson)">MONO · JETBRAINS MONO 400–700</div>
+          <p class="font-mono text-xl mt-3" style="color: var(--emerald-d)">
+            &gt; DUNE 14/40 · BEARING N 217°<br>
+            <span style="color: var(--crimson)">◆ MIRAGE FLAGGED · 03:42:18 UTC</span>
+          </p>
+          <p class="font-mono text-xs mt-3" style="color: var(--obsidian); opacity:.7">
+            telemetry · coordinates · timestamps · CLI · pill labels
+          </p>
+        </div>
+        <div class="stamp-card p-6">
+          <div class="mono-label" style="color: var(--crimson)">HERITAGE ITALIC · CORMORANT GARAMOND</div>
+          <p class="italic-heritage text-3xl mt-3">drifting · afterimage · spirit</p>
+          <p class="text-base mt-3" style="color: var(--obsidian); opacity:.8">
+            ≤3-word inserts inside display headlines, and field-journal
+            quotes. Always Crimson Lens. <span class="italic-heritage">Never</span> for body copy.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.4 — COMPONENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-20">
+      <div class="mb-4 mono-label" style="color: var(--spice)">◆ 01.4 / Components</div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <!-- Buttons & pills -->
+        <div class="relative stamp-card p-6">
+          <span class="corner-tag"><span class="crimson">◆</span> BTN / 01</span>
+          <div class="mono-label mt-4" style="color: var(--emerald-d)">Buttons</div>
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <button class="btn-primary">Drift Now</button>
+            <button class="btn-secondary">Inspect</button>
+            <button class="btn-ghost">Skip dune</button>
+          </div>
+          <div class="mono-label mt-6" style="color: var(--emerald-d)">Pills & badges</div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill-mirage"><span class="pill-dot" style="background:var(--emerald)"></span>STABLE</span>
+            <span class="pill-mirage"><span class="pill-dot" style="background:var(--crimson)"></span>MIRAGE</span>
+            <span class="pill-mirage"><span class="pill-dot" style="background:var(--sky)"></span>OASIS</span>
+            <span class="pill-mirage"><span class="pill-dot" style="background:var(--spice)"></span>DRIFTING</span>
+          </div>
+          <div class="mono-label mt-6" style="color: var(--emerald-d)">Bullets (reticle)</div>
+          <ul class="mt-3 space-y-2 text-sm" style="color: var(--obsidian)">
+            <li class="flex items-start gap-2"><svg class="reticle mt-0.5"><use href="#reticle"/></svg> Reticle as list bullet — used everywhere</li>
+            <li class="flex items-start gap-2"><svg class="reticle mt-0.5"><use href="#reticle"/></svg> Replaces every check / arrow / dot</li>
+            <li class="flex items-start gap-2"><svg class="reticle mt-0.5"><use href="#reticle"/></svg> Never use ✓, ➜, or emoji checkmarks</li>
+          </ul>
+        </div>
+
+        <!-- Inputs & form -->
+        <div class="relative stamp-card p-6">
+          <span class="corner-tag"><span class="crimson">◆</span> FORM / 02</span>
+          <div class="mono-label mt-4" style="color: var(--emerald-d)">Inputs</div>
+          <label class="mono-label mt-4 block" style="color: var(--spice)">CALLSIGN</label>
+          <input class="input-mirage" placeholder="caravan-04" value="caravan-04" />
+          <label class="mono-label mt-4 block" style="color: var(--spice)">BEARING (°)</label>
+          <input class="input-mirage" placeholder="217" value="217" />
+          <label class="mono-label mt-4 block" style="color: var(--spice)">DRIFT MODE</label>
+          <div class="mt-2 flex gap-2 flex-wrap">
+            <label class="pill-mirage cursor-pointer" style="background: var(--bone)"><input type="radio" name="m" class="hidden" checked><span class="pill-dot" style="background:var(--crimson)"></span>SOLO</label>
+            <label class="pill-mirage cursor-pointer"><input type="radio" name="m" class="hidden"><span class="pill-dot" style="background:var(--emerald)"></span>SWARM</label>
+            <label class="pill-mirage cursor-pointer"><input type="radio" name="m" class="hidden"><span class="pill-dot" style="background:var(--sky)"></span>SCOUT</label>
+          </div>
+          <div class="mt-6 flex gap-3">
+            <button class="btn-primary">Dispatch</button>
+            <button class="btn-secondary">Save callsign</button>
+          </div>
+        </div>
+
+        <!-- Cards layout -->
+        <div class="relative stamp-card-dune p-6 md:col-span-2">
+          <span class="corner-tag"><span class="crimson">◆</span> CARD / 03</span>
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="stamp-card p-4">
+              <div class="mono-label" style="color: var(--spice)">VOL. IV · CH. 02</div>
+              <h4 class="font-display text-2xl mt-1" style="color: var(--emerald-d)">CALIBRATING THE LENS</h4>
+              <p class="text-sm mt-2" style="color: var(--obsidian)">Tuning the crimson reticle for compound-eye queries.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <span class="mono-label" style="color: var(--spice)">14 MIN</span>
+                <svg class="reticle"><use href="#reticle"/></svg>
+              </div>
+            </div>
+            <div class="stamp-card p-4">
+              <div class="mono-label" style="color: var(--spice)">VOL. IV · CH. 03</div>
+              <h4 class="font-display text-2xl mt-1" style="color: var(--emerald-d)">DRIFT PROTOCOLS</h4>
+              <p class="text-sm mt-2" style="color: var(--obsidian)">How to read the wind. When to backtrack. Why oases lie.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <span class="mono-label" style="color: var(--spice)">22 MIN</span>
+                <svg class="reticle"><use href="#reticle"/></svg>
+              </div>
+            </div>
+            <div class="stamp-card p-4">
+              <div class="mono-label" style="color: var(--spice)">VOL. IV · CH. 04</div>
+              <h4 class="font-display text-2xl mt-1" style="color: var(--emerald-d)">MIRAGE TAXONOMY</h4>
+              <p class="text-sm mt-2" style="color: var(--obsidian)">Six common refractions and the queries that bait them.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <span class="mono-label" style="color: var(--spice)">9 MIN</span>
+                <svg class="reticle"><use href="#reticle"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- § 02 / UX APPLICATIONS                                         -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-8 pb-6">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div class="flex items-baseline gap-3">
+          <span class="num-marker">№2</span>
+          <div>
+            <div class="mono-label" style="color: var(--spice)">§ 02 / UX applications</div>
+            <h2 class="font-display text-5xl mt-2" style="color: var(--emerald-d)">
+              IN THE <span class="italic-heritage" style="font-size: 0.85em; text-transform: none; letter-spacing: 0;">field</span>
+            </h2>
+          </div>
+        </div>
+        <p class="font-mono max-w-md text-sm" style="color: var(--obsidian)">
+          &gt; THREE DEV SURFACES — wayfinder CLI, codex atlas, spirit
+          tracker — built from the kit above.
+        </p>
+      </div>
+      <div class="horizon-rule mt-8"></div>
+    </section>
+
+    <!-- 02.1 — WAYFINDER CLI (AI coding agent terminal) -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="mono-label" style="color: var(--spice)">◆ 02.1 / UX — Wayfinder CLI</div>
+          <h3 class="font-display text-4xl mt-2" style="color: var(--emerald-d)">EXPEDITION 0341</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="pill-mirage"><span class="pill-dot" style="background:var(--crimson)"></span>DRIFTING · 04:18</span>
+          <span class="pill-mirage"><span class="pill-dot" style="background:var(--sky)"></span>BEARING N 217°</span>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-[2fr_1fr]">
+        <!-- Terminal -->
+        <div class="relative stamp-card p-0 overflow-hidden">
+          <span class="corner-tag"><span class="crimson">◆</span> FIELD UNIT · CARAVAN-04</span>
+          <div class="cli pt-9">
+            <div><span class="prompt">$</span> wayfinder run <span class="info">"refactor auth module · main"</span></div>
+            <div class="muted">// 142 files indexed · 1.84s · model: caravan-large-v3</div>
+            <div>&nbsp;</div>
+            <div><span class="ok">◆</span> EXPEDITION 0341 · BEARING N 217° · DUNE <span class="info">03</span>/40</div>
+            <div><span class="prompt">&gt;</span> scanning <span class="info">src/auth/**</span> — 7 modules, 1,204 LOC</div>
+            <div><span class="ok">✓</span> OASIS FOUND <span class="info">session.ts</span> — middleware extracted</div>
+            <div><span class="ok">✓</span> OASIS FOUND <span class="info">guards/role.ts</span> — predicate isolated</div>
+            <div><span class="prompt">&gt;</span> drift <span class="ok">+0.4 nm</span> — refactoring callsites</div>
+            <div>&nbsp;</div>
+            <div><span class="warn">◆ MIRAGE FLAGGED</span> <span class="info">token.refresh()</span> at <span class="muted">line 88</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="muted">// race condition — refresh may resolve after logout</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="muted">// suggested fix: cancel-on-unmount via AbortController</span></div>
+            <div>&nbsp;</div>
+            <div><span class="prompt">&gt;</span> caravan halted · awaiting confirmation</div>
+            <div><span class="prompt">&gt;</span> apply patch? [<span class="warn">y</span>/N] <span class="cursor"></span></div>
+            <div>&nbsp;</div>
+            <div class="muted">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+            <div class="muted">ELAPSED 04:18 · TOKENS 18,420 · OASES 03 · MIRAGES 01</div>
+          </div>
+        </div>
+
+        <!-- Telemetry / actions -->
+        <div class="grid gap-3 content-start">
+          <div class="relative stamp-card p-5">
+            <span class="corner-tag"><span class="crimson">◆</span> TELEMETRY</span>
+            <div class="mt-5 grid grid-cols-2 gap-3">
+              <div>
+                <div class="mono-label" style="color: var(--spice)">DRIFT</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--emerald-d)">+0.4<span class="text-sm ml-1" style="color: var(--spice)">nm</span></div>
+              </div>
+              <div>
+                <div class="mono-label" style="color: var(--spice)">TOKENS</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--emerald-d)">18.4<span class="text-sm ml-1" style="color: var(--spice)">k</span></div>
+              </div>
+              <div>
+                <div class="mono-label" style="color: var(--spice)">OASES</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--emerald-d)">03</div>
+              </div>
+              <div>
+                <div class="mono-label" style="color: var(--crimson)">MIRAGES</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--crimson)">01</div>
+              </div>
+            </div>
+            <div class="horizon-rule mt-5"></div>
+            <div class="mt-5">
+              <div class="mono-label mb-2" style="color: var(--emerald-d)">DRIFT MAP · DUNE 03/40</div>
+              <div class="h-2 w-full bg-[color:var(--dune)] border border-[color:var(--obsidian)]">
+                <div class="h-full" style="width: 7.5%; background: var(--crimson)"></div>
+              </div>
+              <div class="flex justify-between mt-2 font-mono text-xs" style="color: var(--obsidian)">
+                <span>BASE</span><span>OASIS A</span><span>OASIS B</span><span>SUMMIT</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative stamp-card-emerald p-5">
+            <span class="corner-tag" style="background:var(--bone); color: var(--emerald-d)"><span class="crimson">◆</span> SIGNAL</span>
+            <div class="mt-5 italic-heritage text-lg" style="color: var(--crimson-hi)">
+              "Wing patterns refracting east. Caravan reports a second
+              shadow on dune 04 — moving against the wind."
+            </div>
+            <div class="mono-label mt-3" style="color: var(--bone); opacity:.7">— RADIO · 03:42 UTC</div>
+            <div class="mt-5 flex gap-2">
+              <button class="btn-primary" style="box-shadow: 4px 4px 0 var(--bone)">Apply patch</button>
+              <button class="btn-secondary" style="background: var(--bone); color: var(--emerald-d)">Backtrack</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.2 — CODEX ATLAS (field journal documentation) -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="mono-label" style="color: var(--spice)">◆ 02.2 / UX — Codex Atlas</div>
+          <h3 class="font-display text-4xl mt-2" style="color: var(--emerald-d)">CODEX OF THE MIRAGE · VOL. IV</h3>
+        </div>
+        <span class="italic-heritage text-xl">field notes for sand-bound developers</span>
+      </div>
+
+      <div class="grid gap-px bg-[color:var(--obsidian)] border border-[color:var(--obsidian)] md:grid-cols-[280px_1fr]">
+        <!-- TOC sidebar -->
+        <aside class="bg-[color:var(--dune)] p-6">
+          <div class="mono-label" style="color: var(--emerald-d)">TABLE OF CONTENTS</div>
+          <svg class="mt-3 h-5 w-24"><use href="#wing-fan"/></svg>
+          <ul class="mt-5 space-y-3">
+            <li>
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-heritage text-base">I.</div>
+                  <div class="text-sm font-semibold" style="color: var(--obsidian)">Origins</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--spice)">p. 02</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--obsidian)]/15 pt-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-heritage text-base">II.</div>
+                  <div class="text-sm font-semibold" style="color: var(--obsidian)">Wing protocols</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--spice)">p. 14</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--obsidian)]/15 pt-3">
+              <div class="flex items-center justify-between row-active -mx-2 px-2 py-1">
+                <div class="flex items-center gap-2">
+                  <svg class="reticle"><use href="#reticle"/></svg>
+                  <div>
+                    <div class="italic-heritage text-base">III.</div>
+                    <div class="text-sm font-bold" style="color: var(--crimson)">Lens calibration</div>
+                  </div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--crimson)">p. 28</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--obsidian)]/15 pt-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-heritage text-base">IV.</div>
+                  <div class="text-sm font-semibold" style="color: var(--obsidian)">Compound-eye queries</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--spice)">p. 41</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--obsidian)]/15 pt-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-heritage text-base">V.</div>
+                  <div class="text-sm font-semibold" style="color: var(--obsidian)">Drift detection</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--spice)">p. 58</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--obsidian)]/15 pt-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-heritage text-base">App.</div>
+                  <div class="text-sm font-semibold" style="color: var(--obsidian)">Refraction tables</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--spice)">p. 72</span>
+              </div>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- Main article -->
+        <article class="bg-[color:var(--bone)] p-8 md:p-12 relative hex-eye">
+          <div class="relative">
+            <div class="flex items-baseline gap-3">
+              <span class="num-marker">III</span>
+              <div class="mono-label" style="color: var(--spice)">CHAPTER · LENS CALIBRATION</div>
+            </div>
+            <h4 class="font-display text-5xl mt-3" style="color: var(--emerald-d)">
+              CALIBRATING<br>
+              THE <span class="italic-heritage" style="font-size: 0.85em; text-transform: none; letter-spacing: 0;">crimson</span> LENS
+            </h4>
+            <svg class="mt-4 h-6 w-32"><use href="#wing-fan"/></svg>
+
+            <p class="mt-6 text-base leading-relaxed" style="color: var(--obsidian)">
+              The crimson lens is not a UI element. It is a discipline.
+              Calibrate it once, at the start of every expedition, and
+              every subsequent decision becomes a matter of <em>"is this
+              a reticle, or a flood?"</em> If it floods, you have not
+              earned the red.
+            </p>
+
+            <div class="mt-6 italic-heritage text-2xl leading-snug border-l-2 pl-4" style="border-color: var(--crimson)">
+              "The lens does not see better than the eye. It sees
+              less, but at a temperature the dune respects."
+              <span class="block mono-label mt-2" style="color: var(--spice)">— FIELD NOTE · ABRA HALLIN · 1978</span>
+            </div>
+
+            <div class="mt-6 mono-label" style="color: var(--spice)">III.2 · TUNING THE RETICLE</div>
+            <p class="mt-2 text-base leading-relaxed" style="color: var(--obsidian)">
+              The reticle is a 14–22px composite glyph: emerald ring, red
+              crosshair, red center diamond. Anywhere a list, an alert,
+              or a section header would normally take an arrow or a
+              check, take a reticle instead.
+            </p>
+
+            <!-- Code block as field-journal artifact -->
+            <div class="mt-5 relative">
+              <span class="corner-tag"><span class="crimson">◆</span> SPECIMEN / 14</span>
+              <pre class="cli pt-9 overflow-x-auto text-xs leading-relaxed"><span class="muted">// codex/calibrate.ts</span>
+<span class="info">import</span> { Reticle } <span class="info">from</span> <span class="warn">"@mirage/lens"</span>
+
+<span class="info">export const</span> <span class="ok">calibrate</span> = (input: <span class="warn">string</span>) =&gt; {
+  <span class="info">const</span> lens = <span class="ok">Reticle</span>.<span class="ok">tune</span>({
+    ring:    <span class="warn">"#1FA956"</span>,  <span class="muted">// emerald</span>
+    cross:   <span class="warn">"#E0303F"</span>,  <span class="muted">// crimson</span>
+    center:  <span class="warn">"#E0303F"</span>,
+    bearing: <span class="ok">217</span>,
+  })
+  <span class="info">return</span> lens.<span class="ok">scan</span>(input)
+}</pre>
+            </div>
+
+            <!-- Field illustration: wing iridescence panel -->
+            <div class="mt-6 grid gap-3 md:grid-cols-2">
+              <figure>
+                <div class="relative h-44 wing-iridescence border border-[color:var(--obsidian)]">
+                  <svg class="wing-veins" viewBox="0 0 100 60" preserveAspectRatio="none">
+                    <path d="M0 30 Q25 12 55 28 T100 32" stroke="rgba(26,20,16,0.55)" stroke-width="0.4" fill="none"/>
+                    <path d="M0 38 Q22 24 50 36 T100 42" stroke="rgba(26,20,16,0.45)" stroke-width="0.3" fill="none"/>
+                    <path d="M0 22 Q30 8 60 20 T100 18" stroke="rgba(26,20,16,0.5)" stroke-width="0.35" fill="none"/>
+                    <path d="M0 46 Q24 32 60 44 T100 50" stroke="rgba(26,20,16,0.3)" stroke-width="0.25" fill="none"/>
+                  </svg>
+                </div>
+                <figcaption class="mt-2 italic-heritage text-sm">fig. 14 — wing refraction at 217°, dawn.</figcaption>
+              </figure>
+              <figure>
+                <div class="relative h-44 border border-[color:var(--obsidian)] hex-eye-dense flex items-center justify-center bg-[color:var(--bone)]">
+                  <div class="w-28 h-28 rounded-full crimson-scope flex items-center justify-center" style="box-shadow: 0 0 0 1px var(--obsidian)">
+                    <svg class="w-16 h-16"><use href="#reticle"/></svg>
+                  </div>
+                </div>
+                <figcaption class="mt-2 italic-heritage text-sm">fig. 15 — lens schematic, post-calibration.</figcaption>
+              </figure>
+            </div>
+
+            <div class="horizon-rule mt-10"></div>
+            <div class="mt-6 flex items-center justify-between font-mono text-xs" style="color: var(--obsidian)">
+              <span>← II. Wing protocols</span>
+              <span class="italic-heritage text-base">— p. 28 —</span>
+              <span style="color: var(--crimson)">IV. Compound-eye queries →</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 02.3 — SPIRIT TRACKER (agent dashboard) -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-20">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="mono-label" style="color: var(--spice)">◆ 02.3 / UX — Spirit Tracker</div>
+          <h3 class="font-display text-4xl mt-2" style="color: var(--emerald-d)">CARAVAN DISPATCH · LIVE</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="pill-mirage"><span class="pill-dot" style="background:var(--crimson)"></span>12 ACTIVE</span>
+          <span class="pill-mirage"><span class="pill-dot" style="background:var(--emerald)"></span>SIGNAL STABLE</span>
+        </div>
+      </div>
+
+      <!-- Top stats row -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-px bg-[color:var(--obsidian)] border border-[color:var(--obsidian)] mb-4">
+        <div class="bg-[color:var(--bone)] p-5">
+          <div class="mono-label" style="color: var(--spice)">EXPEDITIONS</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--emerald-d)">1,847</div>
+          <div class="mono-label mt-2" style="color: var(--emerald)">+42 / 7D</div>
+        </div>
+        <div class="bg-[color:var(--bone)] p-5">
+          <div class="mono-label" style="color: var(--spice)">ACTIVE DRIFTS</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--emerald-d)">12</div>
+          <div class="mono-label mt-2" style="color: var(--emerald)">CARAVAN-01 · 04</div>
+        </div>
+        <div class="bg-[color:var(--bone)] p-5">
+          <div class="mono-label" style="color: var(--spice)">OASES INDEXED</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--emerald-d)">4,210</div>
+          <div class="mono-label mt-2" style="color: var(--spice)">14 NEW TODAY</div>
+        </div>
+        <div class="bg-[color:var(--bone)] p-5">
+          <div class="mono-label" style="color: var(--crimson)">MIRAGES (7D)</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--crimson)">89</div>
+          <div class="mono-label mt-2" style="color: var(--crimson)">↑ 18% vs prev</div>
+        </div>
+        <div class="bg-[color:var(--bone)] p-5">
+          <div class="mono-label" style="color: var(--spice)">AVG TIME ALOFT</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--emerald-d)">06:42</div>
+          <div class="mono-label mt-2" style="color: var(--emerald)">↓ 9s vs prev</div>
+        </div>
+      </div>
+
+      <!-- Active expeditions table -->
+      <div class="relative stamp-card overflow-hidden">
+        <span class="corner-tag"><span class="crimson">◆</span> ACTIVE EXPEDITIONS</span>
+        <div class="pt-9">
+          <div class="grid grid-cols-12 gap-3 px-5 py-3 border-b border-[color:var(--obsidian)]/30 mono-label" style="color: var(--spice)">
+            <span class="col-span-1">ID</span>
+            <span class="col-span-4">TASK</span>
+            <span class="col-span-1 text-right">DRIFT</span>
+            <span class="col-span-1 text-right">OASES</span>
+            <span class="col-span-1 text-right">MIRAGE</span>
+            <span class="col-span-2 text-right">TIME</span>
+            <span class="col-span-2 text-right">STATUS</span>
+          </div>
+          <ul class="divide-y divide-[color:var(--obsidian)]/15">
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3 row-active">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--crimson)">0341</span>
+              <span class="col-span-4 text-sm flex items-center gap-2" style="color: var(--obsidian)">
+                <svg class="reticle"><use href="#reticle"/></svg>
+                refactor auth module · main
+              </span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">+0.4nm</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">03</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--crimson)">01</span>
+              <span class="col-span-2 text-right font-mono text-sm" style="color: var(--obsidian)">04:18</span>
+              <span class="col-span-2 text-right"><span class="pill-mirage"><span class="pill-dot" style="background:var(--crimson)"></span>DRIFTING</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--obsidian)">0340</span>
+              <span class="col-span-4 text-sm" style="color: var(--obsidian)">port useState → signals · feature/state</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">+1.2nm</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">07</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--obsidian); opacity:.5">—</span>
+              <span class="col-span-2 text-right font-mono text-sm" style="color: var(--obsidian)">12:01</span>
+              <span class="col-span-2 text-right"><span class="pill-mirage"><span class="pill-dot" style="background:var(--emerald)"></span>LANDED</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--obsidian)">0339</span>
+              <span class="col-span-4 text-sm" style="color: var(--obsidian)">deps cleanup · chore/deps-q2</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--obsidian); opacity:.6">0.0nm</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">01</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--crimson)">02</span>
+              <span class="col-span-2 text-right font-mono text-sm" style="color: var(--obsidian)">02:33</span>
+              <span class="col-span-2 text-right"><span class="pill-mirage"><span class="pill-dot" style="background:var(--spice)"></span>STALLED</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--obsidian)">0338</span>
+              <span class="col-span-4 text-sm" style="color: var(--obsidian)">generate api docs · docs/v4</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">+0.8nm</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">14</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--obsidian); opacity:.5">—</span>
+              <span class="col-span-2 text-right font-mono text-sm" style="color: var(--obsidian)">18:42</span>
+              <span class="col-span-2 text-right"><span class="pill-mirage"><span class="pill-dot" style="background:var(--emerald)"></span>LANDED</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--obsidian)">0337</span>
+              <span class="col-span-4 text-sm" style="color: var(--obsidian)">migrate prisma → drizzle · spike</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">+2.1nm</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">22</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--crimson)">04</span>
+              <span class="col-span-2 text-right font-mono text-sm" style="color: var(--obsidian)">42:18</span>
+              <span class="col-span-2 text-right"><span class="pill-mirage"><span class="pill-dot" style="background:var(--sky)"></span>SCOUT</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--obsidian)">0336</span>
+              <span class="col-span-4 text-sm" style="color: var(--obsidian)">add OG image pipeline · feature/og</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">+0.3nm</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">04</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--obsidian); opacity:.5">—</span>
+              <span class="col-span-2 text-right font-mono text-sm" style="color: var(--obsidian)">07:04</span>
+              <span class="col-span-2 text-right"><span class="pill-mirage"><span class="pill-dot" style="background:var(--emerald)"></span>LANDED</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--obsidian)">0335</span>
+              <span class="col-span-4 text-sm" style="color: var(--obsidian)">tighten CSP headers · ops/security</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">+0.1nm</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--emerald-d)">02</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--obsidian); opacity:.5">—</span>
+              <span class="col-span-2 text-right font-mono text-sm" style="color: var(--obsidian)">03:51</span>
+              <span class="col-span-2 text-right"><span class="pill-mirage"><span class="pill-dot" style="background:var(--emerald)"></span>LANDED</span></span>
+            </li>
+          </ul>
+          <div class="px-5 py-3 border-t border-[color:var(--obsidian)]/30 flex items-center justify-between">
+            <span class="mono-label" style="color: var(--spice)">SHOWING 07 OF 1,847</span>
+            <div class="flex items-center gap-2">
+              <button class="btn-ghost py-1">← Prev</button>
+              <button class="btn-secondary py-2">Next page →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row: hex stat grid + featured drift -->
+      <div class="grid gap-4 md:grid-cols-3 mt-4">
+        <!-- Hex compound-eye stat grid -->
+        <div class="relative stamp-card-dune p-6 md:col-span-2 overflow-hidden">
+          <span class="corner-tag"><span class="crimson">◆</span> COMPOUND-EYE / SIGNAL MAP</span>
+          <div class="mt-7 grid grid-cols-6 gap-2">
+            <!-- 18 hex cells with varying intensity -->
+            <div class="hex-cell aspect-square" style="background:var(--emerald)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald-d)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--dune); border:1px solid var(--emerald)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald)"></div>
+            <div class="hex-cell aspect-square crimson-scope"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald-d)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--dune); border:1px solid var(--emerald)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald-d)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--sky)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--dune); border:1px solid var(--emerald)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald-d)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--dune); border:1px solid var(--emerald)"></div>
+            <div class="hex-cell aspect-square crimson-scope"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald-d)"></div>
+            <div class="hex-cell aspect-square" style="background:var(--emerald)"></div>
+          </div>
+          <div class="mt-5 flex items-center justify-between font-mono text-xs" style="color: var(--obsidian)">
+            <span class="flex items-center gap-2"><span class="w-3 h-3" style="background:var(--emerald)"></span>OASIS</span>
+            <span class="flex items-center gap-2"><span class="w-3 h-3" style="background:var(--dune); border: 1px solid var(--emerald)"></span>UNCHARTED</span>
+            <span class="flex items-center gap-2"><span class="w-3 h-3 crimson-scope"></span>MIRAGE</span>
+            <span class="flex items-center gap-2"><span class="w-3 h-3" style="background:var(--sky)"></span>SIGNAL</span>
+          </div>
+        </div>
+
+        <!-- Featured drift -->
+        <div class="relative stamp-card overflow-hidden">
+          <span class="corner-tag"><span class="crimson">◆</span> FEATURED DRIFT</span>
+          <div class="h-32 wing-iridescence relative">
+            <svg class="wing-veins" viewBox="0 0 100 60" preserveAspectRatio="none">
+              <path d="M0 30 Q25 12 55 28 T100 32" stroke="rgba(26,20,16,0.55)" stroke-width="0.4" fill="none"/>
+              <path d="M0 38 Q22 24 50 36 T100 42" stroke="rgba(26,20,16,0.4)" stroke-width="0.3" fill="none"/>
+              <path d="M0 22 Q30 8 60 20 T100 18" stroke="rgba(26,20,16,0.45)" stroke-width="0.35" fill="none"/>
+            </svg>
+          </div>
+          <div class="p-5">
+            <div class="mono-label" style="color: var(--spice)">EXPEDITION 0341</div>
+            <h4 class="font-display text-2xl mt-1" style="color: var(--emerald-d)">REFACTOR · AUTH MODULE</h4>
+            <p class="text-sm mt-2" style="color: var(--obsidian)">
+              Caravan-04 has crossed dune 03 of 40. One mirage flagged.
+              Lens reports steady refraction at 217°.
+            </p>
+            <div class="mt-4 flex items-center gap-2">
+              <button class="btn-primary">Tail caravan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- FOOTER / COLOPHON                                              -->
+    <!-- ============================================================= -->
+    <footer class="relative dune-horizon mt-8">
+      <div class="absolute inset-0 hex-eye-dense opacity-40 pointer-events-none"></div>
+      <div class="relative mx-auto max-w-6xl px-6 py-12">
+        <div class="flex flex-wrap items-start justify-between gap-8">
+          <div>
+            <div class="flex items-center gap-3">
+              <div class="monogram scale-bg flex items-center justify-center">
+                <svg class="w-9 h-9" style="color: var(--bone)"><use href="#spiral"/></svg>
+              </div>
+              <div>
+                <div class="font-display text-2xl" style="color: var(--emerald-d)">MIRAGE</div>
+                <div class="mono-label" style="color: var(--spice)">FIELD KIT · IV.2026</div>
+              </div>
+            </div>
+            <p class="italic-heritage text-xl mt-5 max-w-md">
+              "The dune does not remember the caravan, only the wind that
+              followed it."
+            </p>
+            <div class="mono-label mt-3" style="color: var(--obsidian); opacity:.7">— FIELD NOTE · A. HALLIN · 1978</div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-10">
+            <div>
+              <div class="mono-label" style="color: var(--emerald-d)">CODEX</div>
+              <ul class="mt-3 space-y-2 text-sm" style="color: var(--obsidian)">
+                <li>Origins</li>
+                <li>Wing protocols</li>
+                <li>Lens calibration</li>
+                <li>Drift detection</li>
+              </ul>
+            </div>
+            <div>
+              <div class="mono-label" style="color: var(--emerald-d)">CARAVAN</div>
+              <ul class="mt-3 space-y-2 text-sm" style="color: var(--obsidian)">
+                <li>Dispatch</li>
+                <li>Telemetry</li>
+                <li>Spirit tracker</li>
+                <li>Refraction tables</li>
+              </ul>
+            </div>
+            <div>
+              <div class="mono-label" style="color: var(--emerald-d)">SIGNAL</div>
+              <ul class="mt-3 space-y-2 text-sm" style="color: var(--obsidian)">
+                <li>Status · 03:42 UTC</li>
+                <li>Changelog</li>
+                <li>Radio</li>
+                <li>Atlas IV.2026</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="horizon-rule mt-10"></div>
+        <div class="mt-5 flex flex-wrap items-center justify-between gap-3 font-mono text-xs" style="color: var(--obsidian)">
+          <span>© MMXXVI · MIRAGE FIELD UNIT · BEARING N 217°</span>
+          <span class="flex items-center gap-3">
+            <svg class="reticle"><use href="#reticle"/></svg>
+            <span>·</span>
+            <span>⬡</span>
+            <span>·</span>
+            <span>⬢</span>
+            <span>·</span>
+            <span style="color: var(--crimson)">◆</span>
+          </span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

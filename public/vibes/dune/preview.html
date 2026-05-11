@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dune — vibe preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Cinzel = Roman-inscription display caps; Inter = body; Cormorant
+         Garamond italic = rare display accent; JetBrains Mono = telemetry. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bone: #f2e5c8;
+        --sand: #e8d4a8;
+        --dune: #d6b071;
+        --bronze: #8b5a2b;
+        --spice: #e8542c;
+        --solar: #ff8027;
+        --ibad: #1b4f7a;
+        --char: #1a0f08;
+      }
+      html,
+      body {
+        background: var(--sand);
+        color: var(--char);
+        font-family: "Inter", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .display {
+        font-family: "Cinzel", "Trajan Pro", serif;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        line-height: 0.92;
+        text-transform: uppercase;
+      }
+      .display-light {
+        font-family: "Cinzel", serif;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .label {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.24em;
+      }
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+      }
+      .mono-up {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+      .italic-accent {
+        font-family: "Cormorant Garamond", "Times New Roman", serif;
+        font-style: italic;
+        font-weight: 500;
+        text-transform: none;
+        letter-spacing: 0;
+      }
+
+      /* Sand-paper grain — warm dust over everything */
+      .sand-paper {
+        background-color: var(--sand);
+        background-image:
+          radial-gradient(circle at 12% 18%, rgba(139, 90, 43, 0.06) 0 1px, transparent 1.5px),
+          radial-gradient(circle at 78% 62%, rgba(232, 84, 44, 0.05) 0 1px, transparent 1.5px),
+          radial-gradient(circle at 38% 78%, rgba(26, 15, 8, 0.05) 0 1px, transparent 1.5px),
+          radial-gradient(circle at 88% 22%, rgba(139, 90, 43, 0.04) 0 1px, transparent 1.5px);
+        background-size: 5px 5px, 7px 7px, 9px 9px, 11px 11px;
+      }
+
+      .bone-paper {
+        background-color: var(--bone);
+        background-image:
+          radial-gradient(circle at 22% 28%, rgba(139, 90, 43, 0.06) 0 1px, transparent 1.5px),
+          radial-gradient(circle at 68% 72%, rgba(232, 84, 44, 0.04) 0 1px, transparent 1.5px);
+        background-size: 6px 6px, 8px 8px;
+      }
+
+      /* Spice-haze hero (the Arrakis sky) */
+      .spice-haze {
+        background:
+          radial-gradient(ellipse 95% 70% at 50% 38%, rgba(255, 128, 39, 0.95) 0%, rgba(255, 128, 39, 0) 55%),
+          linear-gradient(180deg, #ffb060 0%, #e8542c 38%, #8b3a1a 72%, #1a0f08 100%);
+      }
+
+      /* Sandstorm strip */
+      .sandstorm {
+        background: linear-gradient(180deg, #f2e5c8 0%, #e8d4a8 60%, #d6b071 100%);
+      }
+
+      /* Obsidian (deep dark panel) */
+      .obsidian {
+        background: var(--char);
+        color: var(--bone);
+        border: 1px solid rgba(139, 90, 43, 0.45);
+        position: relative;
+      }
+      .obsidian::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(to right, rgba(139, 90, 43, 0.08) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(139, 90, 43, 0.08) 1px, transparent 1px);
+        background-size: 56px 56px;
+        opacity: 0.6;
+      }
+
+      /* Ibad (blue) panel — the rationed cold pop */
+      .ibad {
+        background: var(--ibad);
+        color: var(--bone);
+        box-shadow: inset 0 0 0 1px rgba(242, 229, 200, 0.25);
+      }
+
+      /* Stamp pill */
+      .stamp {
+        background: var(--spice);
+        color: var(--bone);
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 10px;
+        padding: 4px 10px 5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .stamp.dark {
+        background: var(--char);
+        color: var(--solar);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 9px 4px;
+        border: 1px solid var(--bronze);
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--bronze);
+      }
+      .pill .pill-dot {
+        width: 4px;
+        height: 4px;
+        background: var(--spice);
+        display: inline-block;
+      }
+      .pill.ibad-dot .pill-dot { background: var(--ibad); }
+      .pill.bone {
+        color: var(--bone);
+        border-color: rgba(242, 229, 200, 0.45);
+      }
+      .pill.bone .pill-dot { background: var(--solar); }
+
+      /* Buttons */
+      .btn-primary {
+        background: linear-gradient(135deg, #e8542c 0%, #ff8027 100%);
+        color: var(--char);
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+      .btn-primary:hover { filter: brightness(0.96); }
+      .btn-secondary {
+        background: transparent;
+        color: var(--char);
+        border: 1px solid var(--char);
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+      .btn-secondary:hover {
+        background: var(--char);
+        color: var(--bone);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--bronze);
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+      .btn-ghost:hover {
+        color: var(--char);
+        border-bottom: 1px solid var(--bronze);
+      }
+
+      /* Section tag (the small label above headings) */
+      .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--spice);
+      }
+      .section-tag .tick {
+        width: 18px;
+        height: 1px;
+        background: var(--spice);
+        display: inline-block;
+      }
+
+      /* Hieroglyph frieze */
+      .hieroglyph {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        letter-spacing: 0.6em;
+        color: var(--bronze);
+        font-size: 14px;
+      }
+
+      /* Sietch arch (clip-path) */
+      .sietch-arch {
+        clip-path: polygon(0 100%, 0 30%, 50% 0, 100% 30%, 100% 100%);
+      }
+
+      /* Coordinate ticks divider */
+      .ticks {
+        height: 16px;
+        background-image: linear-gradient(
+          to right,
+          rgba(139, 90, 43, 0.55) 1px,
+          transparent 1px
+        );
+        background-size: 8px 16px;
+        opacity: 0.55;
+      }
+
+      /* Eclipse disc */
+      .eclipse {
+        position: absolute;
+        width: 78vh;
+        height: 78vh;
+        max-width: 920px;
+        max-height: 920px;
+        border-radius: 9999px;
+        background: radial-gradient(
+          circle at 50% 45%,
+          #ff8027 0%,
+          #e8542c 22%,
+          #8b3a1a 52%,
+          #1a0f08 88%
+        );
+        filter: blur(0.2px);
+      }
+
+      /* Inset table dividers */
+      .div-bronze {
+        height: 1px;
+        background: rgba(139, 90, 43, 0.25);
+      }
+
+      /* Spice telemetry bars */
+      .spice-bar {
+        display: flex;
+        align-items: end;
+        gap: 2px;
+        height: 56px;
+      }
+      .spice-bar span {
+        width: 4px;
+        background: var(--bronze);
+      }
+      .spice-bar span.hot { background: var(--spice); }
+      .spice-bar span.high { background: var(--solar); }
+      .spice-bar span.cold { background: var(--ibad); }
+
+      /* Sandworm rings */
+      .worm-ring {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        background:
+          repeating-radial-gradient(
+            ellipse 60% 100% at 50% 100%,
+            transparent 0 32px,
+            rgba(139, 90, 43, 0.45) 32px 33px
+          ),
+          linear-gradient(180deg, rgba(255, 128, 39, 0.05), rgba(26, 15, 8, 0.0));
+        background-color: transparent;
+      }
+
+      /* Manuscript drop cap */
+      .drop-cap::first-letter {
+        font-family: "Cinzel", serif;
+        font-weight: 900;
+        font-size: 4.6rem;
+        line-height: 0.85;
+        float: left;
+        margin: 4px 12px 0 0;
+        color: var(--spice);
+      }
+
+      /* Caravan time-block bar */
+      .caravan-bar {
+        height: 12px;
+        background: linear-gradient(
+          90deg,
+          rgba(139, 90, 43, 0.18) 0 18%,
+          var(--spice) 18% 56%,
+          rgba(232, 84, 44, 0.6) 56% 78%,
+          rgba(139, 90, 43, 0.18) 78% 100%
+        );
+      }
+
+      /* Roman row leader */
+      .roman {
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        color: var(--spice);
+      }
+
+      /* Make the iframe parent comfortable on narrow viewports */
+      @media (max-width: 700px) {
+        .eclipse { width: 110vw; height: 110vw; }
+      }
+    </style>
+  </head>
+
+  <body class="sand-paper relative min-h-screen overflow-x-hidden">
+
+    <!-- ============================================================= -->
+    <!-- § IDENTITY                                                     -->
+    <!-- ============================================================= -->
+    <section class="relative isolate overflow-hidden">
+      <!-- Eclipse disc -->
+      <div class="pointer-events-none absolute left-1/2 -translate-x-1/2 -translate-y-[14%] -z-10 eclipse"></div>
+
+      <!-- Top hairline + nav -->
+      <div class="absolute inset-x-0 top-0 h-px" style="background: rgba(26,15,8,0.25)"></div>
+      <nav class="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+        <div class="flex items-center gap-3">
+          <!-- Atreides hawk emblem -->
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <!-- wings (straight strokes) -->
+            <path d="M2 12 L8 8 L14 12" stroke="#1A0F08" stroke-width="1.5" fill="none" />
+            <path d="M14 12 L20 8 L26 12" stroke="#1A0F08" stroke-width="1.5" fill="none" />
+            <!-- body chevron -->
+            <path d="M6 12 L14 22 L22 12 L18 12 L14 16 L10 12 Z" fill="#1A0F08" />
+            <!-- center dot -->
+            <circle cx="14" cy="11" r="1.5" fill="#E8542C" />
+          </svg>
+          <span class="display text-xl text-[#1A0F08]">DUNE</span>
+          <span class="mono-up hidden text-[10px] text-[#8B5A2B] sm:inline">· Arrakis · 10191 A.G.</span>
+        </div>
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#" class="label text-[11px] text-[#1A0F08] hover:text-[#E8542C]">Operations</a>
+          <a href="#" class="label text-[11px] text-[#8B5A2B] hover:text-[#E8542C]">Archive</a>
+          <a href="#" class="label text-[11px] text-[#8B5A2B] hover:text-[#E8542C]">Sietch</a>
+          <a href="#" class="label text-[11px] text-[#8B5A2B] hover:text-[#E8542C]">Manifest</a>
+        </div>
+        <span class="stamp">
+          <span class="block h-1.5 w-1.5 bg-[#F2E5C8]"></span>
+          Imperial · 10191
+        </span>
+      </nav>
+
+      <!-- Hero -->
+      <div class="relative mx-auto max-w-6xl px-6 pb-24 pt-16 text-center">
+        <div class="flex items-center justify-center gap-3">
+          <span class="block h-px w-10" style="background:rgba(242,229,200,0.6)"></span>
+          <span class="label text-[11px] text-[#F2E5C8]" style="text-shadow:0 1px 8px rgba(0,0,0,0.45)">
+            A planetological survey
+          </span>
+          <span class="block h-px w-10" style="background:rgba(242,229,200,0.6)"></span>
+        </div>
+
+        <h1
+          class="display mt-6 text-[#F2E5C8]"
+          style="font-size:clamp(4.5rem, 14vw, 11rem); text-shadow:0 2px 24px rgba(26,15,8,0.55)"
+        >
+          DUNE
+        </h1>
+        <p
+          class="display-light mt-2 text-2xl text-[#1A0F08] md:text-3xl"
+          style="text-shadow:0 1px 0 rgba(255,176,96,0.5)"
+        >
+          The Spice <span class="italic-accent text-[#1A0F08]">must</span> Flow
+        </p>
+
+        <p class="mx-auto mt-8 max-w-xl text-base text-[#1A0F08] md:text-lg" style="text-shadow:0 1px 0 rgba(255,176,96,0.35)">
+          A sun-bleached design kit for Imperial dashboards, Bene Gesserit
+          archives, and Sietch communications. Beige paper, Roman-cap
+          inscriptions, ember stamps, and one rationed pop of
+          <span class="text-[#1B4F7A] font-semibold">Ibad blue</span>.
+        </p>
+
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <a href="#" class="btn-primary inline-flex items-center gap-3 px-6 py-3 text-xs">
+            Take the survey
+            <span>›</span>
+          </a>
+          <a href="#" class="inline-flex items-center gap-3 px-6 py-3 text-xs" style="background:rgba(26,15,8,0.85);color:#F2E5C8;border:1px solid rgba(242,229,200,0.4);font-family:Inter;font-weight:600;text-transform:uppercase;letter-spacing:0.18em;">
+            <!-- ornithopter glyph -->
+            <svg width="14" height="14" viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M10 6 L18 4 L10 8 Z M10 12 L18 14 L10 10 Z M10 6 L2 4 L10 8 Z M10 12 L2 14 L10 10 Z" fill="#FF8027"/>
+              <rect x="9" y="9" width="2" height="2" fill="#F2E5C8"/>
+            </svg>
+            Dispatch ornithopter
+          </a>
+        </div>
+
+        <!-- Hieroglyph frieze -->
+        <p class="hieroglyph mt-12 text-[#F2E5C8]" style="text-shadow:0 1px 4px rgba(26,15,8,0.6)">
+          ▲ ◇ ⌬ ⏣ ◯ ✦ ▽ ⌖ |‖|
+        </p>
+      </div>
+
+      <!-- Spice haze backdrop wash (the actual hero gradient) -->
+      <div class="absolute inset-0 -z-20 spice-haze"></div>
+
+      <!-- Bottom dune ripple silhouette -->
+      <svg
+        class="absolute inset-x-0 bottom-0 -z-10 w-full"
+        viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true"
+      >
+        <path
+          d="M0,220 L0,160 C200,110 360,180 540,150 C720,120 880,200 1080,170 C1240,150 1340,190 1440,170 L1440,220 Z"
+          fill="#1A0F08"
+          opacity="0.95"
+        />
+        <path
+          d="M0,220 L0,180 C220,150 380,210 600,190 C820,170 980,220 1200,200 C1320,190 1390,210 1440,200 L1440,220 Z"
+          fill="#0a0604"
+        />
+      </svg>
+    </section>
+
+    <!-- Dune ripple SVG divider -->
+    <div class="mx-auto max-w-6xl px-6 pt-12">
+      <svg class="w-full" height="36" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 18 Q 100 4 200 18 T 400 18 T 600 18 T 800 18 T 1000 18 T 1200 18" stroke="#8B5A2B" stroke-width="1" fill="none" opacity="0.6"/>
+        <path d="M0 24 Q 100 12 200 24 T 400 24 T 600 24 T 800 24 T 1000 24 T 1200 24" stroke="#8B5A2B" stroke-width="1" fill="none" opacity="0.45"/>
+        <path d="M0 30 Q 100 22 200 30 T 400 30 T 600 30 T 800 30 T 1000 30 T 1200 30" stroke="#8B5A2B" stroke-width="1" fill="none" opacity="0.3"/>
+      </svg>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- § 01 / THEME SPECIFICATION                                     -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-6 pb-10">
+      <p class="hieroglyph mb-6 text-center">▲ ◇ ⌬ ⏣ ◯ ✦ ▽ ⌖</p>
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <span class="section-tag"><span class="tick"></span>§ 01 / Theme spec</span>
+          <h2 class="display mt-4 text-5xl text-[#1A0F08] md:text-6xl">
+            The Kit · Inscribed
+          </h2>
+          <p class="italic-accent mt-1 text-2xl text-[#8B5A2B]">a planetary palette, made visible</p>
+        </div>
+        <p class="mono max-w-md text-sm text-[#8B5A2B]">
+          › PALETTE · GRADIENTS · TYPE · COMPONENTS — exactly as the
+          prompt prescribes, rendered as a press sheet.
+        </p>
+      </div>
+    </section>
+
+    <!-- 01.1 — PALETTE -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-12">
+      <div class="mb-4 flex items-end justify-between">
+        <p class="label text-[11px] text-[#E8542C]">— 01.1 / Palette</p>
+        <span class="mono text-[11px] text-[#8B5A2B]">08 swatches · prompt locked</span>
+      </div>
+      <div class="grid grid-cols-2 gap-px sm:grid-cols-4 md:grid-cols-8" style="background:#D6B071">
+        <div class="flex flex-col gap-1 p-4 text-[10px]" style="background:#F2E5C8;color:#1A0F08">
+          <span class="label">Bone</span><span class="mono">#F2E5C8</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[10px]" style="background:#E8D4A8;color:#1A0F08">
+          <span class="label">Sand</span><span class="mono">#E8D4A8</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[10px]" style="background:#D6B071;color:#1A0F08">
+          <span class="label">Dune</span><span class="mono">#D6B071</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[10px]" style="background:#8B5A2B;color:#F2E5C8">
+          <span class="label">Bronze</span><span class="mono">#8B5A2B</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[10px]" style="background:#E8542C;color:#1A0F08">
+          <span class="label">Spice</span><span class="mono">#E8542C</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[10px]" style="background:#FF8027;color:#1A0F08">
+          <span class="label">Solar</span><span class="mono">#FF8027</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[10px]" style="background:#1B4F7A;color:#F2E5C8">
+          <span class="label">Ibad</span><span class="mono">#1B4F7A</span>
+        </div>
+        <div class="flex flex-col gap-1 p-4 text-[10px]" style="background:#1A0F08;color:#F2E5C8">
+          <span class="label">Char</span><span class="mono">#1A0F08</span>
+        </div>
+      </div>
+      <p class="mono mt-3 text-[11px] text-[#8B5A2B]">
+        ▲ Sand + Bone occupy ≥ 60% of any rendered surface · Spice ≤ 20% ·
+        Ibad strictly rationed (one panel per viewport)
+      </p>
+    </section>
+
+    <!-- 01.2 — GRADIENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-12">
+      <p class="label mb-4 text-[11px] text-[#E8542C]">— 01.2 / Required gradients</p>
+      <div class="grid gap-3 md:grid-cols-2">
+        <div>
+          <div class="relative overflow-hidden" style="height:88px;background:linear-gradient(180deg, #F2E5C8 0%, #FFB060 30%, #E8542C 55%, #6B2410 85%, #1A0F08 100%);">
+            <span class="mono-up absolute bottom-2 left-3 text-[10px] text-[#F2E5C8] px-2 py-1" style="background:rgba(26,15,8,0.55)">Arrakis horizon · card hero</span>
+          </div>
+          <p class="mono mt-2 text-[11px] text-[#8B5A2B]">linear-gradient(180deg, #F2E5C8 → #FFB060 → #E8542C → #6B2410 → #1A0F08)</p>
+        </div>
+        <div>
+          <div class="relative overflow-hidden" style="height:88px;background:linear-gradient(135deg, #E8542C 0%, #FF8027 100%);">
+            <span class="mono-up absolute bottom-2 left-3 text-[10px] text-[#1A0F08] px-2 py-1" style="background:rgba(242,229,200,0.85)">Spice ember · primary CTA</span>
+          </div>
+          <p class="mono mt-2 text-[11px] text-[#8B5A2B]">linear-gradient(135deg, #E8542C 0%, #FF8027 100%)</p>
+        </div>
+        <div>
+          <div class="relative overflow-hidden sandstorm" style="height:88px;">
+            <span class="mono-up absolute bottom-2 left-3 text-[10px] text-[#1A0F08] px-2 py-1" style="background:rgba(242,229,200,0.85)">Sandstorm · banner strip</span>
+          </div>
+          <p class="mono mt-2 text-[11px] text-[#8B5A2B]">linear-gradient(180deg, #F2E5C8 0%, #E8D4A8 60%, #D6B071 100%)</p>
+        </div>
+        <div>
+          <div class="relative overflow-hidden" style="height:88px;background:radial-gradient(circle at 50% 50%, #FF8027 0%, #E8542C 25%, #8B3A1A 55%, #1A0F08 90%);">
+            <span class="mono-up absolute bottom-2 left-3 text-[10px] text-[#F2E5C8] px-2 py-1" style="background:rgba(26,15,8,0.55)">Eclipse disc · hero motif</span>
+          </div>
+          <p class="mono mt-2 text-[11px] text-[#8B5A2B]">radial-gradient(circle at 50% 50%, #FF8027 0%, #E8542C 25%, #8B3A1A 55%, #1A0F08 90%)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.3 — TYPOGRAPHY -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-12">
+      <p class="label mb-4 text-[11px] text-[#E8542C]">— 01.3 / Typography</p>
+      <div class="grid gap-px md:grid-cols-3" style="background:#D6B071">
+        <div class="bone-paper p-6">
+          <p class="label text-[10px] text-[#E8542C]">Display · Cinzel</p>
+          <p class="display mt-3 text-5xl text-[#1A0F08]">ARRAKIS</p>
+          <p class="mono mt-3 text-[11px] text-[#8B5A2B]">
+            900 · uppercase · 0.04em · line-height 0.92 · Roman inscription
+          </p>
+        </div>
+        <div class="bone-paper p-6">
+          <p class="label text-[10px] text-[#1B4F7A]">Body · Inter</p>
+          <p class="mt-3 text-2xl text-[#1A0F08]">Inter — sentence case body</p>
+          <p class="mono mt-3 text-[11px] text-[#8B5A2B]">
+            400 / 500 / 600 / 700 · 14–16px paragraphs
+          </p>
+        </div>
+        <div class="bone-paper p-6">
+          <p class="label text-[10px] text-[#8B5A2B]">Mono · JetBrains</p>
+          <p class="mono mt-3 text-2xl text-[#E8542C]">› SPICE 0.482</p>
+          <p class="mono mt-3 text-[11px] text-[#8B5A2B]">
+            uppercase labels · tracking 0.18em · telemetry / coordinates
+          </p>
+        </div>
+      </div>
+      <div class="mt-3 bone-paper px-6 py-5" style="border:1px solid #D6B071">
+        <p class="label text-[10px] text-[#8B5A2B]">— Italic accent · Cormorant Garamond</p>
+        <p class="display mt-2 text-3xl text-[#1A0F08]">
+          THE SLEEPER MUST <span class="italic-accent text-[#E8542C]">awaken</span>
+        </p>
+        <p class="mono mt-2 text-[11px] text-[#8B5A2B]">
+          one or two words only · always tinted Spice · never body copy
+        </p>
+      </div>
+    </section>
+
+    <!-- 01.4 — COMPONENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <p class="label mb-4 text-[11px] text-[#E8542C]">— 01.4 / Components</p>
+      <div class="grid gap-px md:grid-cols-2" style="background:#D6B071">
+        <!-- Buttons + pills + stamps -->
+        <div class="bone-paper p-6">
+          <p class="label text-[10px] text-[#E8542C]">Buttons · pills · stamps</p>
+          <div class="mt-5 flex flex-wrap items-center gap-3">
+            <button class="btn-primary px-5 py-3 text-[11px]">Take the survey</button>
+            <button class="btn-secondary px-5 py-3 text-[11px]">Read codex</button>
+            <button class="btn-ghost px-3 py-3 text-[11px]">Cancel</button>
+          </div>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="pill"><span class="pill-dot"></span>Live · 10191</span>
+            <span class="pill ibad-dot"><span class="pill-dot"></span>Bene Gesserit</span>
+            <span class="pill"><span class="pill-dot"></span>Storm cell B</span>
+            <span class="pill"><span class="pill-dot" style="background:#1A0F08"></span>Atreides</span>
+          </div>
+          <div class="mt-6 flex flex-wrap items-center gap-2">
+            <span class="stamp">House Atreides</span>
+            <span class="stamp dark">CHOAM · ω-9</span>
+            <span class="stamp">Sietch Tabr</span>
+          </div>
+          <div class="div-bronze mt-6"></div>
+          <p class="mono mt-4 text-[11px] text-[#8B5A2B]">
+            // Square corners only · Inter 600+ uppercase · tracking 0.18em
+          </p>
+        </div>
+
+        <!-- Inputs + table -->
+        <div class="bone-paper p-6">
+          <p class="label text-[10px] text-[#1B4F7A]">Inputs · table · terminal</p>
+          <label class="label mt-5 block text-[10px] text-[#8B5A2B]">Spice harvest · sector</label>
+          <input
+            type="text"
+            placeholder="ARRAKEEN-NE / 0227.041"
+            class="mt-1 w-full bg-transparent px-1 py-2 text-sm text-[#1A0F08] placeholder-[#8B5A2B] outline-none"
+            style="border-bottom:1px solid #1A0F08"
+          />
+          <label class="label mt-4 block text-[10px] text-[#8B5A2B]">Caravan</label>
+          <select class="mt-1 w-full bg-transparent px-1 py-2 text-sm text-[#1A0F08] outline-none" style="border-bottom:1px solid #1A0F08">
+            <option>HARVESTER · KH-19 — Stilgar's column</option>
+            <option>HARVESTER · KH-22 — Liet's column</option>
+            <option>SHIELD-WALL PATROL — Gurney's wing</option>
+          </select>
+          <div class="mt-5 obsidian relative px-4 py-3">
+            <p class="mono relative z-10 text-[12px] text-[#F2E5C8]">
+              <span class="text-[#FF8027]">›</span> spice --status
+            </p>
+            <p class="mono relative z-10 text-[12px] text-[#F2E5C8]">
+              <span class="text-[#FF8027]">›</span> sector ARRAKEEN-NE · yield <span class="text-[#FF8027]">0.482 t/h</span>
+            </p>
+            <p class="mono relative z-10 text-[12px] text-[#F2E5C8]">
+              <span class="text-[#FF8027]">›</span> shai-hulud proximity <span class="text-[#1B4F7A]">2.4 km</span> ▽
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sandstorm strip section break -->
+    <section class="sandstorm relative">
+      <div class="mx-auto max-w-6xl px-6 py-10">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p class="label text-[11px] text-[#8B5A2B]">— 02 / Operational surfaces</p>
+            <h2 class="display mt-3 text-5xl text-[#1A0F08]">Three Sands</h2>
+            <p class="italic-accent text-2xl text-[#8B5A2B]">applied to House work</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="pill bone" style="border-color:#1A0F08;color:#1A0F08"><span class="pill-dot"></span>Operations</span>
+            <span class="pill bone" style="border-color:#1A0F08;color:#1A0F08"><span class="pill-dot" style="background:#1A0F08"></span>Archive</span>
+            <span class="pill bone ibad-dot" style="border-color:#1A0F08;color:#1A0F08"><span class="pill-dot"></span>Sietch</span>
+          </div>
+        </div>
+      </div>
+      <div class="ticks"></div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- § 02.1 / ARRAKEEN OPERATIONS CONSOLE                           -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-12 pb-16">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p class="label text-[11px] text-[#E8542C]">— 02.1 / UX · Operations console</p>
+          <h3 class="display mt-2 text-4xl text-[#1A0F08]">ARRAKEEN OPERATIONS</h3>
+          <p class="italic-accent text-xl text-[#8B5A2B]">spice harvest · weather · worm activity</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="pill"><span class="pill-dot"></span>Live · 14:22 IST</span>
+          <span class="pill"><span class="pill-dot"></span>Wind · 38 km/h NE</span>
+        </div>
+      </div>
+
+      <div class="grid gap-px md:grid-cols-[1.4fr_1fr]" style="background:#D6B071">
+        <!-- LEFT — Spice yield + harvester table -->
+        <div class="bone-paper relative p-6">
+          <span class="stamp absolute right-4 top-4">CHOAM · ω-9</span>
+          <p class="label text-[10px] text-[#E8542C]">— Spice yield · last 24 h</p>
+          <div class="mt-3 flex items-end gap-6">
+            <div>
+              <p class="display text-6xl text-[#1A0F08]">12,481<span class="display text-2xl text-[#8B5A2B]"> t</span></p>
+              <p class="mono mt-1 text-[11px] text-[#8B5A2B]">› melange · refined · standard kilotons</p>
+            </div>
+            <p class="display-light text-2xl text-[#E8542C]">+4.8% ↑</p>
+          </div>
+
+          <!-- Spice telemetry bar -->
+          <div class="spice-bar mt-6">
+            <span style="height:18%"></span><span style="height:22%"></span>
+            <span style="height:30%"></span><span class="hot" style="height:42%"></span>
+            <span class="hot" style="height:54%"></span><span class="high" style="height:70%"></span>
+            <span class="high" style="height:84%"></span><span class="hot" style="height:62%"></span>
+            <span style="height:48%"></span><span style="height:36%"></span>
+            <span class="hot" style="height:52%"></span><span class="high" style="height:74%"></span>
+            <span class="high" style="height:92%"></span><span class="hot" style="height:78%"></span>
+            <span style="height:46%"></span><span style="height:34%"></span>
+            <span class="cold" style="height:24%"></span><span class="cold" style="height:18%"></span>
+            <span style="height:30%"></span><span class="hot" style="height:46%"></span>
+            <span class="high" style="height:64%"></span><span class="hot" style="height:50%"></span>
+            <span style="height:36%"></span><span style="height:24%"></span>
+          </div>
+          <p class="mono mt-2 text-[11px] text-[#8B5A2B]">› hourly average · last 24h · wormstop @ 11:08 highlighted in Ibad</p>
+
+          <div class="div-bronze my-6"></div>
+
+          <!-- Harvester table -->
+          <p class="label text-[10px] text-[#E8542C]">— Harvester column · live</p>
+          <ul class="mt-3 divide-y" style="border-top:1px solid rgba(139,90,43,0.25); border-bottom:1px solid rgba(139,90,43,0.25); border-color:rgba(139,90,43,0.25)">
+            <li class="grid grid-cols-12 items-center gap-3 py-3">
+              <span class="roman col-span-1 text-lg">I</span>
+              <span class="col-span-4 text-sm text-[#1A0F08]">KH-19 · Stilgar's column</span>
+              <span class="col-span-4 text-sm text-[#8B5A2B]">Sector ARRAKEEN-NE / 0227.041</span>
+              <span class="mono col-span-2 text-right text-sm text-[#1A0F08]">0.482 t/h</span>
+              <span class="col-span-1 text-right"><span class="pill"><span class="pill-dot"></span>Live</span></span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 py-3">
+              <span class="roman col-span-1 text-lg">II</span>
+              <span class="col-span-4 text-sm text-[#1A0F08]">KH-22 · Liet's column</span>
+              <span class="col-span-4 text-sm text-[#8B5A2B]">Sector PLASTER-BASIN / 0188.205</span>
+              <span class="mono col-span-2 text-right text-sm text-[#1A0F08]">0.371 t/h</span>
+              <span class="col-span-1 text-right"><span class="pill"><span class="pill-dot"></span>Live</span></span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 py-3">
+              <span class="roman col-span-1 text-lg">III</span>
+              <span class="col-span-4 text-sm text-[#1A0F08]">KH-08 · Gurney's wing</span>
+              <span class="col-span-4 text-sm text-[#8B5A2B]">Sector SHIELD-WALL / 0044.991</span>
+              <span class="mono col-span-2 text-right text-sm text-[#8B5A2B]">— halted</span>
+              <span class="col-span-1 text-right"><span class="pill ibad-dot"><span class="pill-dot"></span>Worm</span></span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 py-3">
+              <span class="roman col-span-1 text-lg">IV</span>
+              <span class="col-span-4 text-sm text-[#1A0F08]">KH-31 · Duncan's column</span>
+              <span class="col-span-4 text-sm text-[#8B5A2B]">Sector SOUTH-POLE / 0612.010</span>
+              <span class="mono col-span-2 text-right text-sm text-[#1A0F08]">0.214 t/h</span>
+              <span class="col-span-1 text-right"><span class="pill"><span class="pill-dot" style="background:#8B5A2B"></span>Slow</span></span>
+            </li>
+          </ul>
+          <div class="mt-5 flex items-center justify-between gap-3">
+            <p class="mono text-[11px] text-[#8B5A2B]">› 4 of 7 columns active · 2 wormstops in last 6h · 1 standby</p>
+            <button class="btn-primary px-4 py-2 text-[11px]">Recall column ›</button>
+          </div>
+        </div>
+
+        <!-- RIGHT — sandworm radar + weather + Ibad stat -->
+        <div class="grid grid-rows-[auto_auto_1fr] gap-px" style="background:#D6B071">
+
+          <!-- Sandworm radar — obsidian panel -->
+          <div class="obsidian relative p-6">
+            <div class="relative z-10 flex items-baseline justify-between">
+              <p class="label text-[10px] text-[#FF8027]">— Shai-Hulud · proximity</p>
+              <span class="mono text-[11px] text-[#F2E5C8]">SECTOR NE</span>
+            </div>
+            <p class="display relative z-10 mt-3 text-5xl text-[#F2E5C8]">2.4<span class="display text-xl text-[#FF8027]"> km</span></p>
+            <p class="mono relative z-10 text-[11px] text-[#FF8027]">› closing — 0.6 km / min · evac KH-08</p>
+
+            <!-- worm rings -->
+            <div class="worm-ring relative z-10 mt-4">
+              <!-- ornithopter glyphs over the rings -->
+              <svg class="absolute" style="left:18%;top:30%" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M10 6 L18 4 L10 8 Z M10 12 L18 14 L10 10 Z M10 6 L2 4 L10 8 Z M10 12 L2 14 L10 10 Z" fill="#FF8027"/>
+                <rect x="9" y="9" width="2" height="2" fill="#F2E5C8"/>
+              </svg>
+              <svg class="absolute" style="right:24%;top:18%;opacity:0.7" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M10 6 L18 4 L10 8 Z M10 12 L18 14 L10 10 Z M10 6 L2 4 L10 8 Z M10 12 L2 14 L10 10 Z" fill="#1B4F7A"/>
+                <rect x="9" y="9" width="2" height="2" fill="#F2E5C8"/>
+              </svg>
+              <span class="absolute bottom-1 left-1/2 -translate-x-1/2" style="width:8px;height:8px;background:#E8542C;border-radius:9999px"></span>
+            </div>
+          </div>
+
+          <!-- Weather panel -->
+          <div class="bone-paper p-6">
+            <p class="label text-[10px] text-[#E8542C]">— Atmosphere · 14:22 IST</p>
+            <div class="mt-3 grid grid-cols-3 gap-4">
+              <div>
+                <p class="mono text-[10px] text-[#8B5A2B]">TEMP</p>
+                <p class="display mt-1 text-2xl text-[#1A0F08]">58°<span class="display text-base text-[#8B5A2B]">C</span></p>
+              </div>
+              <div>
+                <p class="mono text-[10px] text-[#8B5A2B]">WIND</p>
+                <p class="display mt-1 text-2xl text-[#1A0F08]">38<span class="display text-base text-[#8B5A2B]"> km/h</span></p>
+              </div>
+              <div>
+                <p class="mono text-[10px] text-[#8B5A2B]">VIS.</p>
+                <p class="display mt-1 text-2xl text-[#E8542C]">LOW</p>
+              </div>
+            </div>
+            <div class="div-bronze my-4"></div>
+            <p class="mono text-[11px] text-[#8B5A2B]">› haze rising · sandstorm cell B forecast 16:40 · advise shield-wall retreat</p>
+          </div>
+
+          <!-- IBAD stat — the cold pop -->
+          <div class="ibad p-6 relative">
+            <p class="label text-[10px] text-[#F2E5C8] opacity-80">— Bene Gesserit · sayyadina log</p>
+            <p class="display mt-3 text-3xl text-[#F2E5C8]">PROPHECY · 41%</p>
+            <p class="mono mt-2 text-[11px] text-[#F2E5C8] opacity-80">› muad'dib variance ·  trending ↑ since 10189</p>
+            <div class="mt-4 h-1 w-full" style="background:rgba(242,229,200,0.2)">
+              <div class="h-full" style="width:41%;background:#FF8027"></div>
+            </div>
+            <p class="mono mt-3 text-[10px] text-[#F2E5C8] opacity-70">› reverend mother briefing · 14:00 · sealed</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dune ripple divider -->
+    <div class="mx-auto max-w-6xl px-6">
+      <svg class="w-full" height="36" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 18 Q 100 4 200 18 T 400 18 T 600 18 T 800 18 T 1000 18 T 1200 18" stroke="#8B5A2B" stroke-width="1" fill="none" opacity="0.6"/>
+        <path d="M0 24 Q 100 12 200 24 T 400 24 T 600 24 T 800 24 T 1000 24 T 1200 24" stroke="#8B5A2B" stroke-width="1" fill="none" opacity="0.45"/>
+      </svg>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- § 02.2 / IMPERIAL ARCHIVE                                      -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-8 pb-16">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p class="label text-[11px] text-[#E8542C]">— 02.2 / UX · Imperial archive</p>
+          <h3 class="display mt-2 text-4xl text-[#1A0F08]">CODEX OF THE GREAT HOUSES</h3>
+          <p class="italic-accent text-xl text-[#8B5A2B]">a manuscript reader for the Landsraad</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="pill"><span class="pill-dot"></span>Volume IV</span>
+          <span class="pill"><span class="pill-dot" style="background:#1A0F08"></span>Folio 187 of 312</span>
+        </div>
+      </div>
+
+      <div class="grid gap-px md:grid-cols-[260px_1fr_220px]" style="background:#D6B071">
+        <!-- LEFT — TOC -->
+        <aside class="bone-paper p-5">
+          <p class="label text-[10px] text-[#E8542C]">— Folios</p>
+          <ul class="mt-3 space-y-2 text-sm">
+            <li class="flex items-baseline gap-3">
+              <span class="roman text-base">I</span>
+              <span class="text-[#1A0F08]">House Atreides</span>
+              <span class="mono ml-auto text-[10px] text-[#8B5A2B]">001–044</span>
+            </li>
+            <li class="flex items-baseline gap-3">
+              <span class="roman text-base">II</span>
+              <span class="text-[#1A0F08]">House Harkonnen</span>
+              <span class="mono ml-auto text-[10px] text-[#8B5A2B]">045–098</span>
+            </li>
+            <li class="flex items-baseline gap-3">
+              <span class="roman text-base">III</span>
+              <span class="text-[#1A0F08]">House Corrino</span>
+              <span class="mono ml-auto text-[10px] text-[#8B5A2B]">099–136</span>
+            </li>
+            <li class="flex items-baseline gap-3" style="background:rgba(232,84,44,0.08); margin:0 -8px; padding:6px 8px; border-left:2px solid #E8542C">
+              <span class="roman text-base">IV</span>
+              <span class="text-[#1A0F08] font-semibold">Of Arrakis</span>
+              <span class="mono ml-auto text-[10px] text-[#E8542C]">137–230</span>
+            </li>
+            <li class="flex items-baseline gap-3">
+              <span class="roman text-base">V</span>
+              <span class="text-[#1A0F08]">The Spacing Guild</span>
+              <span class="mono ml-auto text-[10px] text-[#8B5A2B]">231–276</span>
+            </li>
+            <li class="flex items-baseline gap-3">
+              <span class="roman text-base">VI</span>
+              <span class="text-[#1A0F08]">The Bene Gesserit</span>
+              <span class="mono ml-auto text-[10px] text-[#8B5A2B]">277–312</span>
+            </li>
+          </ul>
+          <div class="div-bronze my-5"></div>
+          <p class="label text-[10px] text-[#E8542C]">— Search</p>
+          <input
+            type="text"
+            placeholder="MUAD'DIB · KWISATZ · SHAI-HULUD"
+            class="mt-2 w-full bg-transparent px-1 py-2 text-xs text-[#1A0F08] placeholder-[#8B5A2B] outline-none"
+            style="border-bottom:1px solid #1A0F08"
+          />
+          <p class="mono mt-3 text-[10px] text-[#8B5A2B]">› 41 entries · last indexed 14:09 IST</p>
+        </aside>
+
+        <!-- CENTER — manuscript page -->
+        <article class="bone-paper relative p-8">
+          <div class="flex items-baseline justify-between">
+            <p class="label text-[10px] text-[#8B5A2B]">— Volume IV · Of Arrakis · Folio 187</p>
+            <span class="stamp">House Atreides</span>
+          </div>
+          <h4 class="display mt-4 text-4xl leading-tight text-[#1A0F08]">
+            ON THE NATURE OF<br/>
+            <span class="italic-accent text-[#E8542C]" style="font-size:0.95em;line-height:1">spice</span> AND ITS PROPHETS
+          </h4>
+          <p class="mono mt-2 text-[11px] text-[#8B5A2B]">— transcribed Princess Irulan · 10191 A.G.</p>
+
+          <p class="drop-cap mt-6 text-[15px] leading-relaxed text-[#1A0F08]">
+            Arrakis teaches the attitude of the knife — chopping off what is
+            incomplete and saying: now it is complete, because it ends here.
+            Spice is the great sieve through which the Imperium's commerce, its
+            navigation, and its prescience all pass. Without it, no Guild
+            navigator can fold space; without it, no Bene Gesserit can read
+            the bloodlines; without it, the Padishah Emperor has no Empire.
+          </p>
+          <p class="mt-4 text-[15px] leading-relaxed text-[#1A0F08]">
+            The Fremen call it <span class="italic-accent text-[#E8542C]">melange</span> when refined — the
+            substance that opens the eye of the universe. Their water-discipline,
+            their stillsuits, their reverence for Shai-Hulud, all are
+            inseparable from the cycle of spice on the great desert.
+          </p>
+
+          <!-- Marginalia / pull quote -->
+          <div class="mt-6 border-l-2 pl-5" style="border-color:#E8542C">
+            <p class="display-light text-2xl text-[#1A0F08]">
+              "FEAR IS THE <span class="italic-accent text-[#E8542C]">mind-killer</span>."
+            </p>
+            <p class="mono mt-2 text-[11px] text-[#8B5A2B]">— Litany Against Fear · Bene Gesserit · folio 281</p>
+          </div>
+
+          <div class="div-bronze mt-8"></div>
+          <div class="mt-4 flex items-center justify-between">
+            <button class="btn-ghost px-3 py-2 text-[11px]">‹ folio 186</button>
+            <p class="mono text-[11px] text-[#8B5A2B]">— 187 / 312 · Volume IV —</p>
+            <button class="btn-secondary px-3 py-2 text-[11px]">folio 188 ›</button>
+          </div>
+        </article>
+
+        <!-- RIGHT — marginalia / sigils -->
+        <aside class="bone-paper p-5">
+          <p class="label text-[10px] text-[#E8542C]">— Marginalia</p>
+          <div class="mt-3 space-y-3">
+            <div class="border-l-2 border-[#8B5A2B] pl-3">
+              <p class="mono text-[10px] text-[#8B5A2B]">10191.04 — IRULAN</p>
+              <p class="text-[12px] text-[#1A0F08]">"Beginnings are such delicate times."</p>
+            </div>
+            <div class="border-l-2 border-[#1B4F7A] pl-3">
+              <p class="mono text-[10px] text-[#1B4F7A]">10191.06 — REVEREND MOTHER</p>
+              <p class="text-[12px] text-[#1A0F08]">Annotated · Litany cross-reference, folio 281.</p>
+            </div>
+            <div class="border-l-2 border-[#E8542C] pl-3">
+              <p class="mono text-[10px] text-[#E8542C]">10191.09 — STILGAR</p>
+              <p class="text-[12px] text-[#1A0F08]">"He shall know your ways as if born to them."</p>
+            </div>
+          </div>
+
+          <div class="div-bronze my-5"></div>
+
+          <p class="label text-[10px] text-[#E8542C]">— Sigil index</p>
+          <div class="mt-3 grid grid-cols-3 gap-2">
+            <div class="flex aspect-square items-center justify-center text-2xl text-[#8B5A2B]" style="background:rgba(232,84,44,0.05);border:1px solid rgba(139,90,43,0.25)">▲</div>
+            <div class="flex aspect-square items-center justify-center text-2xl text-[#8B5A2B]" style="background:rgba(232,84,44,0.05);border:1px solid rgba(139,90,43,0.25)">◇</div>
+            <div class="flex aspect-square items-center justify-center text-2xl text-[#8B5A2B]" style="background:rgba(232,84,44,0.05);border:1px solid rgba(139,90,43,0.25)">⌬</div>
+            <div class="flex aspect-square items-center justify-center text-2xl text-[#E8542C]" style="background:rgba(232,84,44,0.12);border:1px solid #E8542C">⏣</div>
+            <div class="flex aspect-square items-center justify-center text-2xl text-[#8B5A2B]" style="background:rgba(232,84,44,0.05);border:1px solid rgba(139,90,43,0.25)">◯</div>
+            <div class="flex aspect-square items-center justify-center text-2xl text-[#8B5A2B]" style="background:rgba(232,84,44,0.05);border:1px solid rgba(139,90,43,0.25)">✦</div>
+            <div class="flex aspect-square items-center justify-center text-2xl text-[#8B5A2B]" style="background:rgba(232,84,44,0.05);border:1px solid rgba(139,90,43,0.25)">▽</div>
+            <div class="flex aspect-square items-center justify-center text-2xl text-[#8B5A2B]" style="background:rgba(232,84,44,0.05);border:1px solid rgba(139,90,43,0.25)">⌖</div>
+            <div class="flex aspect-square items-center justify-center text-2xl text-[#8B5A2B]" style="background:rgba(232,84,44,0.05);border:1px solid rgba(139,90,43,0.25)">⊕</div>
+          </div>
+          <p class="mono mt-3 text-[10px] text-[#8B5A2B]">› ⏣ marks Fremen referenced glyph</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Dune ripple divider -->
+    <div class="mx-auto max-w-6xl px-6">
+      <svg class="w-full" height="36" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 18 Q 100 32 200 18 T 400 18 T 600 18 T 800 18 T 1000 18 T 1200 18" stroke="#8B5A2B" stroke-width="1" fill="none" opacity="0.6"/>
+        <path d="M0 24 Q 100 36 200 24 T 400 24 T 600 24 T 800 24 T 1000 24 T 1200 24" stroke="#8B5A2B" stroke-width="1" fill="none" opacity="0.45"/>
+      </svg>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- § 02.3 / SIETCH TABR COMMUNICATIONS                            -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-8 pb-20">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p class="label text-[11px] text-[#E8542C]">— 02.3 / UX · Sietch communications</p>
+          <h3 class="display mt-2 text-4xl text-[#1A0F08]">SIETCH TABR · COMM</h3>
+          <p class="italic-accent text-xl text-[#8B5A2B]">a Fremen dispatch board</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="pill"><span class="pill-dot"></span>14 active runners</span>
+          <span class="pill"><span class="pill-dot" style="background:#1B4F7A"></span>3 ornithopters</span>
+        </div>
+      </div>
+
+      <!-- Sietch arch row -->
+      <div class="grid gap-4 md:grid-cols-3">
+        <!-- Arch 1 -->
+        <div class="relative">
+          <div class="sietch-arch relative" style="background:#1A0F08; height:240px;">
+            <div class="absolute inset-x-0 top-0 h-px" style="background:#FF8027;opacity:0.7"></div>
+            <span class="absolute right-3 top-3 mono text-[10px] text-[#FF8027]">› STILGAR</span>
+            <div class="absolute inset-x-0 bottom-5 px-5">
+              <p class="display text-2xl text-[#F2E5C8]">DUTY</p>
+              <p class="mono mt-1 text-[10px] text-[#F2E5C8] opacity-70">› 06 runners · 2 thopters · sealed</p>
+            </div>
+          </div>
+          <div class="bone-paper border border-[#D6B071] p-4">
+            <p class="text-sm text-[#1A0F08]">Spice convoy escort to Arrakeen — depart 03:40, arrive at false-dawn.</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="pill"><span class="pill-dot"></span>Live</span>
+              <span class="mono text-[10px] text-[#8B5A2B]">priority I</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arch 2 — Ibad accent (the cold pop) -->
+        <div class="relative">
+          <div class="sietch-arch relative" style="background:#1B4F7A; height:240px;">
+            <div class="absolute inset-x-0 top-0 h-px" style="background:#F2E5C8;opacity:0.55"></div>
+            <span class="absolute right-3 top-3 mono text-[10px] text-[#F2E5C8]">› JESSICA</span>
+            <div class="absolute inset-x-0 bottom-5 px-5">
+              <p class="display text-2xl text-[#F2E5C8]">RITE</p>
+              <p class="mono mt-1 text-[10px] text-[#F2E5C8] opacity-80">› reverend mother · sayyadina council</p>
+            </div>
+          </div>
+          <div class="bone-paper border border-[#D6B071] p-4">
+            <p class="text-sm text-[#1A0F08]">Water of Life ceremony at the Cave of Birds — sealed to Bene Gesserit.</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="pill ibad-dot"><span class="pill-dot"></span>Sealed</span>
+              <span class="mono text-[10px] text-[#8B5A2B]">priority B.G.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arch 3 -->
+        <div class="relative">
+          <div class="sietch-arch relative" style="background:#1A0F08; height:240px;">
+            <div class="absolute inset-x-0 top-0 h-px" style="background:#FF8027;opacity:0.7"></div>
+            <span class="absolute right-3 top-3 mono text-[10px] text-[#FF8027]">› CHANI</span>
+            <div class="absolute inset-x-0 bottom-5 px-5">
+              <p class="display text-2xl text-[#F2E5C8]">RAID</p>
+              <p class="mono mt-1 text-[10px] text-[#F2E5C8] opacity-70">› 08 fedaykin · 1 thopter · stealth</p>
+            </div>
+          </div>
+          <div class="bone-paper border border-[#D6B071] p-4">
+            <p class="text-sm text-[#1A0F08]">Harkonnen depot strike — shield-wall pass at 02:14, two crysknives lost.</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="pill"><span class="pill-dot" style="background:#1A0F08"></span>Returning</span>
+              <span class="mono text-[10px] text-[#8B5A2B]">priority II</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Caravan timeline -->
+      <div class="bone-paper mt-6 p-6" style="border:1px solid #D6B071">
+        <div class="flex flex-wrap items-baseline justify-between gap-3">
+          <p class="label text-[11px] text-[#E8542C]">— 02.3.1 / Caravan timeline · 06.07 IST</p>
+          <span class="mono text-[11px] text-[#8B5A2B]">› three columns · staggered departure</span>
+        </div>
+        <!-- Time scale -->
+        <div class="mt-5 grid grid-cols-12 gap-px text-[10px] text-[#8B5A2B]">
+          <span>00</span><span>02</span><span>04</span><span>06</span>
+          <span>08</span><span>10</span><span>12</span><span>14</span>
+          <span>16</span><span>18</span><span>20</span><span>22</span>
+        </div>
+        <div class="mt-2 space-y-3">
+          <div class="grid grid-cols-[120px_1fr_72px] items-center gap-3">
+            <span class="mono text-[11px] text-[#1A0F08]">STILGAR · I</span>
+            <div class="caravan-bar"></div>
+            <span class="mono text-[11px] text-[#8B5A2B]">02 → 16</span>
+          </div>
+          <div class="grid grid-cols-[120px_1fr_72px] items-center gap-3">
+            <span class="mono text-[11px] text-[#1A0F08]">JESSICA · II</span>
+            <div class="caravan-bar" style="background:linear-gradient(90deg, rgba(139,90,43,0.18) 0 30%, #1B4F7A 30% 52%, rgba(139,90,43,0.18) 52% 100%);"></div>
+            <span class="mono text-[11px] text-[#8B5A2B]">04 → 09</span>
+          </div>
+          <div class="grid grid-cols-[120px_1fr_72px] items-center gap-3">
+            <span class="mono text-[11px] text-[#1A0F08]">CHANI · III</span>
+            <div class="caravan-bar" style="background:linear-gradient(90deg, rgba(139,90,43,0.18) 0 8%, #1A0F08 8% 22%, #E8542C 22% 36%, rgba(232,84,44,0.4) 36% 50%, rgba(139,90,43,0.18) 50% 100%);"></div>
+            <span class="mono text-[11px] text-[#8B5A2B]">01 → 09</span>
+          </div>
+        </div>
+
+        <div class="div-bronze mt-6"></div>
+
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <p class="mono text-[11px] text-[#8B5A2B]">› next dispatch · KH-19 spice convoy · Arrakeen-NE — depart 03:40</p>
+          <div class="flex gap-2">
+            <button class="btn-secondary px-4 py-2 text-[11px]">Send runner</button>
+            <button class="btn-primary px-4 py-2 text-[11px]">Dispatch ornithopter ›</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- FOOTER / COLOPHON                                              -->
+    <!-- ============================================================= -->
+    <footer class="relative mt-12">
+      <div class="sandstorm py-12">
+        <div class="mx-auto max-w-6xl px-6">
+          <div class="grid gap-6 md:grid-cols-[2fr_1fr_1fr_1fr] md:gap-12">
+            <div>
+              <div class="flex items-center gap-3">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                  <path d="M2 12 L8 8 L14 12" stroke="#1A0F08" stroke-width="1.5" fill="none" />
+                  <path d="M14 12 L20 8 L26 12" stroke="#1A0F08" stroke-width="1.5" fill="none" />
+                  <path d="M6 12 L14 22 L22 12 L18 12 L14 16 L10 12 Z" fill="#1A0F08" />
+                  <circle cx="14" cy="11" r="1.5" fill="#E8542C" />
+                </svg>
+                <span class="display text-2xl text-[#1A0F08]">DUNE</span>
+              </div>
+              <p class="mt-3 max-w-md text-sm text-[#1A0F08]">
+                A planetological survey kit for House Atreides operations,
+                Imperial archives, and Sietch communications. Filed under
+                <span class="italic-accent text-[#E8542C]">Volume IV · Of Arrakis</span>.
+              </p>
+              <p class="mono mt-3 text-[11px] text-[#8B5A2B]">› 10191 A.G. · Imperial standard year</p>
+            </div>
+            <div>
+              <p class="label text-[10px] text-[#8B5A2B]">Houses</p>
+              <ul class="mt-3 space-y-2 text-sm text-[#1A0F08]">
+                <li><a href="#" class="hover:text-[#E8542C]">Atreides</a></li>
+                <li><a href="#" class="hover:text-[#E8542C]">Corrino</a></li>
+                <li><a href="#" class="hover:text-[#E8542C]">Harkonnen</a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="label text-[10px] text-[#8B5A2B]">Surfaces</p>
+              <ul class="mt-3 space-y-2 text-sm text-[#1A0F08]">
+                <li><a href="#" class="hover:text-[#E8542C]">Arrakeen ops</a></li>
+                <li><a href="#" class="hover:text-[#E8542C]">Imperial codex</a></li>
+                <li><a href="#" class="hover:text-[#E8542C]">Sietch comm</a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="label text-[10px] text-[#8B5A2B]">Sealed</p>
+              <ul class="mt-3 space-y-2 text-sm text-[#1A0F08]">
+                <li><a href="#" class="hover:text-[#1B4F7A]">Bene Gesserit</a></li>
+                <li><a href="#" class="hover:text-[#1B4F7A]">Spacing Guild</a></li>
+                <li><a href="#" class="hover:text-[#1B4F7A]">CHOAM</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-10 flex flex-wrap items-center justify-between gap-3">
+            <p class="mono text-xs text-[#8B5A2B]">
+              › © 10191 A.G. · The Spice Must Flow · Filed Arrakeen Capitol Library
+            </p>
+            <div class="flex items-center gap-3 text-[#8B5A2B]">
+              <span>▲</span><span>◇</span><span>⌬</span><span>⏣</span>
+              <span class="text-[#E8542C]">✦</span>
+              <span class="text-[#1B4F7A]">◯</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Char silhouette horizon strip -->
+      <div style="height:32px;background:#1A0F08"></div>
+    </footer>
+  </body>
+</html>
