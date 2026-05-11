@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,9 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Anton = display condensed; Oswald = body condensed sans;
-         Playfair Display = italic heritage script for moments only -->
+         Playfair Display = italic heritage script for moments only;
+         JetBrains Mono = code blocks (used in UX applications). -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -50,6 +51,9 @@
         font-style: italic;
         font-weight: 500;
       }
+      .code {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+      }
 
       /* Paper grain: cream surface with subtle warm fiber */
       .paper {
@@ -61,7 +65,7 @@
         background-size: 6px 6px, 8px 8px, 10px 10px;
       }
 
-      /* Tablecloth gingham — used inside photo-strip panels */
+      /* Tablecloth gingham */
       .gingham {
         background-color: #f3dcd3;
         background-image:
@@ -71,7 +75,7 @@
         background-position: 0 0, 9px 9px;
       }
 
-      /* Warm marble countertop — used in hero photo panel */
+      /* Warm marble countertop */
       .marble {
         background:
           radial-gradient(ellipse at 30% 20%, rgba(255, 240, 218, 0.95) 0%, rgba(238, 210, 170, 0.5) 35%, transparent 70%),
@@ -79,7 +83,6 @@
           radial-gradient(ellipse at 50% 50%, rgba(244, 220, 180, 1) 0%, rgba(220, 180, 140, 1) 100%);
       }
 
-      /* Photo-strip curve mask — concave bottom edge */
       .strip-curve-bottom {
         mask-image: radial-gradient(
           ellipse 140% 70% at 50% 0%,
@@ -93,7 +96,6 @@
         );
       }
 
-      /* Banner / pennant button — chevron-cut right edge */
       .pennant {
         clip-path: polygon(
           0 0,
@@ -140,7 +142,6 @@
           inset -1px 0 0 rgba(0, 0, 0, 0.18);
       }
 
-      /* Curve at the bottom of an image strip pointing down (convex) */
       .strip-curve-down {
         mask-image: radial-gradient(
           ellipse 140% 70% at 50% 100%,
@@ -154,10 +155,42 @@
         );
       }
 
-      /* Olive branch decorative dingbat */
       .dingbat {
         color: var(--gold);
         opacity: 0.9;
+      }
+
+      /* Section divider above the theme spec / UX application headings */
+      .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        background: var(--crimson);
+        color: var(--gold);
+        font-family: "Oswald", sans-serif;
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      /* Swatch card used inside palette section */
+      .swatch {
+        background: var(--cream);
+        border: 1px solid rgba(42, 24, 16, 0.15);
+      }
+
+      /* Manual chapter row separator */
+      .manual-row {
+        border-bottom: 1px dashed rgba(42, 24, 16, 0.25);
+      }
+
+      /* Terminal mock used in the CLI welcome UX application */
+      .terminal {
+        background: #1a0d08;
+        color: #f4ead0;
+        border: 1px solid var(--coffee);
       }
     </style>
   </head>
@@ -172,11 +205,9 @@
       </button>
 
       <!-- Crown monogram C -->
-      <a href="#" class="text-[var(--gold)]" aria-label="Conserva">
+      <a href="#" class="text-[var(--gold)]" aria-label="Atelier Conserva">
         <svg width="36" height="44" viewBox="0 0 36 44" fill="none" aria-hidden>
-          <!-- Crown wing -->
           <path d="M6 8 L12 4 L18 9 L24 4 L30 8 L28 14 L8 14 Z" fill="currentColor" />
-          <!-- C monogram -->
           <path
             d="M28 22 Q28 16 22 16 H17 Q11 16 11 22 V32 Q11 38 17 38 H22 Q28 38 28 32"
             stroke="currentColor"
@@ -188,94 +219,89 @@
       </a>
 
       <div class="rotate-180 text-[var(--cream)]" style="writing-mode: vertical-rl">
-        <span class="label text-[10px] tracking-[0.32em]">DESDE 1987</span>
+        <span class="label text-[10px] tracking-[0.32em]">EST. 1987</span>
       </div>
     </aside>
 
-    <!-- TOP STRIP — food photography panels (CSS-only fakes with curve cut) -->
+    <!-- ============================================================= -->
+    <!-- § IDENTITY                                                     -->
+    <!-- ============================================================= -->
+
+    <!-- TOP STRIP — three software-themed panels (CSS-only fakes) -->
     <section class="relative md:pr-16">
       <div class="grid grid-cols-3 gap-1 strip-curve-bottom">
-        <!-- Panel 1: jar of preserves -->
+        <!-- Panel 1: a heritage code editor window on gingham -->
         <div class="relative h-48 md:h-72 gingham overflow-hidden">
-          <!-- Jar -->
-          <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <svg width="120" height="160" viewBox="0 0 120 160" aria-hidden>
-              <ellipse cx="60" cy="20" rx="34" ry="6" fill="#a8021a" />
-              <rect x="22" y="20" width="76" height="14" rx="2" fill="#d70321" />
-              <rect x="20" y="30" width="80" height="10" rx="2" fill="#a8021a" />
-              <path d="M22 38 H98 V140 Q98 152 86 152 H34 Q22 152 22 140 Z"
-                fill="#cba058" opacity="0.85" />
-              <rect x="32" y="62" width="56" height="70" rx="3" fill="#fbf5e7" />
-              <text x="60" y="100" text-anchor="middle"
-                font-family="Anton, sans-serif" font-size="14" fill="#d70321"
-                letter-spacing="1">CONSERVA</text>
-              <text x="60" y="116" text-anchor="middle"
-                font-family="Oswald, sans-serif" font-weight="600" font-size="8" fill="#a8021a"
-                letter-spacing="2">DESDE 1987</text>
-            </svg>
+          <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78%]">
+            <div class="paper border-2 border-[var(--crimson)] shadow-[6px_6px_0_var(--oxblood)]">
+              <div class="flex items-center justify-between border-b-2 border-[var(--crimson)] px-3 py-1.5">
+                <span class="label text-[9px] text-[var(--crimson)]">QUILL.IDX</span>
+                <span class="flex gap-1">
+                  <span class="block h-2 w-2 rounded-full bg-[var(--crimson)]"></span>
+                  <span class="block h-2 w-2 rounded-full bg-[var(--gold)]"></span>
+                  <span class="block h-2 w-2 rounded-full bg-[var(--coffee)]"></span>
+                </span>
+              </div>
+              <div class="px-3 py-2 code text-[10px] leading-snug text-[var(--coffee)]">
+                <div><span class="text-[var(--gold-deep)]">01</span>&nbsp;&nbsp;<span class="text-[var(--crimson)]">function</span> craft() {</div>
+                <div><span class="text-[var(--gold-deep)]">02</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[var(--olive)]">// hand-tuned</span></div>
+                <div><span class="text-[var(--gold-deep)]">03</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[var(--crimson)]">return</span> tradition;</div>
+                <div><span class="text-[var(--gold-deep)]">04</span>&nbsp;&nbsp;}</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Panel 2: marble + olives + bread -->
+        <!-- Panel 2: a printed manual page on marble -->
         <div class="relative h-48 md:h-72 marble overflow-hidden">
-          <!-- Olive bowl -->
-          <svg class="absolute left-6 top-10" width="120" height="80" viewBox="0 0 120 80" aria-hidden>
-            <ellipse cx="60" cy="60" rx="55" ry="12" fill="#2a1810" opacity="0.18" />
-            <path d="M8 40 Q8 64 30 70 H90 Q112 64 112 40 Z" fill="#5b3a2c" />
-            <ellipse cx="60" cy="40" rx="52" ry="10" fill="#7a4e36" />
-            <circle cx="40" cy="36" r="7" fill="#4a5a2a" />
-            <circle cx="56" cy="34" r="7" fill="#3a4a1f" />
-            <circle cx="72" cy="36" r="7" fill="#4a5a2a" />
-            <circle cx="88" cy="34" r="7" fill="#3a4a1f" />
-            <circle cx="48" cy="40" r="7" fill="#4a5a2a" />
-            <circle cx="64" cy="42" r="7" fill="#3a4a1f" />
-            <circle cx="80" cy="40" r="7" fill="#4a5a2a" />
-          </svg>
-          <!-- Bread -->
-          <svg class="absolute right-2 top-32" width="140" height="50" viewBox="0 0 140 50" aria-hidden>
-            <ellipse cx="70" cy="42" rx="62" ry="6" fill="#2a1810" opacity="0.15" />
-            <path d="M8 30 Q40 0 70 8 Q100 0 132 30 Q100 46 70 40 Q40 46 8 30 Z"
-              fill="#c98b48" />
-            <path d="M14 28 Q34 14 60 18" stroke="#a37b32" stroke-width="1.5" fill="none" />
-            <path d="M70 14 Q90 14 110 26" stroke="#a37b32" stroke-width="1.5" fill="none" />
-          </svg>
+          <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[72%] paper border border-[var(--coffee)]/30 px-4 py-3 shadow-[4px_4px_0_rgba(42,24,16,0.2)]">
+            <p class="label text-[8px] text-[var(--gold-deep)]">— Chapter II</p>
+            <p class="display mt-1 text-[var(--crimson)] text-2xl">The<br />Buffer</p>
+            <div class="mt-2 space-y-1">
+              <div class="h-px bg-[var(--coffee)]/40"></div>
+              <div class="h-px bg-[var(--coffee)]/30 w-[80%]"></div>
+              <div class="h-px bg-[var(--coffee)]/30 w-[90%]"></div>
+              <div class="h-px bg-[var(--coffee)]/30 w-[60%]"></div>
+            </div>
+            <p class="label mt-3 text-[8px] text-[var(--coffee)]/60">P. 14</p>
+          </div>
         </div>
 
-        <!-- Panel 3: skillet with pepper -->
+        <!-- Panel 3: version stamp on a coffee gradient -->
         <div class="relative h-48 md:h-72 overflow-hidden" style="background: linear-gradient(135deg, #2a1810 0%, #5b3a2c 100%);">
-          <!-- Skillet -->
-          <svg class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" width="200" height="120" viewBox="0 0 200 120" aria-hidden>
-            <rect x="120" y="50" width="80" height="6" rx="2" fill="#0d0805" />
-            <ellipse cx="80" cy="60" rx="70" ry="50" fill="#0d0805" />
-            <ellipse cx="80" cy="56" rx="64" ry="44" fill="#1a0d08" />
-            <!-- Sauce -->
-            <ellipse cx="80" cy="58" rx="48" ry="30" fill="#a8021a" />
-            <!-- Stuffed pepper -->
-            <path d="M58 50 Q50 44 62 38 Q72 36 84 44 Q98 40 100 50 Q104 64 92 72 Q80 78 64 74 Q52 66 58 50 Z"
-              fill="#d70321" />
-            <path d="M70 38 Q72 32 78 32 Q82 32 82 38" stroke="#4a5a2a" stroke-width="3" fill="none" stroke-linecap="round" />
-            <!-- Parsley -->
-            <circle cx="56" cy="40" r="3" fill="#4a5a2a" />
-            <circle cx="100" cy="44" r="2.5" fill="#4a5a2a" />
-          </svg>
+          <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <svg width="200" height="200" viewBox="0 0 200 200" aria-hidden>
+              <circle cx="100" cy="100" r="80" fill="#d70321" stroke="#cba058" stroke-width="3" />
+              <circle cx="100" cy="100" r="68" fill="none" stroke="#cba058" stroke-width="1" />
+              <text x="100" y="86" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="9" fill="#cba058" letter-spacing="2">
+                ATELIER · CONSERVA
+              </text>
+              <text x="100" y="116" text-anchor="middle" font-family="Anton, sans-serif" font-size="36" fill="#cba058">
+                v4.2
+              </text>
+              <text x="100" y="140" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="600" font-size="8" fill="#fbf5e7" letter-spacing="2.5">
+                EST · 1987
+              </text>
+            </svg>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- HERO — "PRUEBA EL SABOR..." -->
+    <!-- HERO -->
     <section class="relative md:pr-16">
       <div class="mx-auto max-w-5xl px-6 pt-12 pb-8 text-center">
         <!-- Heritage stamp -->
         <div class="mx-auto inline-flex items-center gap-2 stamp px-3 py-1.5">
-          <span class="label text-[11px] tracking-[0.22em] text-[var(--gold)]">DESDE 1987</span>
+          <span class="label text-[11px] tracking-[0.22em] text-[var(--gold)]">EST. 1987</span>
           <span class="text-[var(--gold)]" aria-hidden>✦</span>
-          <span class="label text-[11px] tracking-[0.22em] text-[var(--cream)]">NUEVA TRADICIÓN</span>
+          <span class="label text-[11px] tracking-[0.22em] text-[var(--cream)]">NEW TRADITION</span>
         </div>
 
         <h1 class="display mt-7 text-[var(--crimson)] text-[clamp(3rem,9vw,7.5rem)]">
-          Prueba<br />
-          El Sabor<br />
-          De La <span class="script normal-case text-[var(--gold-deep)] text-[0.78em]">nueva</span> Tradición
+          Slow<br />
+          Craft<br />
+          For The <span class="script normal-case text-[var(--gold-deep)] text-[0.78em]">new</span> Tradition
         </h1>
 
         <!-- Olive branch dingbat -->
@@ -291,518 +317,386 @@
         </div>
 
         <p class="label mx-auto max-w-2xl text-[13px] leading-relaxed text-[var(--crimson)]">
-          VEN A PROBAR NUESTROS PIMIENTOS RELLENOS Y DESCUBRE EL MEJOR SABOR.
-          UNA GAMA DE PRODUCTOS DELICIOSOS Y LISTOS PARA CONSUMIR. NO PIERDAS
-          LA OPORTUNIDAD DE CHUPARTE LOS DEDICOS.
+          A HAND-TUNED EDITOR, A PRINTED MANUAL, A LINTER THAT HAS SOMETHING
+          TO SAY. WE BUILD DEVELOPER TOOLS THAT ARE MEANT TO AGE — NOT TO
+          TREND. DON'T LOSE YOUR TASTE FOR CRAFT.
         </p>
 
         <!-- Pennant buttons -->
         <div class="mt-9 flex flex-wrap items-center justify-center gap-4">
           <button class="pennant bg-[var(--crimson)] px-7 py-3.5 pr-12 label text-sm text-[var(--gold)]">
-            Ven a probar
+            Read the manual
           </button>
           <button class="pennant bg-[var(--oxblood)] px-7 py-3.5 pr-12 label text-sm text-[var(--cream)]">
-            Puntos de venta
+            View on GitHub
           </button>
         </div>
       </div>
     </section>
 
     <!-- ============================================================= -->
-    <!-- § I / THEME SPECIFICATION                                      -->
+    <!-- § 01 / THEME SPECIFICATION                                     -->
     <!-- ============================================================= -->
-    <section class="relative md:pr-16 border-y-2 border-[var(--crimson)] bg-[var(--cream-warm)]">
-      <div class="mx-auto max-w-5xl px-6 py-8">
-        <div class="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p class="label text-[12px] text-[var(--gold-deep)]">— § I</p>
-            <h2 class="display mt-1 text-4xl md:text-5xl text-[var(--crimson)]">Receta de marca</h2>
-          </div>
-          <p class="label max-w-xs text-[11px] text-[var(--coffee)]/70 leading-relaxed">
-            Antes de servir, mostramos la receta. Paleta, papel, tipo y
-            componentes — tal y como manda el <span class="script normal-case text-[var(--gold-deep)]">prompt.md</span>.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- I.I — PALETTE -->
-    <section class="relative md:pr-16 border-b border-[var(--crimson)]/25">
-      <div class="mx-auto max-w-5xl px-6 py-10">
-        <div class="flex items-baseline justify-between mb-5">
-          <p class="label text-[12px] text-[var(--gold-deep)]">— I.I · Paleta</p>
-          <p class="label text-[10px] text-[var(--coffee)]/55">08 colores</p>
-        </div>
-        <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-3">
-            <span class="block h-14 w-full border border-[var(--coffee)]/10" style="background:#fbf5e7"></span>
-            <div class="mt-2 label text-[11px] text-[var(--coffee)]">Cream</div>
-            <div class="label text-[9px] tracking-[0.18em] text-[var(--coffee)]/55">#FBF5E7</div>
-          </div>
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-3">
-            <span class="block h-14 w-full" style="background:#f4ead0"></span>
-            <div class="mt-2 label text-[11px] text-[var(--coffee)]">Cream Warm</div>
-            <div class="label text-[9px] tracking-[0.18em] text-[var(--coffee)]/55">#F4EAD0</div>
-          </div>
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-3">
-            <span class="block h-14 w-full" style="background:#d70321"></span>
-            <div class="mt-2 label text-[11px] text-[var(--coffee)]">Crimson</div>
-            <div class="label text-[9px] tracking-[0.18em] text-[var(--coffee)]/55">#D70321</div>
-          </div>
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-3">
-            <span class="block h-14 w-full" style="background:#a8021a"></span>
-            <div class="mt-2 label text-[11px] text-[var(--coffee)]">Crimson Deep</div>
-            <div class="label text-[9px] tracking-[0.18em] text-[var(--coffee)]/55">#A8021A</div>
-          </div>
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-3">
-            <span class="block h-14 w-full" style="background:#6a0613"></span>
-            <div class="mt-2 label text-[11px] text-[var(--coffee)]">Oxblood</div>
-            <div class="label text-[9px] tracking-[0.18em] text-[var(--coffee)]/55">#6A0613</div>
-          </div>
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-3">
-            <span class="block h-14 w-full" style="background:#cba058"></span>
-            <div class="mt-2 label text-[11px] text-[var(--coffee)]">Gold</div>
-            <div class="label text-[9px] tracking-[0.18em] text-[var(--coffee)]/55">#CBA058</div>
-          </div>
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-3">
-            <span class="block h-14 w-full" style="background:#a37b32"></span>
-            <div class="mt-2 label text-[11px] text-[var(--coffee)]">Gold Deep</div>
-            <div class="label text-[9px] tracking-[0.18em] text-[var(--coffee)]/55">#A37B32</div>
-          </div>
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-3">
-            <span class="block h-14 w-full" style="background:#2a1810"></span>
-            <div class="mt-2 label text-[11px] text-[var(--coffee)]">Coffee</div>
-            <div class="label text-[9px] tracking-[0.18em] text-[var(--coffee)]/55">#2A1810</div>
+    <section class="relative md:pr-16">
+      <div class="mx-auto max-w-5xl px-6 pt-12">
+        <div class="border-t-[3px] border-[var(--crimson)] pt-5">
+          <span class="section-tag">✦ § 01 / The kit</span>
+          <div class="mt-4 grid gap-6 md:grid-cols-[1.4fr_1fr] md:items-end">
+            <h2 class="display text-[var(--crimson)] text-5xl md:text-6xl">
+              The kit, <span class="script normal-case text-[var(--gold-deep)]">before</span> the print run.
+            </h2>
+            <p class="label text-[12px] leading-relaxed text-[var(--coffee)]/75">
+              PALETTE · SURFACES · TYPOGRAPHY · COMPONENTS — THE WORKSHOP
+              STANDARDS, ALL EIGHT SWATCHES, ALL THREE WEIGHTS, BEFORE A
+              SINGLE PAGE IS LAID.
+            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- I.II — PAPER & TEXTURES (Gradients/Surfaces) -->
-    <section class="relative md:pr-16 border-b border-[var(--crimson)]/25">
-      <div class="mx-auto max-w-5xl px-6 py-10">
-        <p class="label text-[12px] text-[var(--gold-deep)]">— I.II · Papel & texturas</p>
-        <h3 class="display mt-2 text-2xl text-[var(--crimson)]">Superficies con nombre</h3>
-        <div class="mt-5 grid gap-4 md:grid-cols-2">
+    <!-- 01.1 / PALETTE -->
+    <section class="relative md:pr-16">
+      <div class="mx-auto max-w-5xl px-6 pt-10">
+        <p class="label text-[12px] text-[var(--gold-deep)]">— 01.1 / Palette</p>
+        <h3 class="display mt-1 text-3xl text-[var(--crimson)]">Eight swatches</h3>
+
+        <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div class="swatch p-3"><span class="block h-12 w-full" style="background:#FBF5E7;border:1px solid rgba(42,24,16,0.2)"></span><div class="label mt-2 text-[11px] text-[var(--coffee)]">Cream</div><div class="code text-[10px] text-[var(--coffee)]/60">#FBF5E7</div></div>
+          <div class="swatch p-3"><span class="block h-12 w-full" style="background:#F4EAD0"></span><div class="label mt-2 text-[11px] text-[var(--coffee)]">Cream Warm</div><div class="code text-[10px] text-[var(--coffee)]/60">#F4EAD0</div></div>
+          <div class="swatch p-3"><span class="block h-12 w-full" style="background:#D70321"></span><div class="label mt-2 text-[11px] text-[var(--coffee)]">Crimson</div><div class="code text-[10px] text-[var(--coffee)]/60">#D70321</div></div>
+          <div class="swatch p-3"><span class="block h-12 w-full" style="background:#A8021A"></span><div class="label mt-2 text-[11px] text-[var(--coffee)]">Crimson Deep</div><div class="code text-[10px] text-[var(--coffee)]/60">#A8021A</div></div>
+          <div class="swatch p-3"><span class="block h-12 w-full" style="background:#6A0613"></span><div class="label mt-2 text-[11px] text-[var(--coffee)]">Oxblood</div><div class="code text-[10px] text-[var(--coffee)]/60">#6A0613</div></div>
+          <div class="swatch p-3"><span class="block h-12 w-full" style="background:#CBA058"></span><div class="label mt-2 text-[11px] text-[var(--coffee)]">Gold</div><div class="code text-[10px] text-[var(--coffee)]/60">#CBA058</div></div>
+          <div class="swatch p-3"><span class="block h-12 w-full" style="background:#A37B32"></span><div class="label mt-2 text-[11px] text-[var(--coffee)]">Gold Deep</div><div class="code text-[10px] text-[var(--coffee)]/60">#A37B32</div></div>
+          <div class="swatch p-3"><span class="block h-12 w-full" style="background:#2A1810"></span><div class="label mt-2 text-[11px] text-[var(--coffee)]">Coffee</div><div class="code text-[10px] text-[var(--coffee)]/60">#2A1810</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.2 / SURFACES -->
+    <section class="relative md:pr-16">
+      <div class="mx-auto max-w-5xl px-6 pt-10">
+        <p class="label text-[12px] text-[var(--gold-deep)]">— 01.2 / Surfaces</p>
+        <h3 class="display mt-1 text-3xl text-[var(--crimson)]">Four backgrounds</h3>
+
+        <div class="mt-5 grid gap-3 md:grid-cols-4">
           <div>
-            <div class="paper relative h-20 border border-[var(--coffee)]/15 flex items-end p-3">
-              <span class="label text-[10px] text-[var(--coffee)]/70 bg-[var(--cream)]/85 px-2 py-1">paper · cream + 3 dot layers</span>
-            </div>
-            <p class="label mt-2 text-[10px] text-[var(--coffee)]/60">fondo de cada página · grano cálido</p>
+            <div class="paper h-28 border border-[var(--coffee)]/20"></div>
+            <p class="label mt-2 text-[10px] text-[var(--coffee)]/70">Paper grain · cream + 3 dots</p>
           </div>
           <div>
-            <div class="gingham relative h-20 border border-[var(--coffee)]/15 flex items-end p-3">
-              <span class="label text-[10px] text-[var(--coffee)] bg-[var(--cream)]/85 px-2 py-1">gingham · cuadros a 45° · 18px</span>
-            </div>
-            <p class="label mt-2 text-[10px] text-[var(--coffee)]/60">mantel · panel de fotografía</p>
+            <div class="gingham h-28 border border-[var(--coffee)]/20"></div>
+            <p class="label mt-2 text-[10px] text-[var(--coffee)]/70">Gingham · 18px crimson tile</p>
           </div>
           <div>
-            <div class="marble relative h-20 border border-[var(--coffee)]/15 flex items-end p-3">
-              <span class="label text-[10px] text-[var(--coffee)] bg-[var(--cream)]/85 px-2 py-1">marble · 3 radiales cálidos</span>
-            </div>
-            <p class="label mt-2 text-[10px] text-[var(--coffee)]/60">encimera · fondo de héroe</p>
+            <div class="marble h-28 border border-[var(--coffee)]/20"></div>
+            <p class="label mt-2 text-[10px] text-[var(--coffee)]/70">Marble · warm peach radial</p>
           </div>
           <div>
-            <div class="relative h-20 border border-[var(--coffee)]/15 flex items-end p-3" style="background: linear-gradient(160deg, #d70321 0%, #6a0613 100%);">
-              <span class="label text-[10px] text-[var(--gold)] bg-[var(--coffee)]/40 px-2 py-1">stamp · crimson → oxblood 160°</span>
-            </div>
-            <p class="label mt-2 text-[10px] text-[var(--coffee)]/60">tapa de tarro · acentos profundos</p>
+            <div class="h-28 border border-[var(--coffee)]/20" style="background: linear-gradient(135deg, #2a1810 0%, #5b3a2c 100%);"></div>
+            <p class="label mt-2 text-[10px] text-[var(--coffee)]/70">Coffee · dark print gradient</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- I.III — TYPOGRAPHY -->
-    <section class="relative md:pr-16 border-b border-[var(--crimson)]/25">
-      <div class="mx-auto max-w-5xl px-6 py-10">
-        <p class="label text-[12px] text-[var(--gold-deep)]">— I.III · Tipografía</p>
-        <h3 class="display mt-2 text-2xl text-[var(--crimson)]">Tres voces</h3>
+    <!-- 01.3 / TYPOGRAPHY -->
+    <section class="relative md:pr-16">
+      <div class="mx-auto max-w-5xl px-6 pt-10">
+        <p class="label text-[12px] text-[var(--gold-deep)]">— 01.3 / Typography</p>
+        <h3 class="display mt-1 text-3xl text-[var(--crimson)]">Three voices</h3>
+
         <div class="mt-5 grid gap-px md:grid-cols-3 bg-[var(--coffee)]/15">
           <div class="paper p-6">
-            <p class="label text-[10px] text-[var(--gold-deep)]">Display · Anton</p>
-            <p class="display mt-2 text-5xl text-[var(--crimson)] leading-none">PIMIENTO</p>
-            <p class="label mt-4 text-[10px] text-[var(--coffee)]/60">peso 400 · uppercase</p>
-            <p class="label text-[10px] text-[var(--coffee)]/60">tracking -0.005em · lh 0.88</p>
-            <p class="label text-[10px] text-[var(--coffee)]/60">titulares de héroe únicamente</p>
+            <p class="label text-[11px] text-[var(--gold-deep)]">Display · Anton</p>
+            <p class="display mt-2 text-5xl text-[var(--crimson)]">CRAFT</p>
+            <p class="label mt-3 text-[10px] text-[var(--coffee)]/60">condensed · uppercase · lh 0.88 · -0.005em</p>
           </div>
           <div class="paper p-6">
-            <p class="label text-[10px] text-[var(--gold-deep)]">Body · Oswald</p>
-            <p class="mt-2 text-3xl uppercase tracking-[0.05em] text-[var(--coffee)]" style="font-family:Oswald;font-weight:600">
-              CONSERVAS
+            <p class="label text-[11px] text-[var(--gold-deep)]">Body · Oswald</p>
+            <p class="mt-2 text-2xl uppercase tracking-[0.05em] text-[var(--coffee)]" style="font-family:Oswald;font-weight:600">
+              Workshop standards
             </p>
-            <p class="label mt-4 text-[10px] text-[var(--coffee)]/60">pesos 300–700</p>
-            <p class="label text-[10px] text-[var(--coffee)]/60">caps · tracking 0.12em</p>
-            <p class="label text-[10px] text-[var(--coffee)]/60">párrafos, etiquetas, navegación</p>
+            <p class="label mt-3 text-[10px] text-[var(--coffee)]/60">all-caps · 600 · tracked 0.12em · for paragraphs &amp; labels</p>
           </div>
           <div class="paper p-6">
-            <p class="label text-[10px] text-[var(--gold-deep)]">Acento · Playfair italic</p>
-            <p class="script mt-2 text-4xl text-[var(--gold-deep)] leading-none">delicada</p>
-            <p class="label mt-4 text-[10px] text-[var(--coffee)]/60">peso 500 · italic</p>
-            <p class="label text-[10px] text-[var(--coffee)]/60">tracking normal · case normal</p>
-            <p class="label text-[10px] text-[var(--coffee)]/60">≤2 palabras dentro de titulares</p>
+            <p class="label text-[11px] text-[var(--gold-deep)]">Heritage italic · Playfair</p>
+            <p class="script mt-2 text-4xl text-[var(--gold-deep)]">tradition</p>
+            <p class="label mt-3 text-[10px] text-[var(--coffee)]/60">italic · ≤ 2 words · gold deep · lowercase fine</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- I.IV — COMPONENTS -->
-    <section class="relative md:pr-16 border-b-2 border-[var(--crimson)]">
-      <div class="mx-auto max-w-5xl px-6 py-10">
-        <p class="label text-[12px] text-[var(--gold-deep)]">— I.IV · Componentes</p>
-        <h3 class="display mt-2 text-2xl text-[var(--crimson)]">Piezas del kit</h3>
+    <!-- 01.4 / COMPONENTS -->
+    <section class="relative md:pr-16">
+      <div class="mx-auto max-w-5xl px-6 pt-10 pb-4">
+        <p class="label text-[12px] text-[var(--gold-deep)]">— 01.4 / Components</p>
+        <h3 class="display mt-1 text-3xl text-[var(--crimson)]">Workshop primitives</h3>
 
-        <!-- Buttons row -->
-        <div class="mt-6 grid gap-4 md:grid-cols-2">
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-5">
-            <p class="label text-[10px] text-[var(--gold-deep)]">Botones — pennant</p>
+        <div class="mt-5 grid gap-px bg-[var(--coffee)]/15 md:grid-cols-2">
+          <!-- Buttons -->
+          <div class="paper p-6">
+            <p class="label text-[11px] text-[var(--gold-deep)]">Pennants &amp; stamps</p>
             <div class="mt-4 flex flex-wrap items-center gap-3">
-              <button class="pennant bg-[var(--crimson)] px-7 py-3 pr-12 label text-[12px] text-[var(--gold)]">
-                Primario
-              </button>
-              <button class="pennant bg-[var(--oxblood)] px-7 py-3 pr-12 label text-[12px] text-[var(--cream)]">
-                Secundario
-              </button>
-              <button class="pennant-both bg-[var(--cream-warm)] ring-gold px-7 py-3 px-12 label text-[12px] text-[var(--crimson)]">
-                Outline
-              </button>
+              <button class="pennant bg-[var(--crimson)] px-6 py-3 pr-11 label text-xs text-[var(--gold)]">Primary</button>
+              <button class="pennant bg-[var(--oxblood)] px-6 py-3 pr-11 label text-xs text-[var(--cream)]">Secondary</button>
+              <button class="pennant-left bg-transparent border-2 border-[var(--crimson)] pl-11 pr-6 py-2.5 label text-xs text-[var(--crimson)]">← Back</button>
             </div>
-            <p class="label mt-4 text-[10px] text-[var(--coffee)]/60">clip-path corte chevron · 18px · sin radios</p>
-          </div>
-
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-5">
-            <p class="label text-[10px] text-[var(--gold-deep)]">Sello de herencia</p>
-            <div class="mt-4 flex items-center">
-              <div class="inline-flex items-center gap-2 stamp px-3 py-1.5">
-                <span class="label text-[11px] tracking-[0.22em] text-[var(--gold)]">DESDE 1987</span>
-                <span class="text-[var(--gold)]" aria-hidden>✦</span>
-                <span class="label text-[11px] tracking-[0.22em] text-[var(--cream)]">NUEVA TRADICIÓN</span>
-              </div>
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+              <span class="stamp px-2.5 py-1 label text-[10px] text-[var(--gold)]">EST. 1987</span>
+              <span class="stamp px-2.5 py-1 label text-[10px] text-[var(--cream)] bg-[var(--oxblood)]">NEW</span>
+              <span class="border border-[var(--gold)] px-2.5 py-1 label text-[10px] text-[var(--gold-deep)]">v4.2</span>
             </div>
-            <p class="label mt-4 text-[10px] text-[var(--coffee)]/60">crimson + cream/gold · separador ✦ obligatorio</p>
           </div>
 
-          <!-- Input -->
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-5">
-            <p class="label text-[10px] text-[var(--gold-deep)]">Campo de entrada</p>
-            <label class="mt-4 block">
-              <span class="label text-[10px] text-[var(--gold-deep)]">— Código postal</span>
-              <input
-                type="text"
-                placeholder="31001"
-                value="31001"
-                class="mt-1 block w-full border-b border-[var(--crimson)] bg-transparent py-2 text-[15px] text-[var(--coffee)] outline-none focus:border-[var(--gold-deep)]"
-                style="font-family:Oswald;font-weight:500"
-              />
-            </label>
-            <p class="label mt-4 text-[10px] text-[var(--coffee)]/60">solo borde inferior · focus → gold deep</p>
-          </div>
-
-          <!-- Section marker -->
-          <div class="border border-[var(--coffee)]/15 bg-[var(--cream)] p-5">
-            <p class="label text-[10px] text-[var(--gold-deep)]">Marcador de sección</p>
-            <p class="label mt-4 text-[12px] text-[var(--gold-deep)]">— Nuestros sabores</p>
-            <p class="label text-[12px] text-[var(--gold-deep)]">— Puntos de venta</p>
-            <p class="label text-[12px] text-[var(--gold-deep)]">— Receta de la casa</p>
-            <p class="label mt-4 text-[10px] text-[var(--coffee)]/60">prefijo em-dash · oswald 600 · 12px</p>
-          </div>
-        </div>
-
-        <!-- Olive branch dingbat reference -->
-        <div class="mt-6 border border-[var(--coffee)]/15 bg-[var(--cream)] p-5">
-          <p class="label text-[10px] text-[var(--gold-deep)]">Dingbat — rama de olivo</p>
-          <div class="dingbat mt-4 flex justify-center" aria-hidden>
-            <svg width="76" height="22" viewBox="0 0 76 22" fill="currentColor">
-              <path d="M38 4 L38 18" stroke="currentColor" stroke-width="1.2" />
-              <ellipse cx="30" cy="9" rx="6" ry="2.5" transform="rotate(-15 30 9)" />
-              <ellipse cx="46" cy="9" rx="6" ry="2.5" transform="rotate(15 46 9)" />
-              <ellipse cx="22" cy="13" rx="5" ry="2" transform="rotate(-15 22 13)" />
-              <ellipse cx="54" cy="13" rx="5" ry="2" transform="rotate(15 54 13)" />
-              <circle cx="38" cy="18" r="2" />
-            </svg>
-          </div>
-          <p class="label mt-4 text-center text-[10px] text-[var(--coffee)]/60">divisor bajo titulares · 76 × 22 · gold</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================= -->
-    <!-- § II / UX APPLICATIONS                                         -->
-    <!-- ============================================================= -->
-    <section class="relative md:pr-16 border-b-2 border-[var(--crimson)] bg-[var(--cream-warm)]">
-      <div class="mx-auto max-w-5xl px-6 py-8">
-        <div class="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p class="label text-[12px] text-[var(--gold-deep)]">— § II</p>
-            <h2 class="display mt-1 text-4xl md:text-5xl text-[var(--crimson)]">En la mesa</h2>
-          </div>
-          <p class="label max-w-xs text-[11px] text-[var(--coffee)]/70 leading-relaxed">
-            La receta, servida. Tres aplicaciones reales del kit en superficies
-            de producto — <span class="script normal-case text-[var(--gold-deep)]">tal cual</span> las vería un cliente.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- II.I — PRODUCT RANGE -->
-    <section class="relative md:pr-16 border-b border-[var(--crimson)]/25">
-      <div class="mx-auto max-w-5xl px-6 py-12">
-        <div class="flex items-baseline justify-between mb-4">
-          <p class="label text-[12px] text-[var(--gold-deep)]">— II.I · Nuestros sabores</p>
-          <p class="label text-[10px] text-[var(--coffee)]/55">04 rellenos · 220 g</p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
-          <div class="flex flex-col items-center text-center">
-            <div class="lid-placeholder" data-name="Salmón" data-color="#d70321"></div>
-            <p class="script normal-case mt-3 text-[15px] text-[var(--gold-deep)]">delicada brisa atlántica</p>
-            <p class="label mt-1 text-[10px] text-[var(--coffee)]/55">— 7,80 €</p>
-          </div>
-          <div class="flex flex-col items-center text-center">
-            <div class="lid-placeholder" data-name="Atún" data-color="#a8021a"></div>
-            <p class="script normal-case mt-3 text-[15px] text-[var(--gold-deep)]">del Cantábrico, en aceite</p>
-            <p class="label mt-1 text-[10px] text-[var(--coffee)]/55">— 6,90 €</p>
-          </div>
-          <div class="flex flex-col items-center text-center">
-            <div class="lid-placeholder" data-name="Quinoa" data-color="#cba058"></div>
-            <p class="script normal-case mt-3 text-[15px] text-[var(--gold-deep)]">huerta de Tudela, vegano</p>
-            <p class="label mt-1 text-[10px] text-[var(--coffee)]/55">— 7,20 €</p>
-          </div>
-          <div class="flex flex-col items-center text-center">
-            <div class="lid-placeholder" data-name="Carne" data-color="#6a0613"></div>
-            <p class="script normal-case mt-3 text-[15px] text-[var(--gold-deep)]">ternera al vino tinto</p>
-            <p class="label mt-1 text-[10px] text-[var(--coffee)]/55">— 8,40 €</p>
-          </div>
-        </div>
-
-        <div class="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--crimson)]/25 pt-5">
-          <p class="label text-[11px] text-[var(--coffee)]/70">
-            ✦ Envío en 24 h a península · <span class="script normal-case text-[var(--gold-deep)]">tradición</span> en cada tarro
-          </p>
-          <button class="pennant bg-[var(--crimson)] px-7 py-3 pr-12 label text-[12px] text-[var(--gold)]">
-            Comprar la gama
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- II.II — RECIPE CARD -->
-    <section class="relative md:pr-16 border-b border-[var(--crimson)]/25">
-      <div class="mx-auto max-w-5xl px-6 py-12">
-        <div class="flex items-baseline justify-between mb-4">
-          <p class="label text-[12px] text-[var(--gold-deep)]">— II.II · Receta de la casa</p>
-          <p class="label text-[10px] text-[var(--coffee)]/55">N.º 17 · primavera 2026</p>
-        </div>
-
-        <div class="grid gap-px md:grid-cols-[1.1fr_1fr] bg-[var(--coffee)]/15">
-          <!-- Photo / hero panel -->
-          <div class="marble relative h-72 md:h-auto strip-curve-bottom overflow-hidden">
-            <!-- Plate with stuffed pepper top-down -->
-            <svg class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" width="280" height="220" viewBox="0 0 280 220" aria-hidden>
-              <ellipse cx="140" cy="190" rx="120" ry="14" fill="#2a1810" opacity="0.15" />
-              <circle cx="140" cy="110" r="100" fill="#fbf5e7" stroke="#cba058" stroke-width="2" />
-              <circle cx="140" cy="110" r="86" fill="#f4ead0" />
-              <!-- Two stuffed peppers -->
-              <path d="M100 90 Q92 80 108 74 Q124 72 134 84 Q148 78 152 92 Q156 110 142 122 Q124 130 108 124 Q92 112 100 90 Z"
-                fill="#d70321" />
-              <path d="M118 74 Q120 64 128 64 Q134 64 134 74" stroke="#4a5a2a" stroke-width="3" fill="none" stroke-linecap="round" />
-              <path d="M145 110 Q137 100 153 94 Q169 92 179 104 Q193 98 197 112 Q201 130 187 142 Q169 150 153 144 Q137 132 145 110 Z"
-                fill="#a8021a" />
-              <path d="M163 94 Q165 84 173 84 Q179 84 179 94" stroke="#4a5a2a" stroke-width="3" fill="none" stroke-linecap="round" />
-              <!-- Parsley flecks -->
-              <circle cx="95" cy="125" r="3" fill="#4a5a2a" />
-              <circle cx="190" cy="135" r="2.5" fill="#4a5a2a" />
-              <circle cx="135" cy="148" r="2" fill="#4a5a2a" />
-              <!-- Drizzle -->
-              <path d="M80 145 Q140 158 200 145" stroke="#cba058" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7" />
-            </svg>
-            <!-- Corner label -->
-            <span class="absolute top-3 left-3 stamp px-2 py-1 label text-[10px] tracking-[0.2em] text-[var(--gold)]">
-              35 min · 4 pers.
-            </span>
-          </div>
-
-          <!-- Recipe body -->
-          <div class="paper p-7">
-            <p class="script normal-case text-[18px] text-[var(--gold-deep)]">de la abuela María</p>
-            <h3 class="display mt-1 text-4xl text-[var(--crimson)] leading-[0.9]">
-              Pimientos<br />Rellenos<br />
-              <span class="script normal-case text-[var(--gold-deep)] text-[0.7em]">de</span> Salmón
-            </h3>
-
-            <div class="dingbat my-5 flex justify-start" aria-hidden>
-              <svg width="60" height="18" viewBox="0 0 76 22" fill="currentColor">
+          <!-- Inputs & section markers -->
+          <div class="paper p-6">
+            <p class="label text-[11px] text-[var(--gold-deep)]">Inputs &amp; markers</p>
+            <label class="label mt-4 block text-[10px] text-[var(--gold-deep)]">— Workshop name</label>
+            <input
+              type="text"
+              value="m.brockmann"
+              class="mt-1 block w-full border-b-2 border-[var(--crimson)] bg-transparent py-2 px-1 text-[15px] text-[var(--coffee)] outline-none focus:border-[var(--gold-deep)]"
+            />
+            <p class="label mt-4 text-[10px] text-[var(--gold-deep)]">— Section marker</p>
+            <p class="display mt-1 text-2xl text-[var(--crimson)]">CHAPTER I</p>
+            <div class="dingbat mt-2" aria-hidden>
+              <svg width="56" height="16" viewBox="0 0 76 22" fill="currentColor">
                 <path d="M38 4 L38 18" stroke="currentColor" stroke-width="1.2" />
                 <ellipse cx="30" cy="9" rx="6" ry="2.5" transform="rotate(-15 30 9)" />
                 <ellipse cx="46" cy="9" rx="6" ry="2.5" transform="rotate(15 46 9)" />
-                <ellipse cx="22" cy="13" rx="5" ry="2" transform="rotate(-15 22 13)" />
-                <ellipse cx="54" cy="13" rx="5" ry="2" transform="rotate(15 54 13)" />
                 <circle cx="38" cy="18" r="2" />
               </svg>
-            </div>
-
-            <p class="label text-[11px] text-[var(--gold-deep)]">— Ingredientes</p>
-            <ul class="mt-2 space-y-1.5 text-[13px] uppercase tracking-[0.06em] text-[var(--coffee)]" style="font-family:Oswald;font-weight:500">
-              <li>· 1 tarro Conserva Salmón (220 g)</li>
-              <li>· 12 pimientos del piquillo</li>
-              <li>· 2 dientes de ajo, picados finos</li>
-              <li>· 200 ml de nata para cocinar</li>
-              <li>· 1 cs de aceite de oliva virgen</li>
-              <li>· Perejil fresco, al gusto</li>
-            </ul>
-
-            <p class="label mt-5 text-[11px] text-[var(--gold-deep)]">— Elaboración · 4 pasos</p>
-            <ol class="mt-2 space-y-2.5 text-[12px] uppercase tracking-[0.06em] text-[var(--coffee)] leading-relaxed" style="font-family:Oswald;font-weight:500">
-              <li><span class="text-[var(--crimson)] font-bold">01 ·</span> Rellenar los pimientos con el contenido del tarro, sin escurrir.</li>
-              <li><span class="text-[var(--crimson)] font-bold">02 ·</span> Dorar el ajo en aceite, añadir la nata y reducir 4 min.</li>
-              <li><span class="text-[var(--crimson)] font-bold">03 ·</span> Colocar los pimientos en la salsa, hornear 12 min a 180 °C.</li>
-              <li><span class="text-[var(--crimson)] font-bold">04 ·</span> Servir con perejil. <span class="script normal-case text-[var(--gold-deep)]">Chuparse los dedicos.</span></li>
-            </ol>
-
-            <div class="mt-5 flex items-center justify-between border-t border-[var(--crimson)]/20 pt-4">
-              <p class="label text-[10px] text-[var(--coffee)]/70">
-                ★★★★★ <span class="text-[var(--crimson)]">4.8 / 5</span> · 312 cocineros
-              </p>
-              <a href="#" class="label text-[11px] text-[var(--crimson)] border-b border-[var(--crimson)] pb-0.5">
-                Ver receta completa →
-              </a>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- II.III — PUNTOS DE VENTA -->
+    <!-- ============================================================= -->
+    <!-- § 02 / UX APPLICATIONS                                         -->
+    <!-- ============================================================= -->
     <section class="relative md:pr-16">
-      <div class="mx-auto max-w-5xl px-6 py-12">
-        <div class="flex items-baseline justify-between mb-4">
-          <p class="label text-[12px] text-[var(--gold-deep)]">— II.III · Puntos de venta</p>
-          <p class="label text-[10px] text-[var(--coffee)]/55">214 tiendas en península</p>
+      <div class="mx-auto max-w-5xl px-6 pt-12">
+        <div class="border-t-[3px] border-[var(--crimson)] pt-5">
+          <span class="section-tag">✦ § 02 / On the press</span>
+          <div class="mt-4 grid gap-6 md:grid-cols-[1.4fr_1fr] md:items-end">
+            <h2 class="display text-[var(--crimson)] text-5xl md:text-6xl">
+              The kit, <span class="script normal-case text-[var(--gold-deep)]">on</span> the press.
+            </h2>
+            <p class="label text-[12px] leading-relaxed text-[var(--coffee)]/75">
+              THREE PRODUCT SURFACES — THE EDITOR LINEUP, THE RELEASE
+              JOURNAL, AND THE MANUAL'S TABLE OF CONTENTS — ALL BUILT FROM
+              THE PRIMITIVES ABOVE.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.1 / EDITOR LINEUP — jar-lid medallions -->
+    <section class="relative md:pr-16">
+      <div class="mx-auto max-w-5xl px-6 pt-10">
+        <div class="flex items-end justify-between">
+          <div>
+            <p class="label text-[12px] text-[var(--gold-deep)]">— 02.1 / UX · Editor lineup</p>
+            <h3 class="display mt-1 text-3xl text-[var(--crimson)]">Our crafts · 04 editions</h3>
+          </div>
+          <p class="label text-[10px] text-[var(--coffee)]/60 text-right">Hand-tuned · Hand-shipped</p>
         </div>
 
-        <!-- Search bar -->
-        <div class="flex flex-wrap items-end gap-4 mb-8 border-b border-[var(--crimson)]/25 pb-5">
-          <label class="flex-1 min-w-[180px] block">
-            <span class="label text-[10px] text-[var(--gold-deep)]">— Tu código postal</span>
-            <input
-              type="text"
-              placeholder="31001"
-              class="mt-1 block w-full border-b border-[var(--crimson)] bg-transparent py-2 text-[18px] text-[var(--coffee)] outline-none focus:border-[var(--gold-deep)]"
-              style="font-family:Oswald;font-weight:600"
-            />
-          </label>
-          <button class="pennant bg-[var(--crimson)] px-7 py-3 pr-12 label text-[12px] text-[var(--gold)]">
-            Buscar tiendas
-          </button>
+        <div class="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
+          <div class="lid-card" data-name="QUILL"   data-role="The editor"        data-version="v4.2" data-color="#d70321"></div>
+          <div class="lid-card" data-name="FOLIO"   data-role="The docs builder"  data-version="v2.1" data-color="#a8021a"></div>
+          <div class="lid-card" data-name="FORGE"   data-role="The build system" data-version="v3.0" data-color="#cba058"></div>
+          <div class="lid-card" data-name="RUNE"    data-role="The linter"        data-version="v1.5" data-color="#6a0613"></div>
         </div>
+      </div>
+    </section>
 
-        <!-- Map + List grid -->
-        <div class="grid gap-6 md:grid-cols-[1fr_1.1fr]">
-          <!-- Faux map of peninsular Spain -->
-          <div class="marble relative aspect-[5/6] border border-[var(--coffee)]/15 overflow-hidden">
-            <svg viewBox="0 0 200 240" class="absolute inset-0 h-full w-full" aria-hidden>
-              <!-- Coast outline (impressionist Spain) -->
-              <path d="M16 80 L20 50 L40 32 L70 22 L110 18 L150 22 L178 36 L186 60 L186 100 L172 140 L158 178 L132 210 L92 220 L52 208 L28 178 L18 140 Z"
-                fill="#fbf5e7" stroke="#a37b32" stroke-width="1.5" stroke-dasharray="2 3" />
-              <!-- Faux regions -->
-              <path d="M16 80 Q60 70 110 80 L110 130 Q70 140 18 130 Z" fill="#cba058" opacity="0.15" />
-              <path d="M110 80 Q150 78 186 90 L186 140 Q150 150 110 140 Z" fill="#d70321" opacity="0.08" />
-              <!-- Pins -->
-              <!-- Pamplona -->
-              <g><circle cx="120" cy="44" r="5" fill="#d70321" stroke="#fbf5e7" stroke-width="1.5" /><text x="128" y="42" font-family="Oswald" font-weight="700" font-size="8" fill="#2a1810" letter-spacing="1.2">PAMPLONA</text></g>
-              <!-- Bilbao -->
-              <g><circle cx="98" cy="36" r="4" fill="#a8021a" stroke="#fbf5e7" stroke-width="1.5" /><text x="58" y="34" font-family="Oswald" font-weight="700" font-size="7" fill="#2a1810" letter-spacing="1">BILBAO</text></g>
-              <!-- San Sebastián -->
-              <g><circle cx="118" cy="30" r="3.5" fill="#a8021a" stroke="#fbf5e7" stroke-width="1.5" /><text x="124" y="28" font-family="Oswald" font-weight="700" font-size="7" fill="#2a1810" letter-spacing="1">DONOSTI</text></g>
-              <!-- Madrid -->
-              <g><circle cx="92" cy="120" r="5" fill="#d70321" stroke="#fbf5e7" stroke-width="1.5" /><text x="56" y="118" font-family="Oswald" font-weight="700" font-size="8" fill="#2a1810" letter-spacing="1.2">MADRID</text></g>
-              <!-- Barcelona -->
-              <g><circle cx="170" cy="80" r="4.5" fill="#d70321" stroke="#fbf5e7" stroke-width="1.5" /><text x="124" y="78" font-family="Oswald" font-weight="700" font-size="7" fill="#2a1810" letter-spacing="1">BARCELONA</text></g>
-              <!-- Valencia -->
-              <g><circle cx="148" cy="138" r="3.5" fill="#a8021a" stroke="#fbf5e7" stroke-width="1.5" /><text x="154" y="136" font-family="Oswald" font-weight="700" font-size="7" fill="#2a1810" letter-spacing="1">VALENCIA</text></g>
-              <!-- Sevilla -->
-              <g><circle cx="56" cy="180" r="4" fill="#a8021a" stroke="#fbf5e7" stroke-width="1.5" /><text x="32" y="194" font-family="Oswald" font-weight="700" font-size="7" fill="#2a1810" letter-spacing="1">SEVILLA</text></g>
-              <!-- Star = HQ -->
-              <text x="120" y="46" font-family="Anton" font-size="14" fill="#cba058" text-anchor="middle">✦</text>
-            </svg>
-            <span class="absolute bottom-3 left-3 stamp px-2 py-1 label text-[10px] tracking-[0.2em] text-[var(--gold)]">
-              ✦ ORIGEN · PAMPLONA
-            </span>
+    <!-- 02.2 / RELEASE JOURNAL -->
+    <section class="relative md:pr-16">
+      <div class="mx-auto max-w-5xl px-6 pt-12">
+        <p class="label text-[12px] text-[var(--gold-deep)]">— 02.2 / UX · Release journal</p>
+        <h3 class="display mt-1 text-3xl text-[var(--crimson)]">Issue No. 04 · The Quill Journal</h3>
+
+        <article class="mt-6 paper border-2 border-[var(--crimson)] shadow-[6px_6px_0_var(--oxblood)]">
+          <header class="flex flex-wrap items-baseline justify-between gap-3 border-b-2 border-[var(--crimson)] px-6 py-3">
+            <div class="flex items-baseline gap-3">
+              <span class="stamp px-2.5 py-1 label text-[10px] text-[var(--gold)]">SPRING 2026</span>
+              <span class="label text-[10px] text-[var(--gold-deep)]">— ISSUE No. 04</span>
+            </div>
+            <span class="code text-[11px] text-[var(--coffee)]/60">04 / 12</span>
+          </header>
+
+          <div class="grid gap-px bg-[var(--coffee)]/15 md:grid-cols-[1.4fr_1fr]">
+            <div class="paper px-6 py-7">
+              <h4 class="display text-[var(--crimson)] text-5xl md:text-6xl leading-[0.88]">
+                Quill<br />
+                4.2 Is<br />
+                <span class="script normal-case text-[var(--gold-deep)] text-[0.78em]">finally</span> Shipped.
+              </h4>
+
+              <div class="dingbat my-5" aria-hidden>
+                <svg width="76" height="22" viewBox="0 0 76 22" fill="currentColor">
+                  <path d="M38 4 L38 18" stroke="currentColor" stroke-width="1.2" />
+                  <ellipse cx="30" cy="9" rx="6" ry="2.5" transform="rotate(-15 30 9)" />
+                  <ellipse cx="46" cy="9" rx="6" ry="2.5" transform="rotate(15 46 9)" />
+                  <ellipse cx="22" cy="13" rx="5" ry="2" transform="rotate(-15 22 13)" />
+                  <ellipse cx="54" cy="13" rx="5" ry="2" transform="rotate(15 54 13)" />
+                  <circle cx="38" cy="18" r="2" />
+                </svg>
+              </div>
+
+              <p class="label text-[12px] leading-relaxed text-[var(--coffee)]">
+                LONG EXPECTED. HAND-TUNED. THE FLAGSHIP EDITOR RETURNS TO
+                THE WORKSHOP FLOOR WITH — AT LAST — A LOCAL AI MODE THAT
+                NEVER LEAVES THE PRESS, A 12-COLUMN BUFFER WITH ADJUSTABLE
+                KERNING, AND A NEW MANUAL FORMAT YOU CAN ACTUALLY READ ON
+                A TRAIN.
+              </p>
+
+              <p class="label mt-4 text-[10px] text-[var(--gold-deep)]">— SET BY M. BROCKMANN · APR 14, 2026</p>
+            </div>
+
+            <div class="paper px-6 py-7">
+              <p class="label text-[11px] text-[var(--gold-deep)]">— What's in the run</p>
+              <ul class="mt-3 space-y-2 label text-[11px] text-[var(--coffee)]">
+                <li class="flex items-start gap-2"><span class="text-[var(--crimson)]">✦</span><span>NEW · LOCAL AI MODE — your code never leaves the floor.</span></li>
+                <li class="flex items-start gap-2"><span class="text-[var(--crimson)]">✦</span><span>NEW · 12-COLUMN BUFFER WITH ADJUSTABLE KERNING.</span></li>
+                <li class="flex items-start gap-2"><span class="text-[var(--crimson)]">✦</span><span>NEW · HAND-TUNED VIM MODE — kept the keystrokes, dropped the waste.</span></li>
+                <li class="flex items-start gap-2"><span class="text-[var(--gold-deep)]">·</span><span>FIXED · MACOS KEYMAP REGRESSION FROM 4.1.3.</span></li>
+                <li class="flex items-start gap-2"><span class="text-[var(--gold-deep)]">·</span><span>FIXED · SLOW BOOT ON COLD WORKSPACES.</span></li>
+                <li class="flex items-start gap-2"><span class="text-[var(--oxblood)]">—</span><span>REMOVED · LEGACY PLUGIN FORMAT (RIP, 2002 — 2026).</span></li>
+              </ul>
+
+              <div class="mt-5 flex flex-wrap items-center gap-3">
+                <button class="pennant bg-[var(--crimson)] px-5 py-2.5 pr-10 label text-[11px] text-[var(--gold)]">Download v4.2</button>
+                <button class="pennant bg-[var(--oxblood)] px-5 py-2.5 pr-10 label text-[11px] text-[var(--cream)]">Read the diff</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 02.3 / THE MANUAL · TABLE OF CONTENTS -->
+    <section class="relative md:pr-16">
+      <div class="mx-auto max-w-5xl px-6 pt-12 pb-4">
+        <p class="label text-[12px] text-[var(--gold-deep)]">— 02.3 / UX · The manual</p>
+        <h3 class="display mt-1 text-3xl text-[var(--crimson)]">The Manual · reading order</h3>
+
+        <div class="mt-6 grid gap-6 md:grid-cols-[1fr_1.4fr]">
+          <!-- Cover panel -->
+          <div class="paper border-2 border-[var(--crimson)] p-6 shadow-[6px_6px_0_var(--oxblood)]">
+            <p class="label text-[11px] text-[var(--gold-deep)]">— Volume IV</p>
+            <p class="display mt-2 text-[var(--crimson)] text-5xl">The<br />Manual</p>
+            <div class="dingbat my-4" aria-hidden>
+              <svg width="56" height="16" viewBox="0 0 76 22" fill="currentColor">
+                <path d="M38 4 L38 18" stroke="currentColor" stroke-width="1.2" />
+                <ellipse cx="30" cy="9" rx="6" ry="2.5" transform="rotate(-15 30 9)" />
+                <ellipse cx="46" cy="9" rx="6" ry="2.5" transform="rotate(15 46 9)" />
+                <circle cx="38" cy="18" r="2" />
+              </svg>
+            </div>
+            <p class="script text-2xl text-[var(--gold-deep)]">a quiet book</p>
+            <p class="label mt-2 text-[12px] text-[var(--coffee)]">FOR PEOPLE WHO STILL READ THE WHOLE THING.</p>
+            <p class="label mt-6 text-[10px] text-[var(--gold-deep)]">— PRINTED IN BROOKLYN · 102 PAGES · CLOTHBOUND</p>
           </div>
 
-          <!-- Store list -->
-          <ul class="divide-y divide-[var(--crimson)]/20">
-            <li class="flex items-baseline justify-between gap-3 py-3">
-              <div>
-                <p class="label text-[13px] text-[var(--coffee)]">Mercado de San Miguel — Madrid</p>
-                <p class="label text-[10px] text-[var(--coffee)]/55">Plaza San Miguel, s/n · 28005</p>
-              </div>
-              <span class="label text-[10px] text-[var(--olive)] border border-[var(--olive)]/30 px-2 py-0.5">Abierto</span>
-            </li>
-            <li class="flex items-baseline justify-between gap-3 py-3">
-              <div>
-                <p class="label text-[13px] text-[var(--coffee)]">Conservas Casa Iturri — Pamplona</p>
-                <p class="label text-[10px] text-[var(--coffee)]/55">Calle Estafeta 22 · 31001</p>
-              </div>
-              <span class="label text-[10px] text-[var(--olive)] border border-[var(--olive)]/30 px-2 py-0.5">Abierto</span>
-            </li>
-            <li class="flex items-baseline justify-between gap-3 py-3">
-              <div>
-                <p class="label text-[13px] text-[var(--coffee)]">La Boqueria — Barcelona</p>
-                <p class="label text-[10px] text-[var(--coffee)]/55">La Rambla 91 · 08001</p>
-              </div>
-              <span class="label text-[10px] text-[var(--olive)] border border-[var(--olive)]/30 px-2 py-0.5">Abierto</span>
-            </li>
-            <li class="flex items-baseline justify-between gap-3 py-3">
-              <div>
-                <p class="label text-[13px] text-[var(--coffee)]">Mercado de la Ribera — Bilbao</p>
-                <p class="label text-[10px] text-[var(--coffee)]/55">Erribera Kalea 22 · 48005</p>
-              </div>
-              <span class="label text-[10px] text-[var(--crimson)] border border-[var(--crimson)]/30 px-2 py-0.5">Cerrado</span>
-            </li>
-            <li class="flex items-baseline justify-between gap-3 py-3">
-              <div>
-                <p class="label text-[13px] text-[var(--coffee)]">Mercado Central — Valencia</p>
-                <p class="label text-[10px] text-[var(--coffee)]/55">Plaza Ciudad de Brujas · 46001</p>
-              </div>
-              <span class="label text-[10px] text-[var(--olive)] border border-[var(--olive)]/30 px-2 py-0.5">Abierto</span>
-            </li>
-            <li class="flex items-baseline justify-between gap-3 py-3">
-              <div>
-                <p class="label text-[13px] text-[var(--coffee)]">Mercado de Triana — Sevilla</p>
-                <p class="label text-[10px] text-[var(--coffee)]/55">Plaza del Altozano · 41010</p>
-              </div>
-              <span class="label text-[10px] text-[var(--olive)] border border-[var(--olive)]/30 px-2 py-0.5">Abierto</span>
-            </li>
-          </ul>
+          <!-- TOC -->
+          <div class="paper border border-[var(--coffee)]/25 p-6">
+            <div class="flex items-baseline justify-between border-b-2 border-[var(--crimson)] pb-2">
+              <p class="label text-[12px] text-[var(--crimson)]">Table of contents</p>
+              <p class="label text-[10px] text-[var(--gold-deep)]">pp. 04 — 102</p>
+            </div>
+            <ul class="mt-2">
+              <li class="manual-row flex items-baseline gap-3 py-2.5">
+                <span class="display text-[var(--crimson)] w-12 text-2xl">I.</span>
+                <span class="flex-1 label text-[12px] text-[var(--coffee)]">Setup &amp; the workshop</span>
+                <span class="code text-[11px] text-[var(--coffee)]/70">04 — 12</span>
+              </li>
+              <li class="manual-row flex items-baseline gap-3 py-2.5">
+                <span class="display text-[var(--crimson)] w-12 text-2xl">II.</span>
+                <span class="flex-1 label text-[12px] text-[var(--coffee)]">The buffer</span>
+                <span class="code text-[11px] text-[var(--coffee)]/70">13 — 28</span>
+              </li>
+              <li class="manual-row flex items-baseline gap-3 py-2.5">
+                <span class="display text-[var(--crimson)] w-12 text-2xl">III.</span>
+                <span class="flex-1 label text-[12px] text-[var(--coffee)]">Patterns &amp; <span class="script normal-case text-[var(--gold-deep)]">tradition</span></span>
+                <span class="code text-[11px] text-[var(--coffee)]/70">29 — 42</span>
+              </li>
+              <li class="manual-row flex items-baseline gap-3 py-2.5">
+                <span class="display text-[var(--crimson)] w-12 text-2xl">IV.</span>
+                <span class="flex-1 label text-[12px] text-[var(--coffee)]">Plugins &amp; the press</span>
+                <span class="code text-[11px] text-[var(--coffee)]/70">43 — 60</span>
+              </li>
+              <li class="manual-row flex items-baseline gap-3 py-2.5">
+                <span class="display text-[var(--crimson)] w-12 text-2xl">V.</span>
+                <span class="flex-1 label text-[12px] text-[var(--coffee)]">Migrations</span>
+                <span class="code text-[11px] text-[var(--coffee)]/70">61 — 74</span>
+              </li>
+              <li class="manual-row flex items-baseline gap-3 py-2.5">
+                <span class="display text-[var(--crimson)] w-12 text-2xl">VI.</span>
+                <span class="flex-1 label text-[12px] text-[var(--coffee)]">Errata · we were wrong</span>
+                <span class="code text-[11px] text-[var(--coffee)]/70">75 — 84</span>
+              </li>
+              <li class="manual-row flex items-baseline gap-3 py-2.5">
+                <span class="display text-[var(--crimson)] w-12 text-2xl">VII.</span>
+                <span class="flex-1 label text-[12px] text-[var(--coffee)]">Troubleshooting</span>
+                <span class="code text-[11px] text-[var(--coffee)]/70">85 — 98</span>
+              </li>
+              <li class="flex items-baseline gap-3 py-2.5">
+                <span class="display text-[var(--gold-deep)] w-12 text-2xl">VIII.</span>
+                <span class="flex-1 label text-[12px] text-[var(--gold-deep)]">Colophon</span>
+                <span class="code text-[11px] text-[var(--gold-deep)]">99 — 102</span>
+              </li>
+            </ul>
+
+            <!-- Terminal welcome (a small CLI mock that doubles as a "from the workshop" footer) -->
+            <div class="terminal mt-6 p-4">
+              <p class="code text-[11px] text-[var(--gold)]">$ atelier login</p>
+              <p class="code text-[11px] mt-1 text-[var(--cream)]">welcome, m. brockmann.</p>
+              <p class="code text-[11px] text-[var(--cream)]/70">workshop opens at 09:00 PST · 3 unread issues.</p>
+              <p class="code mt-2 text-[11px] text-[var(--gold)]">$ atelier --help <span class="text-[var(--cream)]/40">▌</span></p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- COLOPHON -->
-    <footer class="relative md:pr-16 py-10">
+    <footer class="relative md:pr-16 py-10 mt-10">
       <div class="mx-auto max-w-5xl px-6">
-        <div class="flex flex-col items-center gap-3 border-t border-[var(--crimson)]/30 pt-6 sm:flex-row sm:justify-between">
-          <p class="label text-[11px] text-[var(--coffee)]/55">
-            ✦ Casa Conserva · Pamplona · Navarra
+        <div class="border-t-[3px] border-[var(--crimson)] pt-4 grid gap-3 md:grid-cols-3">
+          <p class="label text-[11px] text-[var(--coffee)]/70">
+            ✦ ATELIER CONSERVA · WORKSHOP No. 04
           </p>
-          <p class="label text-[11px] text-[var(--coffee)]/55">
-            Desde 1987 · Hecho con tradición
+          <p class="label text-[11px] text-[var(--coffee)]/70 md:text-center">
+            EST. 1987 · HAND-SET · HAND-TUNED · HAND-SHIPPED
+          </p>
+          <p class="label text-[11px] text-[var(--coffee)]/70 md:text-right">
+            ISSUE No. 04 · SPRING 2026
           </p>
         </div>
       </div>
     </footer>
 
-    <!-- Render jar-lid product cards (4 of them).
-         Each renders a red circular lid with circular type running around it. -->
+    <!-- Render jar-lid editor cards (4 of them).
+         Each renders a circular "jar lid" with circular type around the rim. -->
     <script>
-      document.querySelectorAll(".lid-placeholder").forEach((el, i) => {
+      document.querySelectorAll(".lid-card").forEach((el, i) => {
         const name = el.dataset.name || "";
+        const role = el.dataset.role || "";
+        const version = el.dataset.version || "";
         const color = el.dataset.color || "#d70321";
         const id = "lid-arc-" + i;
         const wrap = document.createElement("div");
         wrap.className = "flex flex-col items-center gap-3";
         wrap.innerHTML = `
-          <div class="relative h-32 w-32 sm:h-40 sm:w-40">
+          <div class="relative h-32 w-32 sm:h-36 sm:w-36">
             <div class="absolute inset-0 rounded-full"
               style="background:${color};box-shadow:0 6px 0 rgba(106,6,19,0.55), inset 0 0 0 2px #cba058, inset 0 0 0 6px ${color}, inset 0 0 0 7px #cba058"></div>
             <svg viewBox="0 0 160 160" class="absolute inset-0 h-full w-full" aria-hidden="true">
@@ -812,17 +706,26 @@
               <text font-family="Oswald, sans-serif" font-weight="700" font-size="11"
                 fill="#cba058" letter-spacing="2.4">
                 <textPath href="#${id}" startOffset="2%">
-                  DESDE · 1987 · NUEVA · TRADICIÓN · CONSERVA · ${name.toUpperCase()} ·
+                  EST · 1987 · NEW · TRADITION · ATELIER · ${name.toUpperCase()} ·
                 </textPath>
               </text>
             </svg>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <span style="font-family:Anton, sans-serif;font-size:22px;color:#cba058;letter-spacing:1px">
+            <div class="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
+              <span style="font-family:Anton, sans-serif;font-size:24px;color:#cba058;letter-spacing:1px">
                 ${name.toUpperCase()}
+              </span>
+              <span style="font-family:Oswald, sans-serif;font-weight:600;font-size:9px;color:#cba058;letter-spacing:2px">
+                ${version.toUpperCase()}
               </span>
             </div>
           </div>
-          <span class="label text-[12px] text-[#2a1810]">${name}</span>
+          <div class="text-center">
+            <span class="label text-[12px] text-[var(--coffee)]">${name}</span>
+            <p class="label text-[10px] text-[var(--gold-deep)] mt-0.5">— ${role.toUpperCase()}</p>
+          </div>
+          <button class="pennant bg-[var(--crimson)] px-4 py-2 pr-9 label text-[10px] text-[var(--gold)]">
+            Install
+          </button>
         `;
         el.replaceWith(wrap);
       });
