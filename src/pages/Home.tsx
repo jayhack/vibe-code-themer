@@ -15,14 +15,14 @@ export function Home() {
                 className="h-1.5 w-1.5 rounded-full"
                 style={{
                   background:
-                    "conic-gradient(from 220deg at 50% 50%, #FF6AD5, #8C52FF, #26C6DA, #FF6AD5)",
+                    "linear-gradient(135deg, #1d4ed8 0%, #3b82f6 55%, #0ea5e9 100%)",
                 }}
               />
               Inspiration board · v0.1
             </p>
             <h1 className="text-5xl font-extrabold tracking-tight text-black md:text-6xl">
               Design vibes
-              <span className="block bg-gradient-to-r from-[#1d4ed8] to-[#0ea5e9] pb-[0.125em] pt-[0.04em] font-mono text-[1.06em] font-semibold tabular-nums leading-[1.38] tracking-tight bg-clip-text text-transparent md:text-[1.1em]">
+              <span className="block bg-gradient-to-r from-[#1d4ed8] via-[#3b82f6] to-[#0ea5e9] pb-[0.12em] pt-[0.04em] font-mono text-[1.08em] font-extrabold tabular-nums leading-[1.38] tracking-tight bg-clip-text text-transparent md:text-[1.12em]">
                 for coding agents.
               </span>
             </h1>

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
-import { Header } from "../components/Header";
+import { GitHubMark, Header } from "../components/Header";
 import type { Vibe } from "../data/types";
 import { findVibe } from "../data/vibes";
 import { NotFound } from "./NotFound";
@@ -61,49 +61,26 @@ export function VibeDetail() {
 
   return (
     <div className="flex h-screen flex-col bg-white">
-      <Header vibeName={vibe.name} />
-
-      <div className="border-b border-black/5 bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <div className="flex min-w-0 items-center">
-            <div className="inline-flex shrink-0 items-center gap-1 rounded-full bg-black/[0.04] p-1">
-              <TabButton
-                active={tab === "preview"}
-                onClick={() => setTab("preview")}
-              >
-                Preview
-              </TabButton>
-              <TabButton
-                active={tab === "theme"}
-                onClick={() => setTab("theme")}
-              >
-                Theme
-              </TabButton>
-            </div>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-2">
-            <a
-              href={previewUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-sm font-medium text-black hover:bg-black/[0.04]"
+      <Header
+        vibeName={vibe.name}
+        detailAfterTitle={
+          <div className="inline-flex shrink-0 items-center gap-1 rounded-full bg-black/[0.04] p-1">
+            <TabButton
+              active={tab === "preview"}
+              onClick={() => setTab("preview")}
             >
-              New tab
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M7 17 17 7" />
-                <path d="M7 7h10v10" />
-              </svg>
-            </a>
+              Preview
+            </TabButton>
+            <TabButton
+              active={tab === "theme"}
+              onClick={() => setTab("theme")}
+            >
+              Theme
+            </TabButton>
+          </div>
+        }
+        detailActions={
+          <>
             <button
               type="button"
               onClick={onCopy}
@@ -127,9 +104,17 @@ export function VibeDetail() {
                 </svg>
               )}
             </button>
-          </div>
-        </div>
-      </div>
+            <a
+              href="https://github.com/jayhack/vibe-code-themer"
+              aria-label="View on GitHub"
+              className="inline-flex items-center gap-1.5 rounded-full bg-black/[0.06] px-3 py-1.5 font-medium text-black/70 transition hover:bg-black/[0.1] hover:text-black"
+            >
+              <GitHubMark />
+              <span className="hidden sm:inline">GitHub</span>
+            </a>
+          </>
+        }
+      />
 
       {tab === "preview" ? (
         <PreviewPane

@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NightWave — vibe preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --void: #030305;
+        --carbon: #0a0a0f;
+        --steel: #1a1a24;
+        --ash: #2e2e3a;
+        --ion: #00b4ff;
+        --ember: #ff5b1f;
+        --ember-hot: #ff8a1f;
+        --bone: #e8e8ec;
+        --smoke: #6b6b7a;
+      }
+      html,
+      body {
+        background: var(--void);
+        color: var(--bone);
+        font-family: "Inter", system-ui, sans-serif;
+      }
+      .font-display {
+        font-family: "Big Shoulders Display", "Inter", sans-serif;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        line-height: 0.85;
+        text-transform: uppercase;
+      }
+      .font-mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+      }
+      .mono-up {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+      }
+
+      /* Page-level vignette */
+      .vignette::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 80% 60% at 50% 0%,
+          #14141c 0%,
+          #030305 70%
+        );
+        z-index: -2;
+        pointer-events: none;
+      }
+
+      /* Razor scanlines */
+      .scanlines::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.06) 0 1px,
+          transparent 1px 3px
+        );
+        mix-blend-mode: overlay;
+        pointer-events: none;
+        z-index: 50;
+      }
+
+      /* Ion grid horizon (perspective floor) */
+      .ion-grid {
+        position: absolute;
+        inset: 50% 0 0 0;
+        background-image:
+          linear-gradient(
+            to right,
+            rgba(0, 180, 255, 0.4) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(0, 180, 255, 0.4) 1px,
+            transparent 1px
+          );
+        background-size: 56px 56px;
+        transform: perspective(700px) rotateX(62deg);
+        transform-origin: top center;
+        mask-image: linear-gradient(
+          to bottom,
+          black 5%,
+          rgba(0, 0, 0, 0.55) 50%,
+          transparent 100%
+        );
+        animation: ion-scroll 6s linear infinite;
+      }
+      @keyframes ion-scroll {
+        0% { background-position: 0 0; }
+        100% { background-position: 0 56px; }
+      }
+
+      /* Slash strip — alternating piercing cuts */
+      .slash-strip {
+        height: 6px;
+        background: linear-gradient(
+          90deg,
+          #030305 0 30%,
+          #00b4ff 30% 30.4%,
+          #030305 30.4% 70%,
+          #ff5b1f 70% 70.4%,
+          #030305 70.4% 100%
+        );
+      }
+
+      /* Glitch type */
+      .glitch {
+        position: relative;
+        display: inline-block;
+      }
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        opacity: 0.85;
+      }
+      .glitch::before {
+        color: var(--ember);
+        transform: translate(2px, 0);
+      }
+      .glitch::after {
+        color: var(--ion);
+        transform: translate(-2px, 0);
+      }
+
+      /* Panel base — carbon with hairline ash + ion top highlight */
+      .panel {
+        background: var(--carbon);
+        border: 1px solid var(--ash);
+        position: relative;
+      }
+      .panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        box-shadow: inset 0 1px 0 rgba(0, 180, 255, 0.15);
+      }
+
+      .corner-tag {
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        padding: 4px 9px 5px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--ion);
+        background: var(--void);
+        border-right: 1px solid var(--ash);
+        border-bottom: 1px solid var(--ash);
+      }
+      .corner-tag.ember {
+        color: var(--ember);
+      }
+
+      /* Section number badge */
+      .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px 5px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--bone);
+        border: 1px solid var(--ash);
+        background: var(--carbon);
+      }
+      .section-tag .dot {
+        width: 4px;
+        height: 4px;
+        background: var(--ember);
+        display: inline-block;
+      }
+
+      /* Buttons */
+      .btn-primary {
+        background: linear-gradient(135deg, #ff5b1f 0%, #ff8a1f 100%);
+        color: var(--void);
+      }
+      .btn-primary:hover {
+        filter: brightness(1.1);
+        box-shadow: 0 0 0 1px var(--ember);
+      }
+      .btn-secondary {
+        background: var(--carbon);
+        color: var(--bone);
+        border: 1px solid var(--ash);
+      }
+      .btn-secondary:hover {
+        border-color: var(--ion);
+        color: var(--ion);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--smoke);
+      }
+      .btn-ghost:hover {
+        color: var(--bone);
+        border-bottom: 1px solid var(--ash);
+      }
+
+      /* Pills (square corners, outline only) */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 8px 4px;
+        border: 1px solid var(--ash);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--bone);
+      }
+      .pill .pill-dot {
+        width: 4px;
+        height: 4px;
+        background: var(--ember);
+      }
+      .pill.ion .pill-dot {
+        background: var(--ion);
+      }
+
+      /* Gradient strips */
+      .grad-strip {
+        height: 64px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--ash);
+      }
+      .grad-strip .label {
+        position: absolute;
+        bottom: 8px;
+        left: 10px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--bone);
+        background: var(--void);
+        padding: 3px 7px;
+      }
+
+      /* Crosshair / target reticle */
+      .reticle {
+        position: relative;
+        width: 360px;
+        height: 360px;
+      }
+      .reticle .ring {
+        position: absolute;
+        inset: 0;
+        border: 1px solid var(--ion);
+        border-radius: 9999px;
+      }
+      .reticle .ring-2 {
+        position: absolute;
+        inset: 18%;
+        border: 1px solid rgba(0, 180, 255, 0.35);
+        border-radius: 9999px;
+      }
+      .reticle .halo {
+        position: absolute;
+        inset: -10%;
+        border-radius: 9999px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 180, 255, 0.18) 0%,
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+      .reticle .cross-h,
+      .reticle .cross-v {
+        position: absolute;
+        background: var(--ember);
+      }
+      .reticle .cross-h {
+        left: 4%;
+        right: 4%;
+        top: calc(50% - 0.5px);
+        height: 1px;
+      }
+      .reticle .cross-v {
+        top: 4%;
+        bottom: 4%;
+        left: calc(50% - 0.5px);
+        width: 1px;
+      }
+      .reticle .center-dot {
+        position: absolute;
+        top: calc(50% - 3px);
+        left: calc(50% - 3px);
+        width: 6px;
+        height: 6px;
+        background: var(--ember);
+      }
+      .reticle .notch {
+        position: absolute;
+        background: var(--ion);
+        width: 1px;
+        height: 14px;
+      }
+      .reticle .notch.t { top: 0; left: calc(50% - 0.5px); }
+      .reticle .notch.b { bottom: 0; left: calc(50% - 0.5px); }
+      .reticle .notch.l {
+        left: 0; top: calc(50% - 0.5px); width: 14px; height: 1px;
+      }
+      .reticle .notch.r {
+        right: 0; top: calc(50% - 0.5px); width: 14px; height: 1px;
+      }
+
+      /* Diagonal ember stripe */
+      .ember-stripe {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          115deg,
+          transparent 49.7%,
+          rgba(255, 91, 31, 0.55) 49.7% 50%,
+          transparent 50%
+        );
+        pointer-events: none;
+      }
+      .ion-counter-stripe {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          115deg,
+          transparent 60%,
+          rgba(0, 180, 255, 0.35) 60% 60.18%,
+          transparent 60.18%
+        );
+        pointer-events: none;
+      }
+
+      /* Tick / barcode divider */
+      .ticks {
+        height: 14px;
+        background-image: linear-gradient(
+          to right,
+          var(--ash) 1px,
+          transparent 1px
+        );
+        background-size: 8px 14px;
+        opacity: 0.7;
+      }
+
+      /* Waveform bars (broadcast section) */
+      .wave-row {
+        display: flex;
+        align-items: end;
+        gap: 2px;
+        height: 56px;
+      }
+      .wave-row span {
+        width: 3px;
+        background: var(--smoke);
+      }
+      .wave-row span.hot { background: var(--ember); }
+      .wave-row span.cold { background: var(--ion); }
+
+      /* Vinyl product visual */
+      .vinyl {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        background:
+          radial-gradient(circle at 50% 50%, var(--steel) 0 14%, transparent 14.5%),
+          radial-gradient(circle at 50% 50%, transparent 14.5% 14.8%, rgba(0,180,255,0.35) 14.8% 15%, transparent 15%),
+          repeating-radial-gradient(circle at 50% 50%, var(--carbon) 0 1px, var(--void) 1px 3px),
+          var(--void);
+        border: 1px solid var(--ash);
+      }
+      .vinyl::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 4px;
+        height: 4px;
+        background: var(--ember);
+        transform: translate(-50%, -50%);
+      }
+
+      /* Cassette product visual */
+      .cassette {
+        position: relative;
+        aspect-ratio: 16 / 10;
+        background: var(--carbon);
+        border: 1px solid var(--ash);
+        overflow: hidden;
+      }
+      .cassette::before,
+      .cassette::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 18%;
+        aspect-ratio: 1;
+        border: 1px solid var(--ash);
+        background: var(--void);
+        transform: translateY(-50%);
+        border-radius: 9999px;
+      }
+      .cassette::before { left: 18%; }
+      .cassette::after { right: 18%; }
+
+      /* Channel block (signal indicator) */
+      .channel {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border: 1px solid var(--ash);
+        background: var(--carbon);
+      }
+      .channel .num {
+        font-family: "Big Shoulders Display", sans-serif;
+        font-weight: 900;
+        font-size: 28px;
+        color: var(--ion);
+        line-height: 1;
+        min-width: 36px;
+      }
+
+      /* Fine ash divider */
+      .div-ash {
+        height: 1px;
+        background: var(--ash);
+      }
+    </style>
+  </head>
+
+  <body class="vignette scanlines relative min-h-screen overflow-x-hidden">
+    <!-- ============================================================= -->
+    <!-- § IDENTITY                                                     -->
+    <!-- ============================================================= -->
+    <section class="relative isolate overflow-hidden">
+      <!-- Ion grid horizon -->
+      <div class="absolute inset-0 -z-10">
+        <div class="ion-grid"></div>
+      </div>
+
+      <!-- Top hairline -->
+      <div class="absolute inset-x-0 top-0 h-px bg-[#2E2E3A]"></div>
+
+      <!-- Nav -->
+      <nav class="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+        <div class="flex items-center gap-3">
+          <span class="block h-3 w-1 bg-[#FF5B1F]"></span>
+          <span class="font-display text-xl text-[#E8E8EC]">NIGHT/WAVE</span>
+        </div>
+        <div class="hidden items-center gap-7 md:flex">
+          <a href="#" class="mono-up text-[11px] text-[#6B6B7A] hover:text-[#E8E8EC]">Channels</a>
+          <a href="#" class="mono-up text-[11px] text-[#6B6B7A] hover:text-[#E8E8EC]">Lineup</a>
+          <a href="#" class="mono-up text-[11px] text-[#6B6B7A] hover:text-[#E8E8EC]">Manifest</a>
+          <a href="#" class="mono-up text-[11px] text-[#00B4FF] hover:text-[#E8E8EC]">// Console</a>
+        </div>
+        <a href="#" class="mono-up inline-flex items-center gap-2 px-3 py-1.5 text-[10px] text-[#FF5B1F]" style="border:1px solid #FF5B1F">
+          <span class="h-1.5 w-1.5 bg-[#FF5B1F]"></span>
+          Tune in
+        </a>
+      </nav>
+
+      <!-- Hero -->
+      <div class="relative mx-auto max-w-6xl px-6 pb-32 pt-20 text-center">
+        <!-- Crosshair behind title -->
+        <div class="pointer-events-none absolute left-1/2 top-32 -translate-x-1/2 -z-10 reticle">
+          <div class="halo"></div>
+          <div class="ring"></div>
+          <div class="ring-2"></div>
+          <div class="cross-h"></div>
+          <div class="cross-v"></div>
+          <div class="center-dot"></div>
+          <div class="notch t"></div>
+          <div class="notch b"></div>
+          <div class="notch l"></div>
+          <div class="notch r"></div>
+        </div>
+
+        <span class="mono-up inline-flex items-center gap-2 px-3 py-1 text-[10px] text-[#00B4FF]" style="border:1px solid #2E2E3A;background:rgba(3,3,5,0.7)">
+          <span class="h-1 w-1 bg-[#00B4FF]"></span>
+          Signal acquired · 03:42:18 UTC
+        </span>
+
+        <h1 class="mt-6 font-display text-[#E8E8EC]" style="font-size:clamp(4rem, 12vw, 9rem)">
+          <span class="glitch" data-text="NIGHTWAVE">NIGHTWAVE</span>
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-xl text-base text-[#6B6B7A] md:text-lg">
+          Vaporwave's grid horizon stripped of pastel and rebuilt in pure void
+          black. Ember and ion as 1px flares. A bunker, not a mall —
+          <span class="text-[#00B4FF]">restraint as the loudest tool</span>.
+        </p>
+
+        <div class="mt-8 flex items-center justify-center gap-3">
+          <a href="#" class="btn-primary mono-up inline-flex items-center gap-2 px-5 py-3 text-xs font-bold">
+            Open channel
+            <span>→</span>
+          </a>
+          <a href="#" class="btn-secondary mono-up inline-flex items-center gap-2 px-5 py-3 text-xs font-medium">
+            <span class="text-[#FF5B1F]">▮</span>
+            Latest set
+          </a>
+        </div>
+
+        <p class="font-mono mt-12 text-sm text-[#00B4FF]">
+          &gt; LOAD &nbsp;//&nbsp; CHANNEL 037 &nbsp;//&nbsp; STABLE 0.984ms
+        </p>
+
+        <!-- Slash strip just below the LOAD line -->
+        <div class="slash-strip mx-auto mt-10 max-w-3xl"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- § 01 / THEME SPECIFICATION                                     -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-4 pb-10">
+      <div class="ticks mb-8"></div>
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <span class="section-tag"><span class="dot"></span>§ 01 / Theme spec</span>
+          <h2 class="mt-4 font-display text-5xl text-[#E8E8EC]">THE KIT</h2>
+        </div>
+        <p class="font-mono max-w-md text-sm text-[#6B6B7A]">
+          &gt; PALETTE · GRADIENTS · TYPE · COMPONENTS — exactly what
+          prompt.md prescribes, rendered.
+        </p>
+      </div>
+    </section>
+
+    <!-- 01.1 — PALETTE -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-12">
+      <div class="mb-4 flex items-center justify-between">
+        <p class="mono-up text-xs text-[#FF5B1F]">◢ 01.1 / Palette</p>
+        <span class="font-mono text-xs text-[#6B6B7A]">08 swatches</span>
+      </div>
+      <div class="grid grid-cols-4 gap-px bg-[#2E2E3A] md:grid-cols-8">
+        <div class="font-mono flex flex-col gap-1 p-4 text-[10px]" style="background:#030305;color:#E8E8EC">
+          <span class="mono-up">Void</span><span class="text-[#6B6B7A]">#030305</span>
+        </div>
+        <div class="font-mono flex flex-col gap-1 p-4 text-[10px]" style="background:#0A0A0F;color:#E8E8EC">
+          <span class="mono-up">Carbon</span><span class="text-[#6B6B7A]">#0A0A0F</span>
+        </div>
+        <div class="font-mono flex flex-col gap-1 p-4 text-[10px]" style="background:#1A1A24;color:#E8E8EC">
+          <span class="mono-up">Steel</span><span class="text-[#6B6B7A]">#1A1A24</span>
+        </div>
+        <div class="font-mono flex flex-col gap-1 p-4 text-[10px]" style="background:#2E2E3A;color:#E8E8EC">
+          <span class="mono-up">Ash</span><span class="opacity-70">#2E2E3A</span>
+        </div>
+        <div class="font-mono flex flex-col gap-1 p-4 text-[10px]" style="background:#00B4FF;color:#030305">
+          <span class="mono-up font-bold">Ion Blue</span><span class="opacity-80">#00B4FF</span>
+        </div>
+        <div class="font-mono flex flex-col gap-1 p-4 text-[10px]" style="background:#FF5B1F;color:#030305">
+          <span class="mono-up font-bold">Ember</span><span class="opacity-80">#FF5B1F</span>
+        </div>
+        <div class="font-mono flex flex-col gap-1 p-4 text-[10px]" style="background:#E8E8EC;color:#030305">
+          <span class="mono-up font-bold">Bone</span><span class="opacity-80">#E8E8EC</span>
+        </div>
+        <div class="font-mono flex flex-col gap-1 p-4 text-[10px]" style="background:#6B6B7A;color:#030305">
+          <span class="mono-up font-bold">Smoke</span><span class="opacity-80">#6B6B7A</span>
+        </div>
+      </div>
+      <p class="mono-up mt-4 text-[10px] text-[#6B6B7A]">
+        ▲ Ion + Ember combined occupy &lt;5% of any rendered surface · the rest is void
+      </p>
+    </section>
+
+    <!-- 01.2 — GRADIENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-12">
+      <div class="mb-4">
+        <p class="mono-up text-xs text-[#FF5B1F]">◢ 01.2 / Required gradients</p>
+      </div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <div>
+          <div class="grad-strip" style="background: linear-gradient(135deg, #FF5B1F 0%, #FF8A1F 100%);">
+            <span class="label" style="color:#030305;background:rgba(255,255,255,0.85)">ember · primary CTA</span>
+          </div>
+          <p class="font-mono mt-2 text-[11px] text-[#6B6B7A]">linear-gradient(135deg, #FF5B1F 0%, #FF8A1F 100%)</p>
+        </div>
+        <div>
+          <div class="grad-strip" style="background: linear-gradient(135deg, #00B4FF 0%, #0078CC 100%);">
+            <span class="label">ion · signal</span>
+          </div>
+          <p class="font-mono mt-2 text-[11px] text-[#6B6B7A]">linear-gradient(135deg, #00B4FF 0%, #0078CC 100%)</p>
+        </div>
+        <div>
+          <div class="grad-strip" style="background: radial-gradient(ellipse 80% 60% at 50% 0%, #14141C 0%, #030305 70%);">
+            <span class="label">vignette · page corona</span>
+          </div>
+          <p class="font-mono mt-2 text-[11px] text-[#6B6B7A]">radial-gradient(ellipse 80% 60% at 50% 0%, #14141C 0%, #030305 70%)</p>
+        </div>
+        <div>
+          <div class="grad-strip" style="background: linear-gradient(90deg, #030305 0 30%, #00B4FF 30% 30.4%, #030305 30.4% 70%, #FF5B1F 70% 70.4%, #030305 70.4% 100%);">
+            <span class="label">slash strip · once per page</span>
+          </div>
+          <p class="font-mono mt-2 text-[11px] text-[#6B6B7A]">two 0.4% piercing cuts on void</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.3 — TYPOGRAPHY -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-12">
+      <div class="mb-4">
+        <p class="mono-up text-xs text-[#00B4FF]">◢ 01.3 / Typography</p>
+      </div>
+      <div class="grid gap-px bg-[#2E2E3A] md:grid-cols-3">
+        <div class="bg-[#0A0A0F] p-5">
+          <p class="mono-up text-[10px] text-[#FF5B1F]">Display</p>
+          <p class="mt-3 font-display text-5xl text-[#E8E8EC]">BIG SHOULDERS</p>
+          <p class="font-mono mt-3 text-[11px] text-[#6B6B7A]">
+            900 · uppercase · -0.01em · line-height 0.85
+          </p>
+        </div>
+        <div class="bg-[#0A0A0F] p-5">
+          <p class="mono-up text-[10px] text-[#00B4FF]">Body</p>
+          <p class="mt-3 text-2xl text-[#E8E8EC]" style="font-family:'Inter',sans-serif">
+            Inter — sentence case
+          </p>
+          <p class="font-mono mt-3 text-[11px] text-[#6B6B7A]">
+            400 / 500 / 600 / 700 · 14–16px paragraphs
+          </p>
+        </div>
+        <div class="bg-[#0A0A0F] p-5">
+          <p class="mono-up text-[10px] text-[#E8E8EC]">Mono</p>
+          <p class="font-mono mt-3 text-2xl text-[#00B4FF]">JETBRAINS &gt; 037</p>
+          <p class="font-mono mt-3 text-[11px] text-[#6B6B7A]">
+            uppercase · tracking 0.22em · timestamps · telemetry
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.4 — COMPONENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-4">
+        <p class="mono-up text-xs text-[#FF5B1F]">◢ 01.4 / Components</p>
+      </div>
+      <div class="grid gap-px bg-[#2E2E3A] md:grid-cols-2">
+        <!-- Buttons + pills -->
+        <div class="bg-[#0A0A0F] p-6">
+          <p class="mono-up text-[10px] text-[#FF5B1F]">Buttons & pills</p>
+          <div class="mt-5 flex flex-wrap items-center gap-3">
+            <button class="btn-primary mono-up px-4 py-2 text-[11px] font-bold">Primary</button>
+            <button class="btn-secondary mono-up px-4 py-2 text-[11px] font-medium">Secondary</button>
+            <button class="btn-ghost mono-up px-4 py-2 text-[11px] font-medium">Ghost</button>
+          </div>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="pill"><span class="pill-dot"></span>Live</span>
+            <span class="pill ion"><span class="pill-dot"></span>Channel 037</span>
+            <span class="pill"><span class="pill-dot" style="background:#00B4FF"></span>Stable</span>
+            <span class="pill"><span class="pill-dot"></span>Hardcore</span>
+          </div>
+          <div class="mt-6 div-ash"></div>
+          <p class="font-mono mt-4 text-[11px] text-[#6B6B7A]">
+            // Square corners only · uppercase mono · tracking 0.22em
+          </p>
+        </div>
+
+        <!-- Inputs -->
+        <div class="bg-[#0A0A0F] p-6">
+          <p class="mono-up text-[10px] text-[#00B4FF]">Inputs & selects</p>
+          <label class="mono-up mt-5 block text-[10px] text-[#6B6B7A]">Operator handle</label>
+          <input
+            type="text"
+            placeholder="OPERATOR_037"
+            class="mt-1 w-full bg-[#030305] px-3 py-2 font-mono text-sm text-[#E8E8EC] placeholder-[#6B6B7A] outline-none focus:border-[#00B4FF]"
+            style="border:1px solid #2E2E3A"
+          />
+          <label class="mono-up mt-4 block text-[10px] text-[#6B6B7A]">Channel</label>
+          <select class="mt-1 w-full bg-[#030305] px-3 py-2 text-sm text-[#E8E8EC] outline-none focus:border-[#00B4FF]" style="border:1px solid #2E2E3A">
+            <option>037 — Hard Trance</option>
+            <option>019 — Industrial</option>
+            <option>002 — Bunker Ambient</option>
+          </select>
+          <div class="mt-5 flex items-center gap-3">
+            <span class="mono-up text-[10px] text-[#6B6B7A]">Encryption</span>
+            <span class="pill ion"><span class="pill-dot"></span>AES-256</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- § 02 / UX APPLICATIONS                                         -->
+    <!-- ============================================================= -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-4 pb-10">
+      <div class="ticks mb-8"></div>
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <span class="section-tag"><span class="dot"></span>§ 02 / UX applications</span>
+          <h2 class="mt-4 font-display text-5xl text-[#E8E8EC]">IN THE BUNKER</h2>
+        </div>
+        <p class="font-mono max-w-md text-sm text-[#6B6B7A]">
+          &gt; THREE PRODUCT SURFACES — broadcast, lineup, manifest — built
+          from the kit above.
+        </p>
+      </div>
+    </section>
+
+    <!-- 02.1 — UNDERGROUND BROADCAST -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-5">
+        <p class="mono-up text-xs text-[#FF5B1F]">◢ 02.1 / UX — Underground broadcast</p>
+        <h3 class="mt-2 font-display text-4xl text-[#E8E8EC]">CHANNEL 037 · LIVE</h3>
+      </div>
+
+      <div class="grid gap-px bg-[#2E2E3A] md:grid-cols-[1.4fr_1fr]">
+        <!-- Now playing + tracklist -->
+        <div class="panel relative bg-[#0A0A0F]">
+          <span class="corner-tag">◢ NOW BROADCASTING</span>
+          <div class="ember-stripe"></div>
+          <div class="ion-counter-stripe"></div>
+
+          <div class="relative p-6 pt-10">
+            <div class="grid grid-cols-[112px_1fr] gap-5">
+              <div class="vinyl"></div>
+              <div class="min-w-0">
+                <p class="mono-up text-[10px] text-[#FF5B1F]">▶ Live · 03:42 / 07:21</p>
+                <h4 class="mt-1 font-display text-3xl text-[#E8E8EC]">SUBVERTED FREQUENCY</h4>
+                <p class="text-sm text-[#6B6B7A]">Iron Lung · Bunker Sessions Vol. III (2026)</p>
+
+                <!-- Waveform -->
+                <div class="wave-row mt-4">
+                  <span style="height:10%"></span><span style="height:18%"></span>
+                  <span style="height:32%"></span><span style="height:24%"></span>
+                  <span style="height:48%"></span><span class="hot" style="height:62%"></span>
+                  <span class="hot" style="height:88%"></span><span class="hot" style="height:74%"></span>
+                  <span style="height:54%"></span><span style="height:36%"></span>
+                  <span style="height:42%"></span><span class="cold" style="height:58%"></span>
+                  <span class="cold" style="height:72%"></span><span style="height:46%"></span>
+                  <span style="height:28%"></span><span style="height:18%"></span>
+                  <span style="height:38%"></span><span style="height:52%"></span>
+                  <span class="hot" style="height:66%"></span><span class="hot" style="height:82%"></span>
+                  <span style="height:48%"></span><span style="height:30%"></span>
+                  <span style="height:22%"></span><span style="height:14%"></span>
+                  <span class="cold" style="height:42%"></span><span class="cold" style="height:60%"></span>
+                  <span style="height:48%"></span><span style="height:38%"></span>
+                  <span style="height:24%"></span><span style="height:18%"></span>
+                  <span style="height:28%"></span><span style="height:36%"></span>
+                  <span class="hot" style="height:54%"></span><span class="hot" style="height:46%"></span>
+                  <span style="height:32%"></span><span style="height:22%"></span>
+                  <span style="height:14%"></span><span style="height:10%"></span>
+                </div>
+
+                <div class="mt-4 flex items-center gap-3">
+                  <button class="btn-primary mono-up px-3 py-2 text-[10px] font-bold">▶ Play</button>
+                  <button class="btn-secondary mono-up px-3 py-2 text-[10px] font-medium">Queue</button>
+                  <button class="btn-secondary mono-up px-3 py-2 text-[10px] font-medium">▮▮ Cut signal</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="div-ash"></div>
+
+          <!-- Telemetry strip -->
+          <div class="grid grid-cols-4 divide-x divide-[#2E2E3A] text-[#E8E8EC]">
+            <div class="p-4">
+              <p class="mono-up text-[9px] text-[#6B6B7A]">Listeners</p>
+              <p class="font-display mt-1 text-3xl text-[#00B4FF]">12,481</p>
+            </div>
+            <div class="p-4">
+              <p class="mono-up text-[9px] text-[#6B6B7A]">Bitrate</p>
+              <p class="font-display mt-1 text-3xl">320</p>
+            </div>
+            <div class="p-4">
+              <p class="mono-up text-[9px] text-[#6B6B7A]">Latency</p>
+              <p class="font-display mt-1 text-3xl text-[#00B4FF]">0.984<span class="text-base text-[#6B6B7A]">ms</span></p>
+            </div>
+            <div class="p-4">
+              <p class="mono-up text-[9px] text-[#6B6B7A]">Status</p>
+              <p class="font-display mt-1 text-3xl text-[#FF5B1F]">STABLE</p>
+            </div>
+          </div>
+
+          <div class="div-ash"></div>
+
+          <!-- Tracklist -->
+          <ul class="divide-y divide-[#2E2E3A]">
+            <li class="grid grid-cols-12 items-center gap-3 px-6 py-3">
+              <span class="font-mono col-span-1 text-sm text-[#00B4FF]">01</span>
+              <span class="col-span-5 truncate text-sm text-[#E8E8EC]">Iron Lung Protocol</span>
+              <span class="col-span-4 truncate text-sm text-[#6B6B7A]">Cement Block</span>
+              <span class="font-mono col-span-2 text-right text-sm text-[#6B6B7A]">3:42</span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 px-6 py-3 bg-[#FF5B1F]/[0.06]" style="border-left:2px solid #FF5B1F">
+              <span class="font-mono col-span-1 text-sm text-[#FF5B1F]">▶</span>
+              <span class="col-span-5 truncate text-sm text-[#E8E8EC]">Subverted Frequency</span>
+              <span class="col-span-4 truncate text-sm text-[#6B6B7A]">Iron Lung</span>
+              <span class="font-mono col-span-2 text-right text-sm text-[#E8E8EC]">7:21</span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 px-6 py-3">
+              <span class="font-mono col-span-1 text-sm text-[#00B4FF]">03</span>
+              <span class="col-span-5 truncate text-sm text-[#E8E8EC]">Drone-022</span>
+              <span class="col-span-4 truncate text-sm text-[#6B6B7A]">Bunker Sect</span>
+              <span class="font-mono col-span-2 text-right text-sm text-[#6B6B7A]">5:55</span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 px-6 py-3">
+              <span class="font-mono col-span-1 text-sm text-[#00B4FF]">04</span>
+              <span class="col-span-5 truncate text-sm text-[#E8E8EC]">Black Water Marche</span>
+              <span class="col-span-4 truncate text-sm text-[#6B6B7A]">VOID//037</span>
+              <span class="font-mono col-span-2 text-right text-sm text-[#6B6B7A]">4:01</span>
+            </li>
+            <li class="grid grid-cols-12 items-center gap-3 px-6 py-3">
+              <span class="font-mono col-span-1 text-sm text-[#00B4FF]">05</span>
+              <span class="col-span-5 truncate text-sm text-[#E8E8EC]">Concrete Sleep</span>
+              <span class="col-span-4 truncate text-sm text-[#6B6B7A]">Telephone Tehran</span>
+              <span class="font-mono col-span-2 text-right text-sm text-[#6B6B7A]">6:18</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Sidebar: operator + up next -->
+        <div class="grid grid-rows-[auto_auto_1fr] gap-px bg-[#2E2E3A]">
+          <div class="panel relative bg-[#0A0A0F] p-6 pt-10">
+            <span class="corner-tag ember">◢ OPERATOR</span>
+            <h4 class="font-display text-2xl text-[#E8E8EC]">DJ IRON_LUNG</h4>
+            <p class="mt-2 text-sm text-[#6B6B7A]">
+              Resident · every Thursday from the bunker. Currently
+              <span class="text-[#00B4FF]">12,481</span> operators synced.
+            </p>
+            <div class="mt-4 flex items-center gap-2">
+              <span class="pill"><span class="pill-dot"></span>On air</span>
+              <span class="font-mono text-xs text-[#6B6B7A]">22:14 PST</span>
+            </div>
+          </div>
+
+          <div class="panel relative bg-[#0A0A0F] p-6 pt-10">
+            <span class="corner-tag">◢ UP NEXT · 22:30</span>
+            <p class="font-display text-xl text-[#E8E8EC]">DROP NULL</p>
+            <p class="text-sm text-[#6B6B7A]">"Ash & Filament" · 32 min set</p>
+            <button class="btn-secondary mono-up mt-4 w-full px-3 py-2 text-[10px] font-medium">
+              Set reminder
+            </button>
+          </div>
+
+          <div class="panel relative bg-[#0A0A0F] p-6 pt-10">
+            <span class="corner-tag">◢ SIGNAL LOG</span>
+            <ul class="font-mono space-y-1 text-[11px] text-[#6B6B7A]">
+              <li><span class="text-[#00B4FF]">&gt;</span> 22:14:02 · CHANNEL 037 STABLE</li>
+              <li><span class="text-[#00B4FF]">&gt;</span> 22:13:48 · 12,481 OPERATORS</li>
+              <li><span class="text-[#FF5B1F]">!</span> 22:11:09 · BITRATE DROP 0.4%</li>
+              <li><span class="text-[#00B4FF]">&gt;</span> 22:09:27 · KEY ROTATED</li>
+              <li><span class="text-[#00B4FF]">&gt;</span> 22:00:00 · BROADCAST OPENED</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.2 — RAVE LINEUP -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p class="mono-up text-xs text-[#00B4FF]">◢ 02.2 / UX — Rave lineup</p>
+          <h3 class="mt-2 font-display text-4xl text-[#E8E8EC]">BUNKER NIGHT 037</h3>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="pill"><span class="pill-dot"></span>06.07.26 · 22:00 → 06:00</span>
+          <span class="pill ion"><span class="pill-dot"></span>3 rooms</span>
+        </div>
+      </div>
+
+      <!-- Rooms -->
+      <div class="grid gap-px bg-[#2E2E3A] md:grid-cols-3">
+        <!-- Room A -->
+        <div class="panel relative bg-[#0A0A0F]">
+          <span class="corner-tag">◢ ROOM A · MAIN</span>
+          <div class="p-6 pt-10">
+            <div class="flex items-baseline justify-between">
+              <h4 class="font-display text-2xl text-[#E8E8EC]">CONCRETE</h4>
+              <span class="mono-up text-[10px] text-[#FF5B1F]">240 BPM</span>
+            </div>
+            <p class="font-mono text-[11px] text-[#6B6B7A]">// Hardcore · Gabber · Industrial</p>
+          </div>
+          <div class="div-ash"></div>
+          <div class="space-y-px bg-[#2E2E3A]">
+            <div class="channel">
+              <span class="num">22</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Iron Lung</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">22:00 → 23:30 · OPEN</p>
+              </div>
+              <span class="pill"><span class="pill-dot"></span>Live</span>
+            </div>
+            <div class="channel">
+              <span class="num">23</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Drop Null</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">23:30 → 01:00</p>
+              </div>
+              <span class="pill ion"><span class="pill-dot"></span>Next</span>
+            </div>
+            <div class="channel">
+              <span class="num">01</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Telephone Tehran</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">01:00 → 03:00 · CLOSING</p>
+              </div>
+              <span class="mono-up text-[10px] text-[#6B6B7A]">B2B</span>
+            </div>
+            <div class="channel">
+              <span class="num">03</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">VOID//037</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">03:00 → 06:00 · SUNRISE</p>
+              </div>
+              <span class="mono-up text-[10px] text-[#6B6B7A]">Solo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room B -->
+        <div class="panel relative bg-[#0A0A0F]">
+          <span class="corner-tag ember">◢ ROOM B · CELL</span>
+          <div class="p-6 pt-10">
+            <div class="flex items-baseline justify-between">
+              <h4 class="font-display text-2xl text-[#E8E8EC]">AMMONITE</h4>
+              <span class="mono-up text-[10px] text-[#FF5B1F]">160 BPM</span>
+            </div>
+            <p class="font-mono text-[11px] text-[#6B6B7A]">// Drum & Bass · Halftime</p>
+          </div>
+          <div class="div-ash"></div>
+          <div class="space-y-px bg-[#2E2E3A]">
+            <div class="channel">
+              <span class="num">22</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Bunker Sect</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">22:00 → 00:00</p>
+              </div>
+              <span class="pill"><span class="pill-dot"></span>Live</span>
+            </div>
+            <div class="channel">
+              <span class="num">00</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Cement Block</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">00:00 → 02:30</p>
+              </div>
+              <span class="mono-up text-[10px] text-[#6B6B7A]">Solo</span>
+            </div>
+            <div class="channel">
+              <span class="num">02</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Marche / Null</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">02:30 → 04:30</p>
+              </div>
+              <span class="mono-up text-[10px] text-[#6B6B7A]">B2B</span>
+            </div>
+            <div class="channel">
+              <span class="num">04</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Sleep Ward</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">04:30 → 06:00 · CLOSING</p>
+              </div>
+              <span class="mono-up text-[10px] text-[#6B6B7A]">Solo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room C -->
+        <div class="panel relative bg-[#0A0A0F]">
+          <span class="corner-tag">◢ ROOM C · TUNNEL</span>
+          <div class="p-6 pt-10">
+            <div class="flex items-baseline justify-between">
+              <h4 class="font-display text-2xl text-[#E8E8EC]">TUNNEL</h4>
+              <span class="mono-up text-[10px] text-[#00B4FF]">90 BPM</span>
+            </div>
+            <p class="font-mono text-[11px] text-[#6B6B7A]">// Ambient · Drone · Field</p>
+          </div>
+          <div class="div-ash"></div>
+          <div class="space-y-px bg-[#2E2E3A]">
+            <div class="channel">
+              <span class="num">22</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Drone-022</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">22:00 → 02:00</p>
+              </div>
+              <span class="pill"><span class="pill-dot"></span>Live</span>
+            </div>
+            <div class="channel">
+              <span class="num">02</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Pale Static</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">02:00 → 04:00</p>
+              </div>
+              <span class="mono-up text-[10px] text-[#6B6B7A]">Solo</span>
+            </div>
+            <div class="channel">
+              <span class="num">04</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Wet Cellar</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">04:00 → 05:30</p>
+              </div>
+              <span class="mono-up text-[10px] text-[#6B6B7A]">Solo</span>
+            </div>
+            <div class="channel">
+              <span class="num">05</span>
+              <div>
+                <p class="text-sm text-[#E8E8EC]">Iron Lung (closing ambient)</p>
+                <p class="font-mono text-[10px] text-[#6B6B7A]">05:30 → 06:00</p>
+              </div>
+              <span class="pill ion"><span class="pill-dot"></span>Sunrise</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Door / cart -->
+      <div class="mt-px panel relative bg-[#0A0A0F] p-5 pt-9">
+        <span class="corner-tag">◢ DOOR</span>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="mono-up text-[10px] text-[#FF5B1F]">02 access keys</span>
+            <span class="font-mono text-xs text-[#6B6B7A]">BUNKER NIGHT 037 · 06.07.26</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="font-display text-3xl text-[#E8E8EC]">€44<span class="text-base text-[#6B6B7A]">.00</span></span>
+            <button class="btn-primary mono-up px-4 py-2 text-[11px] font-bold">Claim entry →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.3 — MANIFEST / SUBSCRIBER -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-20">
+      <div class="mb-5">
+        <p class="mono-up text-xs text-[#FF5B1F]">◢ 02.3 / UX — Operator manifest</p>
+        <h3 class="mt-2 font-display text-4xl text-[#E8E8EC]">JOIN THE NETWORK</h3>
+      </div>
+
+      <div class="grid gap-px bg-[#2E2E3A] md:grid-cols-2">
+        <!-- Featured release -->
+        <div class="panel relative bg-[#0A0A0F]">
+          <span class="corner-tag">◢ FEATURED · LIM 200</span>
+          <div class="ember-stripe"></div>
+          <div class="relative grid grid-cols-[140px_1fr] gap-5 p-6 pt-10">
+            <div class="cassette">
+              <div class="absolute inset-x-3 top-3 h-7 flex items-center justify-center" style="background:#030305;border:1px solid #2E2E3A">
+                <span class="font-display text-[10px] text-[#FF5B1F] tracking-widest">BUNKER VOL III</span>
+              </div>
+              <div class="absolute inset-x-3 bottom-3 h-3" style="background:#030305;border:1px solid #2E2E3A"></div>
+            </div>
+            <div>
+              <p class="mono-up text-[10px] text-[#FF5B1F]">Cassette · Limited 200</p>
+              <h3 class="mt-2 font-display text-3xl text-[#E8E8EC]">BUNKER SESSIONS · VOL III</h3>
+              <p class="mt-2 max-w-md text-sm text-[#6B6B7A]">
+                12 tracks of side-chained iron, scraped tape hiss, and one
+                ion-blue closing ambient. Hand-dubbed in Berlin · ships
+                Friday · numbered.
+              </p>
+              <ul class="font-mono mt-3 space-y-1 text-[11px] text-[#6B6B7A]">
+                <li><span class="text-[#00B4FF]">01</span> — Iron Lung Protocol (3:42)</li>
+                <li><span class="text-[#00B4FF]">02</span> — Subverted Frequency (7:21)</li>
+                <li><span class="text-[#00B4FF]">03</span> — Drone-022 (5:55)</li>
+                <li><span class="text-[#00B4FF]">04</span> — Concrete Sleep (6:18)</li>
+              </ul>
+              <div class="mt-5 flex items-center gap-3">
+                <button class="btn-primary mono-up px-4 py-2 text-[11px] font-bold">Pre-order · €24</button>
+                <button class="btn-secondary mono-up px-4 py-2 text-[11px] font-medium">▶ Listen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subscribe form -->
+        <form class="panel relative bg-[#0A0A0F] p-6 pt-10" onsubmit="event.preventDefault()">
+          <span class="corner-tag ember">◢ MANIFEST</span>
+          <p class="mono-up text-[10px] text-[#00B4FF]">Operator credentials</p>
+          <h3 class="mt-2 font-display text-3xl text-[#E8E8EC]">JOIN THE NETWORK</h3>
+
+          <label class="mono-up mt-5 block text-[10px] text-[#6B6B7A]">Operator handle</label>
+          <input
+            type="text"
+            placeholder="OPERATOR_037"
+            class="mt-1 w-full bg-[#030305] px-3 py-2 font-mono text-sm text-[#E8E8EC] placeholder-[#6B6B7A] outline-none focus:border-[#00B4FF]"
+            style="border:1px solid #2E2E3A"
+          />
+
+          <label class="mono-up mt-4 block text-[10px] text-[#6B6B7A]">Channel preference</label>
+          <select class="mt-1 w-full bg-[#030305] px-3 py-2 text-sm text-[#E8E8EC] outline-none focus:border-[#00B4FF]" style="border:1px solid #2E2E3A">
+            <option>037 — Hard Trance & Industrial</option>
+            <option>019 — Bunker Drum & Bass</option>
+            <option>002 — Tunnel Ambient</option>
+            <option>All channels — broadcast everything</option>
+          </select>
+
+          <label class="mono-up mt-4 block text-[10px] text-[#6B6B7A]">Delivery</label>
+          <div class="mt-1 grid grid-cols-3 gap-px bg-[#2E2E3A]">
+            <label class="flex cursor-pointer items-center gap-2 bg-[#030305] px-3 py-2 text-xs text-[#E8E8EC]">
+              <input type="radio" name="delivery" class="accent-[#FF5B1F]" checked />
+              SMS burst
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 bg-[#030305] px-3 py-2 text-xs text-[#E8E8EC]">
+              <input type="radio" name="delivery" class="accent-[#00B4FF]" />
+              Email digest
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 bg-[#030305] px-3 py-2 text-xs text-[#E8E8EC]">
+              <input type="radio" name="delivery" class="accent-[#E8E8EC]" />
+              Pager (RF)
+            </label>
+          </div>
+
+          <div class="mt-5 div-ash"></div>
+
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-mono text-[11px] text-[#6B6B7A]">// Encrypted handshake · AES-256</span>
+            <span class="pill ion"><span class="pill-dot"></span>Stable</span>
+          </div>
+
+          <button class="btn-primary mono-up mt-5 w-full px-4 py-3 text-[11px] font-bold">
+            Acknowledge & sync →
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- FOOTER / COLOPHON                                              -->
+    <!-- ============================================================= -->
+    <footer class="relative mt-12 border-t border-[#2E2E3A] py-10">
+      <div class="mx-auto max-w-6xl px-6">
+        <div class="slash-strip mb-8"></div>
+        <div class="grid gap-6 md:grid-cols-[2fr_1fr_1fr] md:gap-12">
+          <div>
+            <div class="flex items-center gap-3">
+              <span class="block h-3 w-1 bg-[#FF5B1F]"></span>
+              <span class="font-display text-xl text-[#E8E8EC]">NIGHT/WAVE</span>
+            </div>
+            <p class="mt-3 max-w-md text-sm text-[#6B6B7A]">
+              Underground pirate broadcast collective. 24/7 from the bunker
+              since MMXIX. No ads, no algorithm, no daylight.
+            </p>
+          </div>
+          <div>
+            <p class="mono-up text-[10px] text-[#6B6B7A]">Channels</p>
+            <ul class="mt-3 space-y-2 text-sm text-[#E8E8EC]">
+              <li><a href="#" class="hover:text-[#00B4FF]">037 — Concrete</a></li>
+              <li><a href="#" class="hover:text-[#00B4FF]">019 — Ammonite</a></li>
+              <li><a href="#" class="hover:text-[#00B4FF]">002 — Tunnel</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mono-up text-[10px] text-[#6B6B7A]">Manifest</p>
+            <ul class="mt-3 space-y-2 text-sm text-[#E8E8EC]">
+              <li><a href="#" class="hover:text-[#00B4FF]">Operator console</a></li>
+              <li><a href="#" class="hover:text-[#00B4FF]">Encryption keys</a></li>
+              <li><a href="#" class="hover:text-[#00B4FF]">Bunker code</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-10 flex flex-wrap items-center justify-between gap-3">
+          <p class="font-mono text-xs text-[#6B6B7A]">
+            // © MMXXVI · NIGHT/WAVE BROADCAST · NO RIGHTS RESERVED · ALL SIGNALS SHARED
+          </p>
+          <div class="flex items-center gap-3 text-[#6B6B7A]">
+            <span>▲</span>
+            <span>▼</span>
+            <span>◤</span>
+            <span>◢</span>
+            <span class="text-[#FF5B1F]">▮</span>
+            <span class="text-[#00B4FF]">+</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

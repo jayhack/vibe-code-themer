@@ -1,17 +1,39 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 export interface HeaderProps {
   /** When set, renders the vibe's name next to the wordmark. */
   vibeName?: string;
+  /** Vibe detail: controls shown after the title (e.g. Preview / Theme). */
+  detailAfterTitle?: ReactNode;
+  /** Vibe detail: right-side actions (e.g. Prompt + repo link). */
+  detailActions?: ReactNode;
 }
 
-export function Header({ vibeName }: HeaderProps = {}) {
+export function Header({
+  vibeName,
+  detailAfterTitle,
+  detailActions,
+}: HeaderProps = {}) {
   const onDetail = Boolean(vibeName);
+  const detailBar = Boolean(
+    detailAfterTitle != null || detailActions != null,
+  );
 
   return (
     <header className="sticky top-0 z-30 border-b border-black/5 bg-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
-        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+      <div
+        className={
+          "mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 " +
+          (detailBar ? "py-3" : "py-4")
+        }
+      >
+        <div
+          className={
+            "flex min-w-0 items-center gap-2 sm:gap-3 " +
+            (detailBar ? "flex-1 overflow-hidden" : "")
+          }
+        >
           {onDetail ? (
             <>
               <Link
@@ -33,19 +55,18 @@ export function Header({ vibeName }: HeaderProps = {}) {
                   <path d="m12 19-7-7 7-7" />
                 </svg>
               </Link>
-              <span className="truncate text-base font-semibold tracking-tight text-black sm:text-lg">
+              <span className="min-w-0 truncate text-base font-semibold tracking-tight text-black sm:text-lg">
                 {vibeName}
               </span>
+              {detailBar && detailAfterTitle ? (
+                <div className="ml-1 flex min-w-0 shrink-0 items-center">
+                  {detailAfterTitle}
+                </div>
+              ) : null}
             </>
           ) : (
             <Link to="/" className="group flex shrink-0 items-center gap-3">
-              <span
-                className="block h-7 w-7 rounded-lg"
-                style={{
-                  background:
-                    "conic-gradient(from 220deg at 50% 50%, #FF6AD5, #8C52FF, #26C6DA, #FF6AD5)",
-                }}
-              />
+              <BrushLogo className="h-7 w-7" />
               <span className="font-semibold tracking-tight text-black">
                 Vibe Code Themer
               </span>
@@ -54,29 +75,74 @@ export function Header({ vibeName }: HeaderProps = {}) {
         </div>
 
         <nav className="flex shrink-0 items-center gap-2 text-sm">
-          {!onDetail && (
+          {detailBar && detailActions ? (
+            detailActions
+          ) : !onDetail ? (
+            <>
+              <a
+                href="https://github.com/jayhack/vibe-code-themer#contributing"
+                className="hidden rounded-full px-3 py-1.5 text-black/70 hover:bg-black/[0.04] hover:text-black sm:inline"
+              >
+                Submit a vibe
+              </a>
+              <a
+                href="https://github.com/jayhack/vibe-code-themer"
+                aria-label="View on GitHub"
+                className="inline-flex items-center gap-1.5 rounded-full bg-black px-3 py-1.5 text-white transition hover:bg-black/85"
+              >
+                <GitHubMark />
+                <span className="hidden sm:inline">GitHub</span>
+              </a>
+            </>
+          ) : (
             <a
-              href="https://github.com/jayhack/vibe-code-themer#contributing"
-              className="hidden rounded-full px-3 py-1.5 text-black/70 hover:bg-black/[0.04] hover:text-black sm:inline"
+              href="https://github.com/jayhack/vibe-code-themer"
+              aria-label="View on GitHub"
+              className="inline-flex items-center gap-1.5 rounded-full bg-black px-3 py-1.5 text-white transition hover:bg-black/85"
             >
-              Submit a vibe
+              <GitHubMark />
+              <span className="hidden sm:inline">GitHub</span>
             </a>
           )}
-          <a
-            href="https://github.com/jayhack/vibe-code-themer"
-            aria-label="View on GitHub"
-            className="inline-flex items-center gap-1.5 rounded-full bg-black px-3 py-1.5 text-white transition hover:bg-black/85"
-          >
-            <GitHubMark />
-            <span className="hidden sm:inline">GitHub</span>
-          </a>
         </nav>
       </div>
     </header>
   );
 }
 
-function GitHubMark() {
+function BrushLogo({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden
+    >
+      <defs>
+        <linearGradient
+          id="vctBrushGrad"
+          x1="14"
+          y1="14"
+          x2="50"
+          y2="50"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset="0%" stopColor="#1d4ed8" />
+          <stop offset="55%" stopColor="#3b82f6" />
+          <stop offset="100%" stopColor="#0ea5e9" />
+        </linearGradient>
+      </defs>
+      <g transform="rotate(-45 32 32)">
+        <rect x="28" y="6" width="8" height="26" rx="4" fill="#0b0b0f" />
+        <rect x="25" y="30" width="14" height="6" rx="2" fill="#0b0b0f" />
+        <path d="M25 36 H39 L36 52 Q32 58 28 52 Z" fill="url(#vctBrushGrad)" />
+      </g>
+    </svg>
+  );
+}
+
+export function GitHubMark() {
   return (
     <svg
       width="14"

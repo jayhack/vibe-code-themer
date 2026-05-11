@@ -227,6 +227,65 @@ export const VIBES: Vibe[] = [
       url: "https://github.com/jayhack/vibe-code-themer",
     },
   },
+  {
+    slug: "nightwave",
+    name: "NightWave",
+    tagline: "Vaporwave's grid, blacked out, with razor flares of ion and ember.",
+    description:
+      "A blacked-out warehouse rave at 3 AM. Vaporwave's perspective grid and CRT scanlines stripped of pastel sentimentality and rebuilt in pure void black, punched through with razor-thin ion blue and ember orange. Less mall, more bunker — hardcore, restrained, surgical. Best for underground broadcasts, hardcore label sites, dark dashboards, anything that should feel like a flare cracked in a tunnel.",
+    tags: ["dark", "hardcore", "industrial", "minimal"],
+    cardGradient:
+      "linear-gradient(135deg, #030305 0%, #0A0A0F 50%, #00B4FF 50%, #00B4FF 51.5%, #030305 51.5%, #030305 78%, #FF5B1F 78%, #FF5B1F 79.5%, #030305 79.5%)",
+    cardForeground: "light",
+    palette: [
+      { name: "Void", hex: "#030305" },
+      { name: "Carbon", hex: "#0A0A0F" },
+      { name: "Steel", hex: "#1A1A24" },
+      { name: "Ash", hex: "#2E2E3A" },
+      { name: "Ion Blue", hex: "#00B4FF" },
+      { name: "Ember", hex: "#FF5B1F" },
+      { name: "Bone", hex: "#E8E8EC" },
+      { name: "Smoke", hex: "#6B6B7A" },
+    ],
+    fonts: {
+      display: '"Big Shoulders Display", "Inter", sans-serif',
+      body: '"Inter", system-ui, sans-serif',
+      mono: '"JetBrains Mono", ui-monospace, monospace',
+    },
+    motifs: [
+      "Ion-blue perspective grid horizon — 1px lines on void, no glow",
+      "Crosshair / target reticle replaces the vaporwave sun disc",
+      "Razor scanlines (1px white at 3px spacing, opacity 0.06)",
+      "Glitch type: ember + ion 2px offset with mix-blend-mode: screen",
+      "Single 1px ember diagonal stripe per major section, sometimes paired with an ion counter-stripe",
+      "Tick / barcode dividers — irregular 1px ash ticks as section breaks",
+      "Terminal beacons in JetBrains Mono uppercase: > SIGNAL ACQUIRED · 03:42:18 UTC",
+      "CRT vignette + 1px ash inset on every panel",
+    ],
+    kits: [
+      { label: "Tailwind CSS", url: "https://tailwindcss.com" },
+      {
+        label: "Google Fonts: Big Shoulders Display, Inter, JetBrains Mono",
+        url: "https://fonts.google.com",
+      },
+      {
+        label: "No UI kit, no icon set — hand-built from CSS gradients",
+      },
+    ],
+    shapes: [
+      "Logo mark = 1px ion ring + 1px ember crosshair + 3px ember center dot",
+      "All corners square — never rounded except inside vinyl/cassette art",
+      "Buttons: square, mono uppercase, tracking 0.22em, primary = ember gradient on void text",
+      "Pills: outlined only (1px ash), uppercase mono, 4px ember/ion dot",
+      "Allowed glyphs: ▲ ▼ ◤ ◢ ▮ + the crosshair · banned: emoji, blobs, soft shadows, glass",
+    ],
+    previewHtml: "vibes/nightwave/preview.html",
+    promptMarkdown: "vibes/nightwave/prompt.md",
+    author: {
+      name: "Vibe Code Themer",
+      url: "https://github.com/jayhack/vibe-code-themer",
+    },
+  },
 ];
 
 export function findVibe(slug: string | undefined): Vibe | undefined {
