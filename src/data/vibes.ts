@@ -18,7 +18,7 @@ export const VIBES: Vibe[] = [
     name: "Automata",
     tagline: "A Game of Life humming behind thick-cut black type.",
     description:
-      "A research console for emergent computation. Small light-purple squares fade in and out across a fixed background canvas — Conway's Game of Life left running, breathing — while sharp, distinct elements sit on top: thick black display type with a hard purple lift-shadow, dark-purple gradient primary buttons, crisp white secondaries, and 2px corner radii everywhere. Best for simulation dashboards, pattern libraries, ML research microsites, lab journals, anything that should feel ethereal underneath and ruthlessly sharp on top.",
+      "A research console for emergent computation. Large, soft, light-purple squares ease in and out across a fixed background canvas — Conway's Game of Life left running at a whisper, softly landing — while sharp, distinct elements sit on top: thick black display type with a hard purple lift-shadow, dark-purple gradient primary buttons, crisp white secondaries, and 2px corner radii everywhere. Best for simulation dashboards, pattern libraries, ML research microsites, lab journals, anything that should feel ethereal underneath and ruthlessly sharp on top.",
     tags: ["computational", "ethereal", "minimal", "research"],
     cardGradient:
       "linear-gradient(135deg, #F4ECFF 0%, #DCC9FF 35%, #6B2BFF 72%, #2D1473 100%)",
@@ -39,9 +39,9 @@ export const VIBES: Vibe[] = [
       mono: '"JetBrains Mono", ui-monospace, monospace',
     },
     motifs: [
-      "Fixed-position canvas running Conway's Game of Life at ~1.4 gen/sec",
-      "Small 14px cells (2px gap) that fade in/out smoothly — never snap",
-      "Canvas at 0.42 opacity · Bloom tint, deepening to Pulse with age",
+      "Fixed-position canvas running Conway's Game of Life at ~0.8 gen/sec",
+      "Large 44px periwinkle cells that ease in/out exponentially — soft landings",
+      "Canvas at 0.30 opacity · single rgba(199,202,255) tint capped at 0.72 alpha",
       "Thick-black display type with hard 4/8px Bloom + Deep lift-shadow",
       "Primary buttons: linear-gradient(180deg, #2D1473, #150A45) + 2px Bloom drop",
       "Secondary buttons: white fill, 1.5px Glyph border, same Bloom drop",

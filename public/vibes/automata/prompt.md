@@ -95,22 +95,31 @@ Type rules:
 
 ## Visual motifs (include at least 5 per page)
 1. **The living background.** A fixed-position `<canvas>` covering the
-   viewport runs **Conway's Game of Life** at roughly **1.4 generations
-   per second** (one step every ~720ms) on a **14px cell grid with a
-   2px gap**. Births and deaths must **fade in and out smoothly** via a
-   per-cell alpha that lerps toward its target each `requestAnimationFrame`
-   — never snap on or off. Suggested fade rates: `+0.055` per frame on
-   the way in, `-0.030` per frame on the way out, so dying cells linger
-   a beat longer than newborns spring up. Cells are filled with Bloom
-   (`rgba(220,201,255, a)`); cells alive for more than ~4 generations
-   shift to a slightly deeper tint (`rgba(200,178,255, a)`). The grid
-   never draws cell borders. The canvas element sits at **opacity 0.42**
-   so the lattice reads as atmosphere, not content. Re-seed sparsely
-   every ~80 generations (5% density) to keep activity alive; do a
-   larger ~24% re-seed every 320 generations. Honor
-   `prefers-reduced-motion: reduce` by painting a single static frame.
-   If JS is unavailable, fall back to a CSS-grid checkerboard of Bloom +
-   Lattice cells.
+   viewport runs **Conway's Game of Life** at roughly **one step every
+   ~1200ms** on a **large 44px cell grid with a 4px gap**. The cells
+   are deliberately big, soft, and **far below the content's visual
+   weight** — they're atmosphere, not pattern. Births and deaths
+   **ease** (not lerp) toward their target alpha each
+   `requestAnimationFrame`:
+
+   ```js
+   alpha += (target - alpha) * EASE
+   ```
+
+   with `EASE_IN ≈ 0.032` and `EASE_OUT ≈ 0.020`. The asymptotic curve
+   makes cells feel like they're **softly landing** into the lattice
+   rather than fading linearly. The target alpha for a living cell is
+   capped at **0.72** (never 1.0) so even at peak the cells stay quiet,
+   and the canvas element itself sits at **opacity 0.30** so the
+   lattice is felt before it is seen. Cells fill with a single bluer
+   periwinkle tint — `rgba(199, 202, 255, a)` — which reads more
+   "computational" than the warmer Bloom that the rest of the kit uses
+   for foreground accents. Don't band by age at this cell size; one
+   quiet color is enough. Re-seed sparsely every ~80 generations (5%
+   density) to keep activity alive; do a larger ~24% re-seed every 320
+   generations. Honor `prefers-reduced-motion: reduce` by painting a
+   single static frame. If JS is unavailable, fall back to a CSS-grid
+   checkerboard of Bloom + Lattice cells.
 2. **The lift-shadow display heading** (see Typography). Use it on the
    masthead, on each `§` section opener, and on UX-application titles.
    Three times per page minimum.

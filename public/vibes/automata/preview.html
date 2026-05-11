@@ -39,7 +39,7 @@
         height: 100%;
         z-index: 0;
         pointer-events: none;
-        opacity: 0.42;
+        opacity: 0.30;
       }
       .stage { position: relative; z-index: 1; }
 
@@ -1109,20 +1109,24 @@
         if (!canvas) return;
         const ctx = canvas.getContext("2d", { alpha: true });
 
-        // Smaller, more subtle cells. Step the simulation slowly so the
-        // per-cell alpha has time to fade in and out smoothly between
-        // generations — no glitchy on/off snapping.
-        const cellSize = 14;
-        const gap = 2;
-        const STEP_MS = 720;
-        const FADE_IN  = 0.055;
-        const FADE_OUT = 0.030;
+        // Large, soft, distant cells. The simulation steps slowly and
+        // each cell eases (exponentially) toward its target alpha — so
+        // cells feel like they're softly landing into the lattice
+        // rather than flicking on and off. The canvas itself sits at
+        // very low opacity so the lattice never competes with text.
+        const cellSize = 44;
+        const gap = 4;
+        const STEP_MS = 1200;
+        // Exponential easing factor toward the target alpha each frame.
+        // alpha += (target - alpha) * EASE → asymptotic, no hard edges.
+        const EASE_IN  = 0.032;
+        const EASE_OUT = 0.020;
+        // Cap living cells below 1 so even at peak they stay quiet.
+        const ALIVE_ALPHA = 0.72;
 
-        // Two cell tints; cells with higher age stay tinted slightly
-        // pulse-ier than fresh births. Stored as RGB tuples so we can
-        // multiply by the per-cell alpha at draw time.
-        const TINT_FRESH = "220, 201, 255";  // Bloom
-        const TINT_AGED  = "200, 178, 255";  // halfway to Pulse
+        // Single soft tint — a bluer periwinkle (#C7CAFF-ish) reads more
+        // "computational" against the dark-purple foreground accents.
+        const TINT = "199, 202, 255";  // Periwinkle
 
         let W = 0, H = 0, cols = 0, rows = 0;
         let grid = null;        // 0/1 — Conway's logical state
@@ -1186,12 +1190,16 @@
 
         function tick() {
           for (let i = 0; i < alpha.length; i++) {
-            const target = grid[i];
-            if (target === 1) {
-              if (alpha[i] < 1) alpha[i] = Math.min(1, alpha[i] + FADE_IN);
-            } else {
-              if (alpha[i] > 0) alpha[i] = Math.max(0, alpha[i] - FADE_OUT);
-              else age[i] = 0; // fully faded — reset tint history
+            const target = grid[i] ? ALIVE_ALPHA : 0;
+            const diff = target - alpha[i];
+            if (diff > 0) {
+              alpha[i] += diff * EASE_IN;
+            } else if (diff < 0) {
+              alpha[i] += diff * EASE_OUT;
+              if (alpha[i] < 0.002) {
+                alpha[i] = 0;
+                age[i] = 0;
+              }
             }
           }
         }
@@ -1203,10 +1211,9 @@
             for (let x = 0; x < cols; x++) {
               const idx = y * cols + x;
               const a = alpha[idx];
-              if (a > 0.015) {
-                const tint = age[idx] > 4 ? TINT_AGED : TINT_FRESH;
-                ctx.fillStyle = "rgba(" + tint + "," + a.toFixed(3) + ")";
-                ctx.fillRect(x * cellSize + 1, y * cellSize + 1, inner, inner);
+              if (a > 0.01) {
+                ctx.fillStyle = "rgba(" + TINT + "," + a.toFixed(3) + ")";
+                ctx.fillRect(x * cellSize + 2, y * cellSize + 2, inner, inner);
               }
             }
           }
