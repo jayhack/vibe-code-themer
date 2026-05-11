@@ -1,0 +1,1402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Automata — vibe preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Archivo Black = thick-cut display grotesk; Inter = body; JetBrains Mono = labels/telemetry. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper:     #ffffff;
+        --lattice:   #f4ecff;
+        --bloom:     #dcc9ff;
+        --pulse:     #b69aff;
+        --spark:     #6b2bff;
+        --sovereign: #2d1473;
+        --deep:      #150a45;
+        --glyph:     #0a0612;
+        --stone:     #8e84a6;
+      }
+      html, body {
+        background: var(--paper);
+        color: var(--glyph);
+        font-family: "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* === The living background ============================================ */
+      #ca-bg {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.42;
+      }
+      .stage { position: relative; z-index: 1; }
+
+      /* === Type system ====================================================== */
+      .display {
+        font-family: "Archivo Black", "Helvetica Neue", Arial, sans-serif;
+        font-weight: 900;
+        letter-spacing: -0.025em;
+        line-height: 0.9;
+      }
+      .display-lift {
+        font-family: "Archivo Black", "Helvetica Neue", Arial, sans-serif;
+        font-weight: 900;
+        letter-spacing: -0.025em;
+        line-height: 0.9;
+        color: var(--glyph);
+        text-shadow:
+          4px 4px 0 var(--bloom),
+          8px 8px 0 rgba(21, 10, 69, 0.18);
+      }
+      .display-lift-hero {
+        text-shadow:
+          6px 6px 0 var(--bloom),
+          12px 12px 0 rgba(21, 10, 69, 0.18);
+      }
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+      }
+      .mono-up {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-weight: 500;
+      }
+      .label {
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .glyph-cell::before {
+        content: "▪";
+        color: var(--spark);
+        margin-right: 0.5em;
+      }
+
+      /* === Surfaces / cards ================================================= */
+      .panel {
+        background: var(--paper);
+        border: 1.5px solid var(--glyph);
+        border-radius: 2px;
+        box-shadow: 4px 4px 0 var(--bloom);
+      }
+      .panel-flat {
+        background: var(--paper);
+        border: 1.5px solid var(--glyph);
+        border-radius: 2px;
+      }
+      .panel-ink {
+        background: var(--glyph);
+        color: var(--paper);
+        border: 1.5px solid var(--glyph);
+        border-radius: 2px;
+        box-shadow: 4px 4px 0 var(--sovereign);
+      }
+      .hairline { height: 1px; background: var(--glyph); }
+      .hairline-faint { height: 1px; background: rgba(10, 6, 18, 0.15); }
+
+      /* === Buttons ========================================================== */
+      .btn-primary {
+        background: linear-gradient(180deg, #2d1473 0%, #150a45 100%);
+        color: #fff;
+        padding: 13px 22px;
+        border-radius: 2px;
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          0 2px 0 var(--bloom);
+        transition: transform 80ms ease, box-shadow 80ms ease, background 80ms ease;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(180deg, #3a1c8f 0%, #1b0d55 100%);
+      }
+      .btn-primary:active {
+        transform: translateY(2px);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      }
+
+      .btn-secondary {
+        background: var(--paper);
+        color: var(--glyph);
+        padding: 12px 21px;
+        border: 1.5px solid var(--glyph);
+        border-radius: 2px;
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 2px 0 var(--bloom);
+        transition: transform 80ms ease, box-shadow 80ms ease, background 80ms ease;
+      }
+      .btn-secondary:hover { background: var(--glyph); color: var(--paper); }
+      .btn-secondary:active {
+        transform: translateY(2px);
+        box-shadow: none;
+      }
+
+      .btn-ghost {
+        color: var(--spark);
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 12px;
+        font-weight: 600;
+        border-bottom: 1px solid var(--spark);
+        padding-bottom: 2px;
+      }
+
+      /* === Inputs =========================================================== */
+      .field {
+        background: var(--paper);
+        border: 1.5px solid var(--glyph);
+        border-radius: 2px;
+        padding: 10px 14px;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--glyph);
+        width: 100%;
+        outline: none;
+      }
+      .field::placeholder {
+        color: var(--stone);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .field:focus {
+        border-color: var(--spark);
+        box-shadow: 0 0 0 3px var(--bloom);
+      }
+
+      /* === Badges =========================================================== */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 10px;
+        background: var(--paper);
+        border: 1px solid var(--glyph);
+        border-radius: 2px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--glyph);
+      }
+      .badge::before {
+        content: "▪";
+        color: var(--spark);
+      }
+      .badge.is-spark {
+        background: var(--spark);
+        color: #fff;
+        border-color: var(--spark);
+      }
+      .badge.is-spark::before { color: #fff; }
+
+      /* === Cell mini-grid (the logo and decorative grids) =================== */
+      .cell-grid {
+        display: grid;
+        gap: 1px;
+        background: transparent;
+      }
+
+      /* === Slider for the sim console ======================================= */
+      .sim-slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 4px;
+        background: var(--lattice);
+        border-radius: 2px;
+        outline: none;
+      }
+      .sim-slider::-webkit-slider-runnable-track {
+        height: 4px;
+        background: linear-gradient(
+          to right,
+          var(--spark) 0%,
+          var(--spark) var(--val, 50%),
+          var(--lattice) var(--val, 50%),
+          var(--lattice) 100%
+        );
+      }
+      .sim-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 16px;
+        width: 16px;
+        margin-top: -6px;
+        background: var(--glyph);
+        border-radius: 2px;
+        box-shadow: 2px 2px 0 var(--bloom);
+      }
+      .sim-slider::-moz-range-thumb {
+        height: 16px; width: 16px;
+        background: var(--glyph);
+        border-radius: 2px;
+        border: none;
+        box-shadow: 2px 2px 0 var(--bloom);
+      }
+
+      /* === Pattern preview cells ============================================ */
+      .pat-cell {
+        background: var(--paper);
+      }
+      .pat-cell.is-on { background: var(--bloom); }
+      .pat-cell.is-hot { background: var(--spark); }
+
+      /* gentle pulse for one featured pattern in the library */
+      @keyframes cellpulse {
+        0%, 100% { background: var(--bloom); }
+        50%      { background: var(--pulse); }
+      }
+      .pat-cell.is-anim { animation: cellpulse 1.6s ease-in-out infinite; }
+
+      /* === Telemetry strip ================================================== */
+      .telem {
+        display: inline-flex;
+        align-items: center;
+        gap: 18px;
+        padding: 10px 14px;
+        border: 1px solid var(--glyph);
+        border-radius: 2px;
+        background: var(--paper);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .telem .telem-key { color: var(--stone); }
+      .telem .telem-val { color: var(--glyph); font-weight: 700; }
+      .telem .telem-spark { color: var(--spark); font-weight: 700; }
+
+      /* === Section numerals (the §-style opener) ============================ */
+      .section-no {
+        font-family: "Archivo Black", sans-serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        line-height: 0.9;
+        color: var(--spark);
+        letter-spacing: -0.03em;
+      }
+
+      /* === Honor reduced motion ============================================= */
+      @media (prefers-reduced-motion: reduce) {
+        .pat-cell.is-anim { animation: none; }
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen overflow-x-hidden">
+
+    <!-- ===================== LIVING BACKGROUND ============================ -->
+    <canvas id="ca-bg" aria-hidden="true"></canvas>
+
+    <div class="stage">
+
+      <!-- ============================================================= -->
+      <!-- § IDENTITY                                                     -->
+      <!-- ============================================================= -->
+      <section class="relative">
+        <!-- Top nav -->
+        <nav class="mx-auto flex max-w-7xl items-center justify-between px-8 pt-7">
+          <div class="flex items-center gap-3">
+            <!-- Cellular glider mark -->
+            <svg viewBox="0 0 36 36" width="32" height="32" aria-hidden="true">
+              <g fill="#dcc9ff">
+                <rect x="0"  y="0"  width="8" height="8" rx="1"/>
+                <rect x="9"  y="0"  width="8" height="8" rx="1"/>
+                <rect x="27" y="0"  width="8" height="8" rx="1"/>
+                <rect x="18" y="9"  width="8" height="8" rx="1"/>
+                <rect x="0"  y="18" width="8" height="8" rx="1"/>
+                <rect x="18" y="18" width="8" height="8" rx="1"/>
+                <rect x="27" y="18" width="8" height="8" rx="1"/>
+                <rect x="9"  y="27" width="8" height="8" rx="1"/>
+                <rect x="18" y="27" width="8" height="8" rx="1"/>
+              </g>
+              <g fill="#6b2bff">
+                <rect x="18" y="0"  width="8" height="8" rx="1"/>
+                <rect x="9"  y="9"  width="8" height="8" rx="1"/>
+                <rect x="9"  y="18" width="8" height="8" rx="1"/>
+                <rect x="0"  y="27" width="8" height="8" rx="1"/>
+                <rect x="27" y="27" width="8" height="8" rx="1"/>
+              </g>
+            </svg>
+            <span class="mono-up text-[11px] text-[var(--stone)]">Lab · v0.4.2</span>
+          </div>
+          <div class="hidden items-center gap-8 md:flex">
+            <a href="#" class="mono-up text-[11px] text-[var(--glyph)]">Console</a>
+            <a href="#" class="mono-up text-[11px] text-[var(--glyph)]">Patterns</a>
+            <a href="#" class="mono-up text-[11px] text-[var(--glyph)]">Journal</a>
+            <a href="#" class="mono-up text-[11px] text-[var(--spark)] underline decoration-[1.5px] underline-offset-[5px]">Run</a>
+          </div>
+          <div class="telem hidden md:inline-flex">
+            <span><span class="telem-key">Gen</span> <span class="telem-val">0142</span></span>
+            <span><span class="telem-key">Live</span> <span class="telem-val">318</span></span>
+            <span><span class="telem-key">Rule</span> <span class="telem-spark">B3/S23</span></span>
+          </div>
+        </nav>
+
+        <!-- Massive masthead -->
+        <div class="mx-auto max-w-7xl px-8 pt-12 pb-4">
+          <p class="label text-[var(--spark)]"><span class="glyph-cell"></span>Vibe № 07 / Research console</p>
+          <h1 class="display-lift display-lift-hero mt-5" style="font-size:clamp(4rem, 14vw, 11rem); text-transform: uppercase;">
+            AUTOMATA
+          </h1>
+          <p class="mt-6 max-w-2xl text-[15px] leading-[1.55] text-[var(--glyph)]">
+            A live cellular automaton hums in the background. Sharp,
+            distinct elements sit on top: thick black display type with a
+            hard purple lift-shadow, dark-purple gradient primaries, and
+            crisp white secondaries. <span class="mono text-[var(--spark)]">B3/S23</span> below,
+            decisive controls above.
+          </p>
+
+          <div class="mt-8 flex flex-wrap items-center gap-3">
+            <button class="btn-primary">Run simulation <span>→</span></button>
+            <button class="btn-secondary">Seed glider <span>▪</span></button>
+            <a href="#" class="btn-ghost">View source →</a>
+          </div>
+        </div>
+
+        <div class="mx-auto max-w-7xl px-8 pt-8">
+          <div class="hairline opacity-25"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- § 01 / THEME SPECIFICATION                                     -->
+      <!-- ============================================================= -->
+      <section class="mx-auto max-w-7xl px-8 pt-16">
+        <div class="grid grid-cols-12 items-end gap-6">
+          <div class="col-span-12 md:col-span-2">
+            <p class="section-no">§01</p>
+            <p class="mt-2 label text-[var(--spark)]"><span class="glyph-cell"></span>Theme spec</p>
+          </div>
+          <div class="col-span-12 md:col-span-7">
+            <h2 class="display-lift" style="font-size:clamp(2.5rem,5.5vw,4.5rem); text-transform:uppercase;">
+              The kit, on the lattice.
+            </h2>
+          </div>
+          <div class="col-span-12 md:col-span-3">
+            <p class="text-[14px] leading-[1.55] text-[var(--glyph)]">
+              Palette · Gradients · Typography · Components — verbatim from
+              <span class="mono text-[var(--spark)]">prompt.md</span>. The page only ships
+              if every console below can be rebuilt from this section.
+            </p>
+          </div>
+        </div>
+        <div class="hairline mt-6"></div>
+      </section>
+
+      <!-- 01.1 PALETTE -->
+      <section class="mx-auto max-w-7xl px-8 pt-10">
+        <div class="mb-4 flex items-baseline justify-between">
+          <p class="label text-[var(--spark)]"><span class="glyph-cell"></span>01.1 / Palette</p>
+          <span class="mono text-[11px] text-[var(--stone)]">09 swatches · no substitutions</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-px bg-[var(--glyph)]/15 md:grid-cols-9">
+          <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#ffffff;color:#0a0612">
+            <span class="label">Paper</span><span class="mono text-[var(--stone)]">#FFFFFF</span>
+          </div>
+          <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#f4ecff;color:#0a0612">
+            <span class="label">Lattice</span><span class="mono text-[var(--stone)]">#F4ECFF</span>
+          </div>
+          <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#dcc9ff;color:#0a0612">
+            <span class="label">Bloom</span><span class="mono opacity-80">#DCC9FF</span>
+          </div>
+          <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#b69aff;color:#0a0612">
+            <span class="label">Pulse</span><span class="mono opacity-80">#B69AFF</span>
+          </div>
+          <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#6b2bff;color:#ffffff">
+            <span class="label">Spark</span><span class="mono opacity-90">#6B2BFF</span>
+          </div>
+          <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#2d1473;color:#ffffff">
+            <span class="label">Sovereign</span><span class="mono opacity-90">#2D1473</span>
+          </div>
+          <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#150a45;color:#ffffff">
+            <span class="label">Deep</span><span class="mono opacity-90">#150A45</span>
+          </div>
+          <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#0a0612;color:#ffffff">
+            <span class="label">Glyph</span><span class="mono opacity-90">#0A0612</span>
+          </div>
+          <div class="flex flex-col gap-1 p-4 text-[11px]" style="background:#8e84a6;color:#ffffff">
+            <span class="label">Stone</span><span class="mono opacity-90">#8E84A6</span>
+          </div>
+        </div>
+        <p class="mt-3 mono text-[11px] text-[var(--stone)]">
+          // Sovereign + Deep + Spark combined occupy &lt;12% of any rendered surface · cells underneath, sharp foreground.
+        </p>
+      </section>
+
+      <!-- 01.2 GRADIENTS -->
+      <section class="mx-auto max-w-7xl px-8 pt-12">
+        <div class="mb-4 flex items-baseline justify-between">
+          <p class="label text-[var(--spark)]"><span class="glyph-cell"></span>01.2 / Gradients</p>
+          <span class="mono text-[11px] text-[var(--stone)]">02 gradients · everything else is flat</span>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div class="panel-flat overflow-hidden">
+            <div class="h-24" style="background:linear-gradient(180deg,#2d1473 0%,#150a45 100%)"></div>
+            <div class="border-t border-[var(--glyph)] p-3">
+              <p class="mono-up text-[10px] text-[var(--spark)]">Primary CTA</p>
+              <p class="mono mt-1 text-[11px] text-[var(--glyph)]">linear-gradient(180deg, #2D1473 0%, #150A45 100%)</p>
+            </div>
+          </div>
+          <div class="panel-flat overflow-hidden">
+            <div class="h-24" style="background:linear-gradient(135deg,#f4ecff 0%,#dcc9ff 35%,#6b2bff 72%,#2d1473 100%)"></div>
+            <div class="border-t border-[var(--glyph)] p-3">
+              <p class="mono-up text-[10px] text-[var(--spark)]">Gallery hero</p>
+              <p class="mono mt-1 text-[11px] text-[var(--glyph)] break-all">linear-gradient(135deg, #F4ECFF 0%, #DCC9FF 35%, #6B2BFF 72%, #2D1473 100%)</p>
+            </div>
+          </div>
+          <div class="panel-flat overflow-hidden">
+            <div class="h-24" style="background:repeating-conic-gradient(#dcc9ff 0% 25%, #ffffff 0% 50%); background-size:24px 24px"></div>
+            <div class="border-t border-[var(--glyph)] p-3">
+              <p class="mono-up text-[10px] text-[var(--spark)]">Lattice fallback</p>
+              <p class="mono mt-1 text-[11px] text-[var(--glyph)]">conic-gradient checkerboard · only used as no-JS fallback</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 01.3 TYPOGRAPHY -->
+      <section class="mx-auto max-w-7xl px-8 pt-12">
+        <div class="mb-4">
+          <p class="label text-[var(--spark)]"><span class="glyph-cell"></span>01.3 / Typography</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-px bg-[var(--glyph)]/15 md:grid-cols-3">
+          <div class="bg-[var(--paper)] p-7">
+            <p class="mono-up text-[10px] text-[var(--spark)]">Display · Archivo Black</p>
+            <p class="display-lift mt-5" style="font-size:clamp(2.5rem,4.5vw,4rem); text-transform:uppercase;">CELL</p>
+            <p class="mono mt-5 text-[11px] text-[var(--stone)]">
+              // 900 weight · uppercase · -0.025em · line-height 0.9<br/>
+              // lift: 4px Bloom + 8px Deep at 18%
+            </p>
+          </div>
+          <div class="bg-[var(--paper)] p-7">
+            <p class="mono-up text-[10px] text-[var(--spark)]">Body · Inter</p>
+            <p class="mt-5 text-[22px] leading-[1.4] text-[var(--glyph)]">
+              Emergence from local rules.
+            </p>
+            <p class="mt-5 text-[14px] leading-[1.55] text-[var(--glyph)]">
+              The page reads like a research note. Body copy never gets
+              the lift-shadow — that gloss is reserved for headings.
+            </p>
+            <p class="mono mt-5 text-[11px] text-[var(--stone)]">
+              // 400 / 500 / 600 / 700 · 14–16px · line-height 1.55
+            </p>
+          </div>
+          <div class="bg-[var(--paper)] p-7">
+            <p class="mono-up text-[10px] text-[var(--spark)]">Mono · JetBrains Mono</p>
+            <p class="mono mt-5 text-[20px] uppercase tracking-[0.16em] text-[var(--glyph)]">GEN 0142 · B3/S23</p>
+            <p class="mono mt-5 text-[14px] text-[var(--glyph)]">
+              <span class="text-[var(--spark)]">Fig. 03</span> · (x=14, y=22)
+            </p>
+            <p class="mono mt-5 text-[11px] text-[var(--stone)]">
+              // uppercase · tracking 0.16em · telemetry, ▪ glyph, coordinates
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 01.4 COMPONENTS -->
+      <section class="mx-auto max-w-7xl px-8 pt-12 pb-16">
+        <div class="mb-4">
+          <p class="label text-[var(--spark)]"><span class="glyph-cell"></span>01.4 / Components</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-px bg-[var(--glyph)]/15 md:grid-cols-2">
+          <!-- Buttons + badges -->
+          <div class="bg-[var(--paper)] p-7">
+            <p class="mono-up text-[10px] text-[var(--spark)]">Buttons</p>
+            <div class="mt-5 flex flex-wrap items-center gap-4">
+              <button class="btn-primary">Run · Gen 1<span>→</span></button>
+              <button class="btn-secondary">Step ▪</button>
+              <a href="#" class="btn-ghost">Reset →</a>
+            </div>
+
+            <p class="mono-up mt-7 text-[10px] text-[var(--spark)]">Badges</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <span class="badge">Still life</span>
+              <span class="badge">Oscillator</span>
+              <span class="badge">Spaceship</span>
+              <span class="badge is-spark">Gun · Spark</span>
+            </div>
+
+            <p class="mono mt-7 text-[11px] text-[var(--stone)]">
+              // 2px radius on every surface · the only allowed lift-shadow is 0 2px 0 Bloom
+            </p>
+          </div>
+
+          <!-- Inputs / slider -->
+          <div class="bg-[var(--paper)] p-7">
+            <p class="mono-up text-[10px] text-[var(--spark)]">Inputs &amp; controls</p>
+
+            <label class="mono-up mt-5 block text-[10px] text-[var(--stone)]">Cell rule</label>
+            <input class="field mt-1" placeholder="B3/S23"/>
+
+            <label class="mono-up mt-5 block text-[10px] text-[var(--stone)]">Tick rate · 4 Hz</label>
+            <input id="demo-slider" class="sim-slider mt-3" type="range" min="1" max="20" value="8" style="--val:38%"/>
+
+            <div class="mt-5 flex items-center gap-3">
+              <button class="btn-secondary !py-2 !px-3 !text-[11px]">Pause</button>
+              <button class="btn-secondary !py-2 !px-3 !text-[11px]">Step ▪</button>
+              <button class="btn-primary !py-2 !px-3 !text-[11px]">Resume →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cards row -->
+        <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div class="panel p-5">
+            <p class="mono-up text-[10px] text-[var(--spark)]">Card · default</p>
+            <p class="display-lift mt-4 text-[28px]" style="text-transform:uppercase;">Panel</p>
+            <p class="mt-3 text-[13.5px] leading-[1.55] text-[var(--glyph)]">
+              1.5px Glyph border, 2px radius, 4px hard Bloom drop-shadow.
+              No soft shadow ever.
+            </p>
+          </div>
+          <div class="panel-flat p-5">
+            <p class="mono-up text-[10px] text-[var(--spark)]">Card · flat</p>
+            <p class="display-lift mt-4 text-[28px]" style="text-transform:uppercase;">Panel</p>
+            <p class="mt-3 text-[13.5px] leading-[1.55] text-[var(--glyph)]">
+              Same border, no lift. Used for nested panels inside an
+              already-lifted card.
+            </p>
+          </div>
+          <div class="panel-ink p-5">
+            <p class="mono-up text-[10px]" style="color:#dcc9ff">Card · ink</p>
+            <p class="display-lift mt-4 text-[28px]" style="text-transform:uppercase; color:#fff; text-shadow:4px 4px 0 #6b2bff, 8px 8px 0 rgba(220,201,255,0.18);">Panel</p>
+            <p class="mt-3 text-[13.5px] leading-[1.55]" style="color:#dcc9ff">
+              Reserved for one focal mailing-list or CTA aside. Lift
+              shadow flips to Sovereign.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- § 02 / UX APPLICATIONS                                         -->
+      <!-- ============================================================= -->
+      <section class="mx-auto max-w-7xl px-8 pt-16">
+        <div class="grid grid-cols-12 items-end gap-6">
+          <div class="col-span-12 md:col-span-2">
+            <p class="section-no">§02</p>
+            <p class="mt-2 label text-[var(--spark)]"><span class="glyph-cell"></span>UX applications</p>
+          </div>
+          <div class="col-span-12 md:col-span-7">
+            <h2 class="display-lift" style="font-size:clamp(2.5rem,5.5vw,4.5rem); text-transform:uppercase;">
+              Three surfaces, same lattice.
+            </h2>
+          </div>
+          <div class="col-span-12 md:col-span-3">
+            <p class="text-[14px] leading-[1.55] text-[var(--glyph)]">
+              Simulation console · pattern library · lab journal. Each is
+              built only from §01 — no new colors, no rounded corners.
+            </p>
+          </div>
+        </div>
+        <div class="hairline mt-6"></div>
+      </section>
+
+      <!-- 02.1 SIMULATION CONSOLE -->
+      <section class="mx-auto max-w-7xl px-8 pt-10">
+        <p class="label text-[var(--spark)]"><span class="glyph-cell"></span>02.1 / UX — Simulation console</p>
+        <h3 class="display-lift mt-3" style="font-size:clamp(2rem,4vw,3.25rem); text-transform:uppercase;">
+          Conway · Run 0142
+        </h3>
+
+        <div class="mt-8 grid grid-cols-12 gap-6">
+          <!-- Main canvas card -->
+          <div class="col-span-12 panel p-5 md:col-span-8">
+            <div class="flex items-center justify-between">
+              <p class="mono-up text-[10px] text-[var(--spark)]">Live lattice · 60 × 40</p>
+              <div class="telem !py-1.5 !text-[10px]">
+                <span><span class="telem-key">Gen</span> <span class="telem-val">0142</span></span>
+                <span><span class="telem-key">Live</span> <span class="telem-val">318</span></span>
+                <span><span class="telem-key">Born</span> <span class="telem-spark">12</span></span>
+                <span><span class="telem-key">Died</span> <span class="telem-val">09</span></span>
+              </div>
+            </div>
+
+            <!-- A frozen 24×16 cell grid representing one frame -->
+            <div class="mt-5 border border-[var(--glyph)] p-3" style="background:#ffffff">
+              <div id="sim-grid" class="cell-grid" style="grid-template-columns: repeat(32, 1fr); aspect-ratio: 2 / 1;"></div>
+            </div>
+
+            <!-- Controls row -->
+            <div class="mt-6 grid grid-cols-12 items-center gap-4">
+              <div class="col-span-12 flex flex-wrap items-center gap-3 md:col-span-7">
+                <button class="btn-primary">Resume <span>→</span></button>
+                <button class="btn-secondary">Step ▪</button>
+                <button class="btn-secondary">Reset</button>
+                <a href="#" class="btn-ghost">Export GIF →</a>
+              </div>
+              <div class="col-span-12 md:col-span-5">
+                <label class="mono-up text-[10px] text-[var(--stone)]">Tick rate · 4 Hz</label>
+                <input class="sim-slider mt-2" type="range" min="1" max="20" value="8" style="--val:38%"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="col-span-12 flex flex-col gap-6 md:col-span-4">
+            <div class="panel-flat p-5">
+              <p class="mono-up text-[10px] text-[var(--spark)]">Rule</p>
+              <p class="display-lift mt-3 text-[36px]" style="text-transform:uppercase;">B3/S23</p>
+              <p class="mt-2 mono text-[11px] text-[var(--stone)]">
+                Born with 3 neighbours · survives with 2 or 3 · Conway 1970
+              </p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <span class="badge">B3/S23</span>
+                <span class="badge">B36/S23</span>
+                <span class="badge">B2/S</span>
+                <span class="badge is-spark">Edit rule</span>
+              </div>
+            </div>
+
+            <div class="panel-flat p-5">
+              <p class="mono-up text-[10px] text-[var(--spark)]">Seed</p>
+              <ul class="mt-3 divide-y divide-[var(--glyph)]/15">
+                <li class="flex items-baseline justify-between py-2.5">
+                  <span class="text-[14px] font-medium">Random · 32%</span>
+                  <span class="mono text-[11px] text-[var(--stone)]">SEED 7F19</span>
+                </li>
+                <li class="flex items-baseline justify-between py-2.5">
+                  <span class="text-[14px] font-medium">Glider · NW</span>
+                  <span class="mono text-[11px] text-[var(--stone)]">5 cells</span>
+                </li>
+                <li class="flex items-baseline justify-between py-2.5">
+                  <span class="text-[14px] font-medium">Gosper gun</span>
+                  <span class="mono text-[11px] text-[var(--stone)]">36 cells</span>
+                </li>
+                <li class="flex items-baseline justify-between py-2.5">
+                  <span class="text-[14px] font-medium">Pulsar (p3)</span>
+                  <span class="mono text-[11px] text-[var(--stone)]">48 cells</span>
+                </li>
+              </ul>
+              <button class="btn-primary mt-5 w-full justify-center">Reseed lattice <span>→</span></button>
+            </div>
+
+            <div class="panel-ink p-5">
+              <p class="mono-up text-[10px]" style="color:#dcc9ff">Snapshot</p>
+              <p class="mt-2 text-[13px] leading-[1.55]" style="color:#dcc9ff">
+                Gen 0142 captured at <span class="mono" style="color:#ffffff">14:08:31 UTC</span>.
+                The colony survived a re-seed at Gen 0080 and stabilised
+                into two oscillators and one wandering glider heading SE.
+              </p>
+              <div class="mt-4 flex items-center gap-3">
+                <button class="btn-primary !bg-none" style="background:#6b2bff;">Pin frame <span>▪</span></button>
+                <a href="#" class="mono-up text-[11px]" style="color:#dcc9ff; border-bottom:1px solid #dcc9ff; padding-bottom:2px;">Open in journal →</a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 02.2 PATTERN LIBRARY -->
+      <section class="mx-auto max-w-7xl px-8 pt-20">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <p class="label text-[var(--spark)]"><span class="glyph-cell"></span>02.2 / UX — Pattern library</p>
+            <h3 class="display-lift mt-3" style="font-size:clamp(2rem,4vw,3.25rem); text-transform:uppercase;">
+              Named lives · 12 entries
+            </h3>
+          </div>
+          <div class="hidden md:flex items-center gap-3">
+            <input class="field !w-72" placeholder="SEARCH · GLIDER, PULSAR, R-PENTOMINO"/>
+            <button class="btn-secondary">Filter ▪</button>
+          </div>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+          <!-- Pattern 1: Glider -->
+          <article class="panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="badge">Spaceship</span>
+              <span class="mono text-[11px] text-[var(--stone)]">№ 01 · p4</span>
+            </div>
+            <div class="mt-4 border border-[var(--glyph)] p-3" style="background:#ffffff">
+              <div class="cell-grid glider-grid" style="grid-template-columns: repeat(8, 1fr); aspect-ratio: 1;"></div>
+            </div>
+            <div class="mt-4">
+              <p class="display-lift text-[24px]" style="text-transform:uppercase;">Glider</p>
+              <p class="mono mt-1 text-[11px] text-[var(--stone)]">R. Guy · 1970 · period 4 · diagonal · <span class="text-[var(--spark)]">Fig. 01</span></p>
+              <p class="mt-3 text-[13px] leading-[1.55] text-[var(--glyph)]">
+                The smallest known spaceship. Travels one cell diagonally
+                every four generations. The mascot of the field.
+              </p>
+            </div>
+            <div class="mt-4 flex items-center gap-2">
+              <button class="btn-secondary !py-2 !px-3 !text-[11px]">Load seed</button>
+              <a href="#" class="btn-ghost">Detail →</a>
+            </div>
+          </article>
+
+          <!-- Pattern 2: Blinker -->
+          <article class="panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="badge">Oscillator</span>
+              <span class="mono text-[11px] text-[var(--stone)]">№ 02 · p2</span>
+            </div>
+            <div class="mt-4 border border-[var(--glyph)] p-3" style="background:#ffffff">
+              <div class="cell-grid blinker-grid" style="grid-template-columns: repeat(8, 1fr); aspect-ratio: 1;"></div>
+            </div>
+            <div class="mt-4">
+              <p class="display-lift text-[24px]" style="text-transform:uppercase;">Blinker</p>
+              <p class="mono mt-1 text-[11px] text-[var(--stone)]">M. Gardner · 1970 · period 2 · stationary · <span class="text-[var(--spark)]">Fig. 02</span></p>
+              <p class="mt-3 text-[13px] leading-[1.55] text-[var(--glyph)]">
+                Three cells in a row. Rotates ninety degrees every tick.
+                The first oscillator most people draw on graph paper.
+              </p>
+            </div>
+            <div class="mt-4 flex items-center gap-2">
+              <button class="btn-secondary !py-2 !px-3 !text-[11px]">Load seed</button>
+              <a href="#" class="btn-ghost">Detail →</a>
+            </div>
+          </article>
+
+          <!-- Pattern 3: Pulsar -->
+          <article class="panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="badge">Oscillator</span>
+              <span class="mono text-[11px] text-[var(--stone)]">№ 03 · p3</span>
+            </div>
+            <div class="mt-4 border border-[var(--glyph)] p-3" style="background:#ffffff">
+              <div class="cell-grid pulsar-grid" style="grid-template-columns: repeat(13, 1fr); aspect-ratio: 1;"></div>
+            </div>
+            <div class="mt-4">
+              <p class="display-lift text-[24px]" style="text-transform:uppercase;">Pulsar</p>
+              <p class="mono mt-1 text-[11px] text-[var(--stone)]">J. Conway · 1971 · period 3 · 48 cells · <span class="text-[var(--spark)]">Fig. 03</span></p>
+              <p class="mt-3 text-[13px] leading-[1.55] text-[var(--glyph)]">
+                The most common period-3 oscillator. Four-fold symmetric.
+                Looks like a contracting heart muscle in motion.
+              </p>
+            </div>
+            <div class="mt-4 flex items-center gap-2">
+              <button class="btn-secondary !py-2 !px-3 !text-[11px]">Load seed</button>
+              <a href="#" class="btn-ghost">Detail →</a>
+            </div>
+          </article>
+
+          <!-- Pattern 4: R-pentomino -->
+          <article class="panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="badge is-spark">Methuselah</span>
+              <span class="mono text-[11px] text-[var(--stone)]">№ 04 · 1103g</span>
+            </div>
+            <div class="mt-4 border border-[var(--glyph)] p-3" style="background:#ffffff">
+              <div class="cell-grid rpent-grid" style="grid-template-columns: repeat(8, 1fr); aspect-ratio: 1;"></div>
+            </div>
+            <div class="mt-4">
+              <p class="display-lift text-[24px]" style="text-transform:uppercase;">R-Pentomino</p>
+              <p class="mono mt-1 text-[11px] text-[var(--stone)]">J. Conway · 1969 · stabilises at gen 1103 · <span class="text-[var(--spark)]">Fig. 04</span></p>
+              <p class="mt-3 text-[13px] leading-[1.55] text-[var(--glyph)]">
+                A 5-cell methuselah. Looks trivial; spawns 1103 generations
+                of debris, six gliders, and a small zoo of still lifes.
+              </p>
+            </div>
+            <div class="mt-4 flex items-center gap-2">
+              <button class="btn-secondary !py-2 !px-3 !text-[11px]">Load seed</button>
+              <a href="#" class="btn-ghost">Detail →</a>
+            </div>
+          </article>
+
+          <!-- Pattern 5: Gosper Glider Gun -->
+          <article class="panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="badge">Gun</span>
+              <span class="mono text-[11px] text-[var(--stone)]">№ 05 · ∞</span>
+            </div>
+            <div class="mt-4 border border-[var(--glyph)] p-3" style="background:#ffffff">
+              <div class="cell-grid gun-grid" style="grid-template-columns: repeat(36, 1fr); aspect-ratio: 36 / 9;"></div>
+            </div>
+            <div class="mt-4">
+              <p class="display-lift text-[24px]" style="text-transform:uppercase;">Gosper Gun</p>
+              <p class="mono mt-1 text-[11px] text-[var(--stone)]">B. Gosper · 1970 · period 30 · emits gliders · <span class="text-[var(--spark)]">Fig. 05</span></p>
+              <p class="mt-3 text-[13px] leading-[1.55] text-[var(--glyph)]">
+                The first known pattern with unbounded growth. Fires a
+                glider every 30 generations into the lower-right quadrant
+                forever.
+              </p>
+            </div>
+            <div class="mt-4 flex items-center gap-2">
+              <button class="btn-secondary !py-2 !px-3 !text-[11px]">Load seed</button>
+              <a href="#" class="btn-ghost">Detail →</a>
+            </div>
+          </article>
+
+          <!-- Pattern 6: LWSS -->
+          <article class="panel p-5">
+            <div class="flex items-center justify-between">
+              <span class="badge">Spaceship</span>
+              <span class="mono text-[11px] text-[var(--stone)]">№ 06 · p4</span>
+            </div>
+            <div class="mt-4 border border-[var(--glyph)] p-3" style="background:#ffffff">
+              <div class="cell-grid lwss-grid" style="grid-template-columns: repeat(9, 1fr); aspect-ratio: 9 / 7;"></div>
+            </div>
+            <div class="mt-4">
+              <p class="display-lift text-[24px]" style="text-transform:uppercase;">LWSS</p>
+              <p class="mono mt-1 text-[11px] text-[var(--stone)]">Conway team · 1970 · period 4 · horizontal · <span class="text-[var(--spark)]">Fig. 06</span></p>
+              <p class="mt-3 text-[13px] leading-[1.55] text-[var(--glyph)]">
+                Lightweight spaceship. Moves two cells horizontally every
+                four generations. Used in glider-gun harvesting.
+              </p>
+            </div>
+            <div class="mt-4 flex items-center gap-2">
+              <button class="btn-secondary !py-2 !px-3 !text-[11px]">Load seed</button>
+              <a href="#" class="btn-ghost">Detail →</a>
+            </div>
+          </article>
+        </div>
+
+        <!-- Footer strip -->
+        <div class="mt-10 grid grid-cols-12 gap-6 border-t border-[var(--glyph)]/15 pt-5">
+          <p class="col-span-6 md:col-span-3 mono-up text-[10px] text-[var(--spark)]">
+            ▪ 06 of 12 patterns
+          </p>
+          <p class="col-span-6 md:col-span-6 mono-up text-[10px] text-[var(--stone)]">
+            Catalogued from LifeWiki · all CC-BY-SA · seed files in RLE format
+          </p>
+          <p class="col-span-12 md:col-span-3 mono-up text-[10px] text-[var(--glyph)] md:text-right">
+            Page 01 / 02
+          </p>
+        </div>
+      </section>
+
+      <!-- 02.3 LAB JOURNAL -->
+      <section class="mx-auto max-w-7xl px-8 pt-20 pb-20">
+        <p class="label text-[var(--spark)]"><span class="glyph-cell"></span>02.3 / UX — Lab journal</p>
+        <h3 class="display-lift mt-3" style="font-size:clamp(2rem,4vw,3.25rem); text-transform:uppercase;">
+          Entry № 042 · Re-seed cadence
+        </h3>
+
+        <div class="mt-8 grid grid-cols-12 gap-8">
+          <!-- Article body -->
+          <article class="col-span-12 md:col-span-7">
+            <div class="flex flex-wrap items-center gap-4 mono-up text-[10px] text-[var(--stone)]">
+              <span>April 18, 2026</span>
+              <span>·</span>
+              <span>I. Petrovic</span>
+              <span>·</span>
+              <span class="text-[var(--spark)]">10 min read</span>
+            </div>
+
+            <p class="mt-6 text-[15px] leading-[1.7] text-[var(--glyph)]">
+              On a 60×40 torus running <span class="mono text-[var(--spark)]">B3/S23</span>, a uniformly
+              random 32% seed collapses into ash within ~80 generations on
+              the median run. Past that point the population graph
+              flatlines and the lattice loses its character — it stops
+              feeling like compute and starts looking like static. The
+              question we're tracking this week: <em>at what cadence
+              should we re-seed</em> to keep the lattice atmospheric without
+              papering over Conway's own dynamics?
+            </p>
+
+            <h4 class="display-lift mt-10" style="font-size:24px; text-transform:uppercase;">Method</h4>
+            <p class="mt-3 text-[15px] leading-[1.7] text-[var(--glyph)]">
+              We instrument the simulation to emit four counters per tick
+              (born, died, live, gliders) and re-seed by sprinkling 8%
+              random cells when the rolling live count drops below 60.
+              The threshold is empirical; below 60 cells the lattice
+              feels visually dead even though life is technically
+              continuing.
+            </p>
+
+            <!-- Code block -->
+            <pre class="mt-5 overflow-x-auto rounded-[2px] border-[1.5px] border-[var(--glyph)] bg-[var(--paper)] p-4 mono text-[12.5px] leading-[1.65] text-[var(--glyph)]" style="box-shadow:4px 4px 0 #dcc9ff"><span class="text-[var(--stone)]">// re-seed when colony dips below 60 live cells</span>
+<span class="text-[var(--spark)]">if</span> (liveCount &lt; 60) {
+  <span class="text-[var(--spark)]">for</span> (let i = 0; i &lt; grid.length; i++) {
+    <span class="text-[var(--spark)]">if</span> (Math.random() &lt; 0.08) grid[i] = 1;
+  }
+}</pre>
+
+            <h4 class="display-lift mt-10" style="font-size:24px; text-transform:uppercase;">Findings</h4>
+            <ol class="mt-4 space-y-3 text-[15px] leading-[1.7] text-[var(--glyph)]">
+              <li>
+                <span class="mono text-[var(--spark)]">▪ 01</span> · A re-seed
+                cadence of every 80 generations produced the most
+                visually balanced lattice — neither saturated nor sparse.
+              </li>
+              <li>
+                <span class="mono text-[var(--spark)]">▪ 02</span> · Lowering
+                the trigger threshold to 40 cells caused noticeable
+                "dead patches" in the corners of the canvas.
+              </li>
+              <li>
+                <span class="mono text-[var(--spark)]">▪ 03</span> · Of 32
+                runs, four spontaneously produced a Gosper-gun-adjacent
+                emitter; one ran 6,000 generations without re-seed.
+              </li>
+            </ol>
+
+            <p class="mt-6 text-[15px] leading-[1.7] text-[var(--glyph)]">
+              Next entry will revisit this on a 120×80 lattice. Suspect
+              the optimal sparse-seed rate scales sub-linearly with area;
+              if so, larger viewports should re-seed less often, not more.
+            </p>
+
+            <!-- Inline figure -->
+            <figure class="mt-10 panel p-5">
+              <div class="border border-[var(--glyph)] p-3" style="background:#ffffff">
+                <div class="cell-grid fig-grid" style="grid-template-columns: repeat(40, 1fr); aspect-ratio: 5 / 2;"></div>
+              </div>
+              <figcaption class="mt-3 flex items-baseline justify-between">
+                <p class="mono text-[11px]">
+                  <span class="text-[var(--spark)]">Fig. 07</span>
+                  <span class="text-[var(--stone)]"> · live frame at gen 0142, 60×40 torus, B3/S23, seed 7F19</span>
+                </p>
+                <span class="mono text-[11px] text-[var(--stone)]">(x=0, y=0) → (x=60, y=40)</span>
+              </figcaption>
+            </figure>
+          </article>
+
+          <!-- Sidebar -->
+          <aside class="col-span-12 md:col-span-5">
+            <div class="panel-ink p-7">
+              <p class="mono-up text-[10px]" style="color:#dcc9ff">▪ Mailing list</p>
+              <h4 class="display-lift mt-3" style="font-size:clamp(1.75rem,3vw,2.25rem); text-transform:uppercase; color:#fff; text-shadow:4px 4px 0 #6b2bff, 8px 8px 0 rgba(220,201,255,0.18);">
+                One journal entry per week.
+              </h4>
+              <p class="mt-4 max-w-sm text-[14px] leading-[1.6]" style="color:#dcc9ff">
+                Sent Thursday mornings. Always one figure, one re-seed
+                threshold experiment, and one pattern of the week. We
+                don't run analytics on the lattice — and we don't run
+                them on the mailing list either.
+              </p>
+              <form class="mt-6" onsubmit="event.preventDefault()">
+                <label class="mono-up block text-[10px]" style="color:rgba(220,201,255,0.7)">Email</label>
+                <input
+                  type="email"
+                  placeholder="HELLO@AUTOMATA.LAB"
+                  class="mt-2 w-full bg-transparent py-2.5 px-3 border-[1.5px] rounded-[2px] mono text-[13px] uppercase tracking-[0.12em] outline-none"
+                  style="color:#ffffff; border-color:rgba(220,201,255,0.4);"
+                />
+                <button type="submit" class="btn-primary mt-5 w-full justify-center" style="background:#6b2bff;">
+                  Subscribe · weekly <span>→</span>
+                </button>
+                <p class="mono mt-4 text-[11px]" style="color:rgba(220,201,255,0.6)">
+                  // Unsubscribe within 24h · zero retargeting · plain text only
+                </p>
+              </form>
+            </div>
+
+            <div class="panel-flat mt-6 p-5">
+              <p class="mono-up text-[10px] text-[var(--spark)]">▪ Recent entries</p>
+              <ul class="mt-3 divide-y divide-[var(--glyph)]/15">
+                <li class="grid grid-cols-12 items-baseline py-3">
+                  <span class="col-span-2 mono-up text-[10px] text-[var(--spark)]">№ 042</span>
+                  <span class="col-span-8 text-[13.5px] font-medium">Re-seed cadence</span>
+                  <span class="col-span-2 mono text-[10px] text-[var(--stone)] text-right">Apr 18</span>
+                </li>
+                <li class="grid grid-cols-12 items-baseline py-3">
+                  <span class="col-span-2 mono-up text-[10px] text-[var(--spark)]">№ 041</span>
+                  <span class="col-span-8 text-[13.5px] font-medium">B36/S23 vs Conway</span>
+                  <span class="col-span-2 mono text-[10px] text-[var(--stone)] text-right">Apr 11</span>
+                </li>
+                <li class="grid grid-cols-12 items-baseline py-3">
+                  <span class="col-span-2 mono-up text-[10px] text-[var(--spark)]">№ 040</span>
+                  <span class="col-span-8 text-[13.5px] font-medium">Pulsar phase mapping</span>
+                  <span class="col-span-2 mono text-[10px] text-[var(--stone)] text-right">Apr 04</span>
+                </li>
+                <li class="grid grid-cols-12 items-baseline py-3">
+                  <span class="col-span-2 mono-up text-[10px] text-[var(--spark)]">№ 039</span>
+                  <span class="col-span-8 text-[13.5px] font-medium">Toroidal vs bounded</span>
+                  <span class="col-span-2 mono text-[10px] text-[var(--stone)] text-right">Mar 28</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="panel-flat mt-6 p-5">
+              <p class="mono-up text-[10px] text-[var(--spark)]">▪ Lab stats</p>
+              <div class="mt-3 grid grid-cols-2 gap-4">
+                <div>
+                  <p class="display-lift text-[36px]">042</p>
+                  <p class="label mt-1 text-[var(--stone)]">Entries shipped</p>
+                </div>
+                <div>
+                  <p class="display-lift text-[36px]">6.2k</p>
+                  <p class="label mt-1 text-[var(--stone)]">Generations logged</p>
+                </div>
+                <div>
+                  <p class="display-lift text-[36px]">128</p>
+                  <p class="label mt-1 text-[var(--stone)]">Named patterns</p>
+                </div>
+                <div>
+                  <p class="display-lift text-[36px]">04</p>
+                  <p class="label mt-1 text-[var(--stone)]">Researchers</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- § COLOPHON / FOOTER                                            -->
+      <!-- ============================================================= -->
+      <footer class="mx-auto max-w-7xl px-8 pb-14 pt-6">
+        <div class="hairline"></div>
+        <div class="mt-6 grid grid-cols-12 items-end gap-6">
+          <div class="col-span-12 md:col-span-6">
+            <h2 class="display-lift display-lift-hero" style="font-size:clamp(3.5rem,12vw,9rem); text-transform:uppercase; line-height:0.88">
+              AUTOMATA
+            </h2>
+          </div>
+          <div class="col-span-6 md:col-span-2">
+            <p class="label text-[var(--spark)]">Colophon</p>
+            <p class="mt-2 text-[12.5px] leading-[1.55]">
+              Set in Archivo Black, Inter, JetBrains Mono. Lattice runs
+              Conway's B3/S23 at 4 Hz behind every page.
+            </p>
+          </div>
+          <div class="col-span-6 md:col-span-2">
+            <p class="label text-[var(--spark)]">Lab</p>
+            <p class="mt-2 text-[12.5px] leading-[1.55]">automata.lab</p>
+            <p class="text-[12.5px] leading-[1.55] text-[var(--stone)]">Belgrade · 4 researchers</p>
+          </div>
+          <div class="col-span-12 md:col-span-2 md:text-right">
+            <p class="label text-[var(--spark)]">© 2026</p>
+            <p class="mt-2 mono text-[11px] text-[var(--stone)]">B3/S23 forever</p>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+
+    <!-- =====================================================================
+         The cellular automaton background.
+         Conway's Game of Life on a torus, ~4 generations/sec, with a sparse
+         re-seed every 80 generations to keep the lattice atmospheric. Cells
+         are drawn in Bloom/Pulse/Lattice depending on age. Honors
+         prefers-reduced-motion.
+    ===================================================================== -->
+    <script>
+      (function () {
+        const canvas = document.getElementById("ca-bg");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d", { alpha: true });
+
+        // Smaller, more subtle cells. Step the simulation slowly so the
+        // per-cell alpha has time to fade in and out smoothly between
+        // generations — no glitchy on/off snapping.
+        const cellSize = 14;
+        const gap = 2;
+        const STEP_MS = 720;
+        const FADE_IN  = 0.055;
+        const FADE_OUT = 0.030;
+
+        // Two cell tints; cells with higher age stay tinted slightly
+        // pulse-ier than fresh births. Stored as RGB tuples so we can
+        // multiply by the per-cell alpha at draw time.
+        const TINT_FRESH = "220, 201, 255";  // Bloom
+        const TINT_AGED  = "200, 178, 255";  // halfway to Pulse
+
+        let W = 0, H = 0, cols = 0, rows = 0;
+        let grid = null;        // 0/1 — Conway's logical state
+        let age = null;         // generations alive
+        let alpha = null;       // 0..1 — current display alpha per cell
+        let gen = 0;
+        let lastStep = 0;
+        let rafId = 0;
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        function resize() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          W = window.innerWidth;
+          H = window.innerHeight;
+          canvas.width = Math.ceil(W * dpr);
+          canvas.height = Math.ceil(H * dpr);
+          canvas.style.width = W + "px";
+          canvas.style.height = H + "px";
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          cols = Math.ceil(W / cellSize) + 1;
+          rows = Math.ceil(H / cellSize) + 1;
+          grid  = new Uint8Array(cols * rows);
+          age   = new Uint8Array(cols * rows);
+          alpha = new Float32Array(cols * rows);
+          seed(0.28);
+          draw();
+        }
+
+        function seed(rate) {
+          for (let i = 0; i < grid.length; i++) {
+            if (Math.random() < rate) {
+              grid[i] = 1;
+              if (!age[i]) age[i] = 1;
+            }
+          }
+        }
+
+        function step() {
+          const next = new Uint8Array(grid.length);
+          for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+              let n = 0;
+              for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                  if (!dx && !dy) continue;
+                  const nx = (x + dx + cols) % cols;
+                  const ny = (y + dy + rows) % rows;
+                  n += grid[ny * cols + nx];
+                }
+              }
+              const idx = y * cols + x;
+              const alive = grid[idx] === 1;
+              if (alive) next[idx] = (n === 2 || n === 3) ? 1 : 0;
+              else next[idx] = (n === 3) ? 1 : 0;
+              if (next[idx]) age[idx] = Math.min(250, (age[idx] || 0) + 1);
+              else if (!next[idx] && alive) age[idx] = age[idx]; // keep age for tint until faded
+            }
+          }
+          grid = next;
+        }
+
+        function tick() {
+          for (let i = 0; i < alpha.length; i++) {
+            const target = grid[i];
+            if (target === 1) {
+              if (alpha[i] < 1) alpha[i] = Math.min(1, alpha[i] + FADE_IN);
+            } else {
+              if (alpha[i] > 0) alpha[i] = Math.max(0, alpha[i] - FADE_OUT);
+              else age[i] = 0; // fully faded — reset tint history
+            }
+          }
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, W, H);
+          const inner = cellSize - gap;
+          for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+              const idx = y * cols + x;
+              const a = alpha[idx];
+              if (a > 0.015) {
+                const tint = age[idx] > 4 ? TINT_AGED : TINT_FRESH;
+                ctx.fillStyle = "rgba(" + tint + "," + a.toFixed(3) + ")";
+                ctx.fillRect(x * cellSize + 1, y * cellSize + 1, inner, inner);
+              }
+            }
+          }
+        }
+
+        function frame(now) {
+          if (!lastStep) lastStep = now;
+          if (now - lastStep >= STEP_MS) {
+            step();
+            gen++;
+            if (gen % 80 === 0)  seed(0.05);
+            if (gen % 320 === 0) seed(0.24);
+            lastStep = now;
+          }
+          tick();
+          draw();
+          rafId = requestAnimationFrame(frame);
+        }
+
+        resize();
+        window.addEventListener("resize", () => {
+          clearTimeout(window.__caResize);
+          window.__caResize = setTimeout(resize, 120);
+        });
+
+        if (!reducedMotion) {
+          rafId = requestAnimationFrame(frame);
+        } else {
+          // Static frame: paint every live cell at full alpha, once.
+          for (let i = 0; i < alpha.length; i++) alpha[i] = grid[i];
+          draw();
+        }
+      })();
+    </script>
+
+    <!-- =====================================================================
+         Tiny script: paint the Pulsar, Gosper Glider Gun, and lab figure
+         pattern previews. These are static-frame helpers so we don't have
+         to hand-type 169 / 324 / 1600 cell divs.
+    ===================================================================== -->
+    <script>
+      (function () {
+        function paint(selector, cols, rows, liveCoords, hotCoords, animCoords) {
+          const el = document.querySelector(selector);
+          if (!el) return;
+          const liveSet = new Set(liveCoords.map(([x, y]) => y * cols + x));
+          const hotSet = new Set((hotCoords || []).map(([x, y]) => y * cols + x));
+          const animSet = new Set((animCoords || []).map(([x, y]) => y * cols + x));
+          const frag = document.createDocumentFragment();
+          for (let i = 0; i < cols * rows; i++) {
+            const d = document.createElement("div");
+            d.className = "pat-cell";
+            if (animSet.has(i)) d.classList.add("is-anim");
+            else if (hotSet.has(i)) d.classList.add("is-hot");
+            else if (liveSet.has(i)) d.classList.add("is-on");
+            frag.appendChild(d);
+          }
+          el.appendChild(frag);
+        }
+
+        // Glider (8x8) — the canonical 5-cell spaceship
+        paint(".glider-grid", 8, 8, [[2,1],[3,2],[1,3],[2,3],[3,3]]);
+
+        // Blinker (8x8) — 3-cell oscillator, animated
+        paint(".blinker-grid", 8, 8, [], [], [[3,3],[4,3],[5,3]]);
+
+        // R-pentomino (8x8) — Spark cells to mark methuselah
+        paint(".rpent-grid", 8, 8, [], [[3,2],[4,2],[2,3],[3,3],[3,4]]);
+
+        // LWSS (9x7) — lightweight spaceship pointing right
+        paint(".lwss-grid", 9, 7, [
+          [2,1],[5,1],
+          [1,2],
+          [1,3],[5,3],
+          [1,4],[2,4],[3,4],[4,4]
+        ]);
+
+        // Simulation console "live frame" — 32x16 lattice snapshot
+        function makeConsoleFrame() {
+          const live = [];
+          // Two gliders chasing each other
+          [[3,2],[4,3],[2,4],[3,4],[4,4]].forEach(p=>live.push(p));
+          [[28,11],[27,12],[28,12],[29,12],[27,13]].forEach(p=>live.push(p));
+          // Pulsar fragment
+          const cx = 14, cy = 7;
+          const pf = [
+            [-4,-2],[-3,-2],[-2,-2],[2,-2],[3,-2],[4,-2],
+            [-6,0],[-1,0],[1,0],[6,0],
+            [-6,1],[-1,1],[1,1],[6,1],
+            [-6,2],[-1,2],[1,2],[6,2],
+            [-4,4],[-3,4],[-2,4],[2,4],[3,4],[4,4]
+          ];
+          pf.forEach(([dx,dy]) => live.push([cx+dx, cy+dy]));
+          // Blinkers + still lifes scattered
+          [[8,14],[9,14],[10,14]].forEach(p=>live.push(p));
+          [[24,2],[25,2],[24,3],[25,3]].forEach(p=>live.push(p));
+          [[1,12],[2,12],[1,13],[2,13]].forEach(p=>live.push(p));
+          // Random debris (deterministic)
+          let s = 0x4242;
+          function rng() { s ^= s << 13; s ^= s >> 17; s ^= s << 5; return (s >>> 0) / 4294967295; }
+          for (let i = 0; i < 22; i++) {
+            live.push([Math.floor(rng() * 32), Math.floor(rng() * 16)]);
+          }
+          return live.filter(([x,y]) => x >= 0 && x < 32 && y >= 0 && y < 16);
+        }
+        paint("#sim-grid", 32, 16, makeConsoleFrame());
+
+        // Pulsar (13x13)
+        const pulsar = [
+          [2,0],[3,0],[4,0],[8,0],[9,0],[10,0],
+          [0,2],[5,2],[7,2],[12,2],
+          [0,3],[5,3],[7,3],[12,3],
+          [0,4],[5,4],[7,4],[12,4],
+          [2,5],[3,5],[4,5],[8,5],[9,5],[10,5],
+          [2,7],[3,7],[4,7],[8,7],[9,7],[10,7],
+          [0,8],[5,8],[7,8],[12,8],
+          [0,9],[5,9],[7,9],[12,9],
+          [0,10],[5,10],[7,10],[12,10],
+          [2,12],[3,12],[4,12],[8,12],[9,12],[10,12]
+        ];
+        paint(".pulsar-grid", 13, 13, pulsar);
+
+        // Gosper Glider Gun (36x9)
+        const gun = [
+          [24,0],
+          [22,1],[24,1],
+          [12,2],[13,2],[20,2],[21,2],[34,2],[35,2],
+          [11,3],[15,3],[20,3],[21,3],[34,3],[35,3],
+          [0,4],[1,4],[10,4],[16,4],[20,4],[21,4],
+          [0,5],[1,5],[10,5],[14,5],[16,5],[17,5],[22,5],[24,5],
+          [10,6],[16,6],[24,6],
+          [11,7],[15,7],
+          [12,8],[13,8]
+        ];
+        paint(".gun-grid", 36, 9, gun);
+
+        // Lab journal "live frame" — make a somewhat dense organic frame
+        // by combining a glider, a few blinkers, a pulsar-ish cluster,
+        // and some random debris.
+        function makeFrame(cols, rows) {
+          const live = [];
+          // glider near (3,3)
+          [[4,3],[5,4],[3,5],[4,5],[5,5]].forEach(p=>live.push(p));
+          // blinkers
+          [[10,5],[11,5],[12,5]].forEach(p=>live.push(p));
+          [[18,8],[19,8],[20,8]].forEach(p=>live.push(p));
+          [[30,3],[30,4],[30,5]].forEach(p=>live.push(p));
+          [[36,12],[36,13],[36,14]].forEach(p=>live.push(p));
+          // pulsar-ish core
+          const cx = 22, cy = 9;
+          const pulsarOff = [
+            [-4,-2],[-3,-2],[-2,-2],[2,-2],[3,-2],[4,-2],
+            [-6,0],[-1,0],[1,0],[6,0],
+            [-6,1],[-1,1],[1,1],[6,1],
+            [-6,2],[-1,2],[1,2],[6,2],
+            [-4,4],[-3,4],[-2,4],[2,4],[3,4],[4,4]
+          ];
+          pulsarOff.forEach(([dx,dy]) => live.push([cx+dx, cy+dy]));
+          // beacon
+          [[6,12],[7,12],[6,13],[8,14],[9,14],[9,13]].forEach(p=>live.push(p));
+          // toad
+          [[14,14],[15,14],[16,14],[13,15],[14,15],[15,15]].forEach(p=>live.push(p));
+          // random sparse debris (deterministic)
+          let s = 0x7f19;
+          function rng() { s ^= s << 13; s ^= s >> 17; s ^= s << 5; return (s >>> 0) / 4294967295; }
+          for (let i = 0; i < 38; i++) {
+            const x = Math.floor(rng() * cols);
+            const y = Math.floor(rng() * rows);
+            live.push([x, y]);
+          }
+          return live.filter(([x,y]) => x >= 0 && x < cols && y >= 0 && y < rows);
+        }
+        paint(".fig-grid", 40, 16, makeFrame(40, 16));
+      })();
+    </script>
+
+    <!-- =====================================================================
+         Slider visual fill (cosmetic only — keeps the Spark track in sync
+         with the thumb in our demo console).
+    ===================================================================== -->
+    <script>
+      document.querySelectorAll(".sim-slider").forEach((el) => {
+        const sync = () => {
+          const min = +el.min || 0, max = +el.max || 100, v = +el.value;
+          const pct = ((v - min) / (max - min)) * 100;
+          el.style.setProperty("--val", pct + "%");
+        };
+        el.addEventListener("input", sync);
+        sync();
+      });
+    </script>
+  </body>
+</html>
