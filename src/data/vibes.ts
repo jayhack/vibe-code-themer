@@ -170,10 +170,10 @@ export const VIBES: Vibe[] = [
   {
     slug: "conserva",
     name: "Conserva",
-    tagline: "Cream paper, crimson stamps, gold crests — a Spanish deli reissued.",
+    tagline: "Cream paper, crimson stamps, gold crests — a heritage software workshop.",
     description:
-      "A modern Spanish heritage delicatessen for 2026. Cream butcher-paper background, crimson stamped headlines stacked tight in Anton, gold monogram crests, banner / pennant-shaped buttons, curve-cut food-photo strips, and the year ‘DESDE 1987’ repeated like a stamp of authenticity. Warm, appetizing, peninsular, hand-crafted. Best for heritage food & drink brands, butcher shops, vermouth bars, recipe sites, anything that needs to feel like a tin you'd buy at a market.",
-    tags: ["heritage", "editorial", "warm", "spanish"],
+      "A heritage software workshop reissued for 2026. Cream butcher-paper background, crimson stamped headlines stacked tight in Anton, gold monogram crests, banner / pennant-shaped buttons, curve-cut press strips, and `EST. 1987` repeated like a stamp of authenticity. Warm, opinionated, hand-set, anti-AI-slop. The aesthetic is borrowed from old food packaging but applied entirely to developer surfaces — code editors, release journals, manuals, CLI welcomes, changelogs. Best for heritage dev tools, indie code editors, opinionated open-source libraries, anything that should feel printed and built to age.",
+    tags: ["heritage", "editorial", "warm", "letterpress"],
     cardGradient:
       "linear-gradient(135deg, #FBF5E7 0%, #F4EAD0 40%, #D70321 40%, #D70321 60%, #FBF5E7 60%)",
     cardForeground: "dark",
@@ -190,40 +190,41 @@ export const VIBES: Vibe[] = [
     fonts: {
       display: '"Anton", "Oswald", "Helvetica Neue", sans-serif',
       body: '"Oswald", "Helvetica Neue", Helvetica, Arial, sans-serif',
-      mono: '"Playfair Display" italic (heritage script accents only)',
+      mono: '"JetBrains Mono" (code, version strings, terminal blocks)',
     },
     motifs: [
-      "Heritage stamp: DESDE 1987 ✦ NUEVA TRADICIÓN in Crimson + Gold",
-      "Stacked all-caps Anton headlines with one Playfair italic word in Gold",
+      "Heritage stamp: EST. 1987 ✦ NEW TRADITION in Crimson + Gold",
+      "Stacked all-caps Anton headlines with one Playfair italic word in Gold Deep",
       "Olive-branch dingbat divider beneath display headlines",
       "Pennant / ribbon buttons with chevron-cut right edge (clip-path)",
-      "Curve-cut photo strips (concave mask on top, convex on bottom)",
-      "Right-side Crimson rail with Gold monogram + vertical DESDE 1987",
-      "Jar-lid product circles with textPath circular type around the rim",
+      "Curve-cut press strips of CSS-built editor / manual / version mockups",
+      "Right-side Crimson rail with Gold monogram + vertical EST. 1987",
+      "Jar-lid medallions used to badge editor releases (textPath circular type)",
+      "Letterpress hard-offset shadow on cards: 6px 6px 0 Oxblood",
     ],
     kits: [
       { label: "Tailwind CSS", url: "https://tailwindcss.com" },
       {
-        label: "Google Fonts: Anton, Oswald, Playfair Display",
+        label: "Google Fonts: Anton, Oswald, Playfair Display, JetBrains Mono",
         url: "https://fonts.google.com",
       },
       {
-        label: "Reference: donmolinico.es",
+        label: "Reference: heritage food packaging applied to dev tools",
         url: "https://www.donmolinico.es/",
       },
     ],
     shapes: [
       "Buttons are pennants with chevron-cut clip-path (px-7 py-3.5 pr-12)",
       "Monogram = capital Anton letter + Gold crown-wing SVG on Crimson square",
-      "Jar lid = circle + Gold inner ring + textPath rim + Anton center label",
-      "Icon system is only ✦, ·, —, and hand-drawn SVG food objects",
-      "Never rounded except jar lids and tag pills; no glass, no blur",
+      "Jar lid = circle + Gold inner ring + textPath rim + Anton center + version below",
+      "Icon system is only ✦, ·, —, the olive-branch SVG, and hand-drawn workshop objects",
+      "Never rounded except jar lids and stamp pills; no glass, no blur, no soft shadows",
     ],
     previewHtml: "vibes/conserva/preview.html",
     promptMarkdown: "vibes/conserva/prompt.md",
     author: {
-      name: "Inspired by donmolinico.es",
-      url: "https://www.donmolinico.es/",
+      name: "Vibe Code Themer",
+      url: "https://github.com/jayhack/vibe-code-themer",
     },
   },
 ];
