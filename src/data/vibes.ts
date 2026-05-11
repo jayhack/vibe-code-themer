@@ -167,6 +167,65 @@ export const VIBES: Vibe[] = [
       url: "https://github.com/jayhack/vibe-code-themer",
     },
   },
+  {
+    slug: "conserva",
+    name: "Conserva",
+    tagline: "Cream paper, crimson stamps, gold crests — a Spanish deli reissued.",
+    description:
+      "A modern Spanish heritage delicatessen for 2026. Cream butcher-paper background, crimson stamped headlines stacked tight in Anton, gold monogram crests, banner / pennant-shaped buttons, curve-cut food-photo strips, and the year ‘DESDE 1987’ repeated like a stamp of authenticity. Warm, appetizing, peninsular, hand-crafted. Best for heritage food & drink brands, butcher shops, vermouth bars, recipe sites, anything that needs to feel like a tin you'd buy at a market.",
+    tags: ["heritage", "editorial", "warm", "spanish"],
+    cardGradient:
+      "linear-gradient(135deg, #FBF5E7 0%, #F4EAD0 40%, #D70321 40%, #D70321 60%, #FBF5E7 60%)",
+    cardForeground: "dark",
+    palette: [
+      { name: "Cream", hex: "#FBF5E7" },
+      { name: "Cream Warm", hex: "#F4EAD0" },
+      { name: "Crimson", hex: "#D70321" },
+      { name: "Crimson Deep", hex: "#A8021A" },
+      { name: "Oxblood", hex: "#6A0613" },
+      { name: "Gold", hex: "#CBA058" },
+      { name: "Gold Deep", hex: "#A37B32" },
+      { name: "Coffee", hex: "#2A1810" },
+    ],
+    fonts: {
+      display: '"Anton", "Oswald", "Helvetica Neue", sans-serif',
+      body: '"Oswald", "Helvetica Neue", Helvetica, Arial, sans-serif',
+      mono: '"Playfair Display" italic (heritage script accents only)',
+    },
+    motifs: [
+      "Heritage stamp: DESDE 1987 ✦ NUEVA TRADICIÓN in Crimson + Gold",
+      "Stacked all-caps Anton headlines with one Playfair italic word in Gold",
+      "Olive-branch dingbat divider beneath display headlines",
+      "Pennant / ribbon buttons with chevron-cut right edge (clip-path)",
+      "Curve-cut photo strips (concave mask on top, convex on bottom)",
+      "Right-side Crimson rail with Gold monogram + vertical DESDE 1987",
+      "Jar-lid product circles with textPath circular type around the rim",
+    ],
+    kits: [
+      { label: "Tailwind CSS", url: "https://tailwindcss.com" },
+      {
+        label: "Google Fonts: Anton, Oswald, Playfair Display",
+        url: "https://fonts.google.com",
+      },
+      {
+        label: "Reference: donmolinico.es",
+        url: "https://www.donmolinico.es/",
+      },
+    ],
+    shapes: [
+      "Buttons are pennants with chevron-cut clip-path (px-7 py-3.5 pr-12)",
+      "Monogram = capital Anton letter + Gold crown-wing SVG on Crimson square",
+      "Jar lid = circle + Gold inner ring + textPath rim + Anton center label",
+      "Icon system is only ✦, ·, —, and hand-drawn SVG food objects",
+      "Never rounded except jar lids and tag pills; no glass, no blur",
+    ],
+    previewHtml: "vibes/conserva/preview.html",
+    promptMarkdown: "vibes/conserva/prompt.md",
+    author: {
+      name: "Inspired by donmolinico.es",
+      url: "https://www.donmolinico.es/",
+    },
+  },
 ];
 
 export function findVibe(slug: string | undefined): Vibe | undefined {
