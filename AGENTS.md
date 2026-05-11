@@ -43,6 +43,58 @@ checklist.
 
 ---
 
+## From a reference website (optional workflow)
+
+Sometimes a human sends a **live URL** and you derive a vibe from what you see,
+then iterate until the kit feels right. The contract below still applies —
+this section only describes **how to get from a URL to those files**.
+
+### What to do with the URL
+
+1. **Inspect the reference** in a browser (or inspect static assets where
+   permitted). Note dominant colors and roles, type stacks and scale, spacing
+   rhythm, borders/shadows, and recurring motifs. You are **not** scraping a
+   pixel-perfect clone.
+2. **Map findings into this repo's contract** — named palette + roles,
+   gradient strings, typography (CDN links in the prompt where needed),
+   motifs, and component recipes. See `prompt.md` and canonical `preview.html`
+   section order so nothing is improvised off-structure.
+3. **Do not** paste the reference site's analytics, tag managers, beacons,
+   or other tracking into `preview.html`. Hard rule: vibes stay static art.
+
+### Inspiration vs cloning
+
+Treat the site as **reference material** for mood, palette, typography, and
+layout language — not something to photocopy.
+
+- Do **not** reproduce trademarked logos, wordmarks, mascots, or distinctive
+  brand illustration systems.
+- Use **original** names, imaginary companies, and your own realistic copy in
+  UX mockups (the same realism rules as other vibes — no lorem ipsum).
+- When unsure, abstract one level (e.g. “bold financial serif + electric
+  cyan CTAs”) instead of duplicating a specific brand’s recognizable marks.
+
+### Keeping artifacts in sync (especially when iterating)
+
+The design kit should match everywhere it appears. When you change colors,
+fonts, motifs, or stack choices, update **all** of:
+
+- **`prompt.md`** — Source of truth for **names**, hex codes, gradients, fonts,
+  and motif descriptions.
+- **`preview.html`** — Theme spec **Palette** chips must show the same named
+  hex values as in `prompt.md`. **Gradients** and **Typography** must match the
+  prompt’s strings and font choices (specimens use the actual faces).
+- **`src/data/vibes.ts`** — `palette` (name + hex), `fonts`, `motifs[]`,
+  `kits[]`, and `shapes[]` should mirror the prompt in short form; `cardGradient`
+  should fit what the preview sells.
+
+**Iteration:** It is fine to sketch in `preview.html` first, but before the
+vibe is “done,” **backfill** `prompt.md` and `vibes.ts` so nothing drifts. If
+you edit the prompt first, refresh the preview until the theme spec and
+applications match.
+
+---
+
 ## `preview.html` requirements
 
 Hard rules (your PR will be requested-changes if any of these fail):
@@ -178,6 +230,11 @@ Run through this checklist (the PR template asks for it):
       (palette, gradients, typography, components) → at least two UX
       applications with realistic copy → footer.
 - [ ] Prompt is prescriptive — every color, gradient, and font is named.
+- [ ] Named colors, fonts, and kit bullets match across `prompt.md`, theme spec
+      in `preview.html`, and `src/data/vibes.ts` (see "Keeping artifacts in
+      sync").
+- [ ] If derived from a reference site: follows "Inspiration vs cloning" above;
+      no trademarked marks or tracking from the source.
 - [ ] No tracking, no autoplay, no popups, no broken images.
 
 ---
