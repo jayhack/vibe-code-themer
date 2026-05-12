@@ -1,0 +1,1465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Surf's Up — vibe preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Anton = condensed display caps (the wave-cut letterforms);
+         Pacifico = the rare hand-lettered surf-shack accent;
+         Inter = body / labels;
+         JetBrains Mono = telemetry, prices, surf-report numerics. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Pacifico&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --foam:      #F4E7CA;
+        --sand:      #E8D9B0;
+        --marigold:  #F2BA3D;
+        --tangerine: #EE7B26;
+        --crimson:   #D6362A;
+        --oxblood:   #8B2114;
+        --lagoon:    #4E89B5;
+        --midnight:  #1F3A5F;
+        --pitch:     #0A1A2E;
+      }
+      html, body {
+        background: var(--foam);
+        color: var(--pitch);
+        font-family: "Inter", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* === Type ============================================== */
+      .display {
+        font-family: "Anton", "Oswald", "Helvetica Neue", sans-serif;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        line-height: 0.86;
+        text-transform: uppercase;
+      }
+      .label {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+      }
+      .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+      .mono-up {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+      .script {
+        font-family: "Pacifico", cursive;
+        letter-spacing: 0.01em;
+        font-weight: 400;
+      }
+
+      /* === Halftone print grain ============================= */
+      .grain-foam {
+        background-color: var(--foam);
+        background-image:
+          radial-gradient(circle at 14% 22%, rgba(139,33,20,0.07) 0 1px, transparent 1.6px),
+          radial-gradient(circle at 68% 58%, rgba(31,58,95,0.06) 0 1px, transparent 1.8px),
+          radial-gradient(circle at 36% 78%, rgba(10,26,46,0.06) 0 1px, transparent 1.6px),
+          radial-gradient(circle at 88% 16%, rgba(139,33,20,0.05) 0 1px, transparent 2px);
+        background-size: 5px 5px, 7px 7px, 9px 9px, 11px 11px;
+      }
+      .grain-sand {
+        background-color: var(--sand);
+        background-image:
+          radial-gradient(circle at 22% 30%, rgba(139,33,20,0.08) 0 1px, transparent 1.6px),
+          radial-gradient(circle at 70% 70%, rgba(31,58,95,0.07) 0 1px, transparent 1.8px),
+          radial-gradient(circle at 50% 12%, rgba(10,26,46,0.06) 0 1px, transparent 2px);
+        background-size: 6px 6px, 8px 8px, 10px 10px;
+      }
+
+      /* === The gradients (hard stripes only) ================ */
+      .sunset-ribbon {
+        background:
+          linear-gradient(180deg,
+            #F2BA3D 0%, #F2BA3D 18%,
+            #EE7B26 18%, #EE7B26 42%,
+            #D6362A 42%, #D6362A 66%,
+            #1F3A5F 66%, #1F3A5F 88%,
+            #4E89B5 88%, #4E89B5 100%);
+      }
+      .sun-disc {
+        background:
+          radial-gradient(circle at 50% 100%,
+            #F2BA3D 0%, #F2BA3D 12%,
+            #EE7B26 12%, #EE7B26 28%,
+            #D6362A 28%, #D6362A 48%,
+            transparent 48%);
+      }
+      .stripe-tape {
+        background:
+          linear-gradient(180deg,
+            #F2BA3D 0%, #F2BA3D 25%,
+            #EE7B26 25%, #EE7B26 50%,
+            #D6362A 50%, #D6362A 75%,
+            #4E89B5 75%, #4E89B5 100%);
+      }
+      .card-hero-diagonal {
+        background:
+          linear-gradient(135deg,
+            #F2BA3D 0%, #EE7B26 28%,
+            #D6362A 52%, #1F3A5F 78%, #4E89B5 100%);
+      }
+
+      /* === Buttons / pinned offset =========================== */
+      .btn-primary {
+        background: var(--crimson);
+        color: var(--foam);
+        font-family: "Anton", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 16px;
+        padding: 14px 22px;
+        box-shadow: 4px 4px 0 var(--pitch);
+        transition: transform .06s ease, background .12s ease, box-shadow .12s ease;
+        display: inline-flex; align-items: center; gap: 10px;
+      }
+      .btn-primary:hover { background: var(--oxblood); }
+      .btn-primary:active {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 var(--pitch);
+      }
+      .btn-secondary {
+        background: var(--foam);
+        color: var(--pitch);
+        border: 2px solid var(--pitch);
+        font-family: "Anton", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 16px;
+        padding: 12px 20px;
+        box-shadow: 4px 4px 0 var(--crimson);
+        display: inline-flex; align-items: center; gap: 10px;
+      }
+      .btn-secondary:hover { background: var(--sand); }
+      .btn-ghost {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 12px;
+        color: var(--crimson);
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 6px 2px;
+        border-bottom: 1.5px solid transparent;
+      }
+      .btn-ghost:hover { border-bottom-color: var(--crimson); }
+
+      /* === Cards & stamps ==================================== */
+      .card {
+        background: var(--foam);
+        border: 2px solid var(--pitch);
+        box-shadow: 4px 4px 0 var(--oxblood);
+      }
+      .card-sand { background: var(--sand); border: 2px solid var(--pitch); box-shadow: 4px 4px 0 var(--oxblood); }
+      .card-midnight {
+        background: var(--midnight);
+        color: var(--foam);
+        border: 2px solid var(--pitch);
+        box-shadow: 4px 4px 0 var(--crimson);
+      }
+      .card-pitch-shadow { box-shadow: 4px 4px 0 var(--pitch); }
+      .card-lagoon { background: var(--lagoon); color: var(--foam); border: 2px solid var(--pitch); box-shadow: 4px 4px 0 var(--pitch); }
+
+      .stamp {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 9px 5px;
+        border: 1.5px solid var(--oxblood);
+        color: var(--oxblood);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        background: transparent;
+      }
+      .stamp.solid {
+        background: var(--marigold);
+        color: var(--pitch);
+        border-color: var(--pitch);
+      }
+      .stamp.crimson {
+        background: var(--crimson);
+        color: var(--foam);
+        border-color: var(--pitch);
+      }
+      .stamp.dark {
+        background: var(--pitch);
+        color: var(--marigold);
+        border-color: var(--pitch);
+      }
+
+      .pill {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 9px;
+        border: 1.5px solid var(--pitch);
+        color: var(--pitch);
+        background: var(--foam);
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+      .pill .pill-dot {
+        width: 6px; height: 6px; border-radius: 9999px;
+        background: var(--crimson);
+        display: inline-block;
+      }
+      .pill.lagoon .pill-dot { background: var(--lagoon); }
+      .pill.marigold .pill-dot { background: var(--marigold); }
+
+      /* === Section tag ====================================== */
+      .section-tag {
+        display: inline-flex; align-items: center; gap: 10px;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--crimson);
+      }
+      .section-tag .num-tag {
+        width: 26px; height: 26px;
+        background: var(--crimson);
+        color: var(--foam);
+        font-family: "Anton", sans-serif;
+        font-size: 14px;
+        display: inline-flex; align-items: center; justify-content: center;
+        padding-top: 2px;
+      }
+      .section-tag .tick {
+        width: 22px; height: 1.5px;
+        background: var(--crimson);
+        display: inline-block;
+      }
+
+      /* === Triple-print register effect ===================== */
+      .triple-print {
+        position: relative;
+        display: inline-block;
+        color: var(--pitch);
+      }
+      .triple-print::before,
+      .triple-print::after {
+        content: attr(data-text);
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .triple-print::before {
+        color: var(--tangerine);
+        transform: translate(-3px, 3px);
+        mix-blend-mode: multiply;
+        opacity: 0.92;
+        z-index: -1;
+      }
+      .triple-print::after {
+        color: var(--lagoon);
+        transform: translate(3px, -3px);
+        mix-blend-mode: multiply;
+        opacity: 0.85;
+        z-index: -2;
+      }
+      .triple-print-crimson { color: var(--crimson); }
+      .double-print {
+        position: relative;
+        display: inline-block;
+        color: var(--pitch);
+      }
+      .double-print::before {
+        content: attr(data-text);
+        position: absolute; inset: 0;
+        color: var(--tangerine);
+        transform: translate(-2px, 2px);
+        mix-blend-mode: multiply;
+        opacity: 0.9;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* === Wave divider ====================================== */
+      .wave-divider {
+        width: 100%;
+        height: 36px;
+        display: block;
+      }
+
+      /* === Hero sun disc placement =========================== */
+      .hero-sun {
+        position: absolute;
+        left: 50%;
+        bottom: -28%;
+        width: min(820px, 110vw);
+        aspect-ratio: 1 / 1;
+        transform: translateX(-50%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* === Inputs ============================================ */
+      .input {
+        background: transparent;
+        border: none;
+        border-bottom: 1.5px solid var(--pitch);
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        color: var(--pitch);
+        padding: 8px 2px;
+        outline: none;
+        width: 100%;
+      }
+      .input::placeholder {
+        font-family: "JetBrains Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 11px;
+        color: rgba(31, 58, 95, 0.65);
+      }
+      .input:focus { border-bottom-color: var(--crimson); }
+
+      /* === Swatch chip ====================================== */
+      .swatch {
+        height: 96px;
+        border: 1.5px solid var(--pitch);
+        position: relative;
+        box-shadow: 3px 3px 0 var(--oxblood);
+      }
+      .swatch-label {
+        position: absolute;
+        left: 6px;
+        bottom: 6px;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 10px;
+        background: var(--foam);
+        color: var(--pitch);
+        padding: 3px 5px 3px;
+        border: 1px solid var(--pitch);
+      }
+      .swatch-hex {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 500;
+        font-size: 10px;
+        background: var(--pitch);
+        color: var(--foam);
+        padding: 3px 5px 3px;
+        letter-spacing: 0.08em;
+      }
+
+      /* === Tide chart bars ================================== */
+      .tide-row { display: flex; align-items: end; gap: 3px; height: 84px; }
+      .tide-row span {
+        flex: 1;
+        background: var(--lagoon);
+        border-top: 1.5px solid var(--pitch);
+        opacity: 0.85;
+      }
+      .tide-row span.hi  { background: var(--crimson); }
+      .tide-row span.now { background: var(--marigold); }
+
+      /* === Wave SVG bg for hero ============================= */
+      .hero-frame {
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* === Heat-bar ======================================== */
+      .score-bar {
+        height: 10px;
+        background: var(--sand);
+        border: 1.5px solid var(--pitch);
+        position: relative;
+      }
+      .score-bar > div {
+        height: 100%;
+        background: var(--crimson);
+        border-right: 1.5px solid var(--pitch);
+      }
+
+      /* === Quantity stepper ================================= */
+      .qty {
+        display: inline-flex;
+        border: 1.5px solid var(--pitch);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+      }
+      .qty button {
+        width: 32px; height: 32px;
+        background: var(--foam);
+        color: var(--pitch);
+        border-right: 1.5px solid var(--pitch);
+      }
+      .qty button:last-child { border-right: none; border-left: 1.5px solid var(--pitch); }
+      .qty span {
+        width: 44px; height: 32px;
+        display: inline-flex; align-items: center; justify-content: center;
+        background: var(--sand);
+        color: var(--pitch);
+        font-size: 13px;
+      }
+
+      /* === Toggle "select fin set" ========================== */
+      .opt {
+        border: 1.5px solid var(--pitch);
+        padding: 10px 12px;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        background: var(--foam);
+        text-align: left;
+        position: relative;
+      }
+      .opt.active {
+        background: var(--pitch);
+        color: var(--foam);
+      }
+
+      /* === Print-register pattern for "section number" ===== */
+      .num-chip {
+        display: inline-flex;
+        width: 64px; height: 64px;
+        background: var(--crimson);
+        color: var(--foam);
+        font-family: "Anton", sans-serif;
+        font-size: 38px;
+        line-height: 1;
+        align-items: center; justify-content: center;
+        box-shadow: 4px 4px 0 var(--pitch);
+        padding-top: 4px;
+      }
+    </style>
+  </head>
+
+  <body class="grain-foam relative min-h-screen overflow-x-hidden">
+
+    <!-- =================================================== -->
+    <!-- § STRIPE TAPE (poster top border)                   -->
+    <!-- =================================================== -->
+    <div class="stripe-tape h-6 w-full"></div>
+
+    <!-- =================================================== -->
+    <!-- § 01 — IDENTITY                                     -->
+    <!-- =================================================== -->
+    <section class="relative isolate overflow-hidden">
+
+      <!-- nav -->
+      <nav class="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+        <div class="flex items-center gap-3">
+          <!-- wave-curl mark -->
+          <svg viewBox="0 0 40 28" width="44" height="32" aria-hidden="true">
+            <path d="M2 22 C 8 22, 10 8, 22 8 C 30 8, 34 14, 38 14 L 38 22 L 30 22 C 26 22, 24 16, 20 16 C 14 16, 12 22, 6 22 Z" fill="#D6362A"/>
+            <circle cx="32" cy="10" r="3" fill="#F2BA3D"/>
+          </svg>
+          <span class="display text-2xl text-[#0A1A2E]">Surf's Up</span>
+          <span class="mono-up hidden text-[10px] text-[#1F3A5F]/80 sm:inline">· Pleasure Pt · Est. 1970</span>
+        </div>
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#" class="label text-[11px] text-[#D6362A]" style="border-bottom:2px solid #D6362A; padding-bottom:6px;">Shop</a>
+          <a href="#" class="label text-[11px] text-[#0A1A2E]/80 hover:text-[#D6362A]">Forecast</a>
+          <a href="#" class="label text-[11px] text-[#0A1A2E]/80 hover:text-[#D6362A]">Heat Sheet</a>
+          <a href="#" class="label text-[11px] text-[#0A1A2E]/80 hover:text-[#D6362A]">Journal</a>
+        </div>
+        <span class="stamp solid">
+          <span class="block h-1.5 w-1.5 bg-[#D6362A]"></span>
+          Dawn Patrol · 05:42
+        </span>
+      </nav>
+
+      <!-- Hero -->
+      <div class="hero-frame relative mx-auto max-w-6xl px-6 pb-20 pt-10 text-center">
+        <div class="hero-sun sun-disc"></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center justify-center gap-3">
+            <span class="block h-px w-14 bg-[#0A1A2E]/40"></span>
+            <span class="label text-[11px] text-[#0A1A2E]">A 1970s screen print, reissued for the browser</span>
+            <span class="block h-px w-14 bg-[#0A1A2E]/40"></span>
+          </div>
+
+          <!-- Triple-print hero wordmark -->
+          <h1
+            class="display mx-auto mt-8 select-none"
+            style="font-size:clamp(5rem, 18vw, 14rem); line-height:0.84;"
+          >
+            <span class="triple-print" data-text="SURF'S">SURF'S</span>
+            <br />
+            <span class="triple-print triple-print-crimson" data-text="UP" style="color:#D6362A">UP</span>
+          </h1>
+
+          <p class="mx-auto mt-8 max-w-xl text-base text-[#0A1A2E] md:text-lg">
+            A sun-bleached screen-print kit for surf shops, swell forecasts, and
+            contest heat sheets. Wave-cut Anton headlines, a single ink
+            silhouette, and a sunset ribbon that never blurs.
+            <span class="script text-[#D6362A] text-2xl align-middle" style="transform:rotate(-4deg); display:inline-block;">
+              dawn patrol
+            </span>
+          </p>
+
+          <div class="mt-10 flex flex-wrap items-center justify-center gap-5">
+            <a href="#" class="btn-primary">
+              Catch the kit
+              <span>→</span>
+            </a>
+            <a href="#" class="btn-secondary">
+              <!-- mini curl -->
+              <svg viewBox="0 0 40 28" width="22" height="16" aria-hidden="true">
+                <path d="M2 22 C 8 22, 10 8, 22 8 C 30 8, 34 14, 38 14 L 38 22 L 30 22 C 26 22, 24 16, 20 16 C 14 16, 12 22, 6 22 Z" fill="#D6362A"/>
+                <circle cx="32" cy="10" r="3" fill="#F2BA3D"/>
+              </svg>
+              See the prompt
+            </a>
+          </div>
+
+          <!-- Silhouette surfer — the one ink anchor on the page -->
+          <svg
+            viewBox="0 0 200 180"
+            class="mx-auto mt-10 block"
+            width="200"
+            height="180"
+            aria-hidden="true"
+          >
+            <!-- wave under the surfer -->
+            <path d="M0 150 C 40 130, 70 145, 110 138 C 150 130, 180 150, 200 145 L 200 180 L 0 180 Z" fill="#4E89B5"/>
+            <path d="M0 158 C 40 140, 70 153, 110 148 C 150 142, 180 158, 200 154 L 200 180 L 0 180 Z" fill="#1F3A5F"/>
+            <!-- surfer silhouette (low crouch, board angled) -->
+            <g fill="#0A1A2E">
+              <!-- head -->
+              <circle cx="98" cy="58" r="9"/>
+              <!-- torso + arms -->
+              <path d="M92 64 C 84 78, 78 92, 76 108 L 88 110 C 92 96, 98 84, 104 76 Z"/>
+              <!-- back arm -->
+              <path d="M105 74 C 116 70, 124 64, 128 56 L 124 50 C 118 56, 112 60, 102 64 Z"/>
+              <!-- front arm -->
+              <path d="M86 88 C 76 96, 70 108, 68 118 L 76 122 C 80 112, 84 102, 92 96 Z"/>
+              <!-- hips -->
+              <path d="M76 108 L 96 108 L 100 122 L 80 124 Z"/>
+              <!-- legs (bent) -->
+              <path d="M80 124 C 76 132, 78 142, 84 150 L 96 146 C 98 138, 96 132, 96 122 Z"/>
+              <path d="M98 122 C 104 130, 112 136, 122 138 L 124 130 C 116 126, 110 122, 102 116 Z"/>
+              <!-- board -->
+              <path d="M42 158 L 168 134 L 172 142 L 46 166 Z"/>
+              <!-- fin -->
+              <path d="M70 156 L 78 168 L 72 168 Z"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- wave divider -->
+      <svg class="wave-divider" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 22 Q 75 4, 150 22 T 300 22 T 450 22 T 600 22 T 750 22 T 900 22 T 1050 22 T 1200 22" fill="none" stroke="#0A1A2E" stroke-width="1.8"/>
+      </svg>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- § 02 — THEME SPECIFICATION                          -->
+    <!-- =================================================== -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-14 pb-6">
+      <div class="flex items-end justify-between">
+        <div class="flex items-center gap-4">
+          <span class="num-chip">02</span>
+          <div>
+            <div class="section-tag mt-1"><span class="tick"></span> Theme specification</div>
+            <h2 class="display mt-2 text-5xl text-[#0A1A2E] md:text-6xl">
+              <span class="double-print" data-text="The kit">The kit</span>,
+              <span class="script text-[#D6362A]" style="font-size:0.7em; transform:rotate(-3deg); display:inline-block; vertical-align:0.05em;">screen-printed</span>
+            </h2>
+          </div>
+        </div>
+        <span class="stamp dark hidden md:inline-flex">No 04 · Summer '77</span>
+      </div>
+
+      <!-- =============== 02.1 PALETTE =============== -->
+      <div class="mt-12">
+        <div class="section-tag mb-4"><span class="num-tag">A</span> 02.1 / Palette</div>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div class="swatch" style="background:#F4E7CA">
+            <span class="swatch-label">Foam</span>
+            <span class="swatch-hex">#F4E7CA</span>
+          </div>
+          <div class="swatch" style="background:#E8D9B0">
+            <span class="swatch-label">Sand</span>
+            <span class="swatch-hex">#E8D9B0</span>
+          </div>
+          <div class="swatch" style="background:#F2BA3D">
+            <span class="swatch-label">Marigold</span>
+            <span class="swatch-hex">#F2BA3D</span>
+          </div>
+          <div class="swatch" style="background:#EE7B26">
+            <span class="swatch-label">Tangerine</span>
+            <span class="swatch-hex">#EE7B26</span>
+          </div>
+          <div class="swatch" style="background:#D6362A">
+            <span class="swatch-label">Crimson</span>
+            <span class="swatch-hex">#D6362A</span>
+          </div>
+          <div class="swatch" style="background:#8B2114">
+            <span class="swatch-label">Oxblood</span>
+            <span class="swatch-hex">#8B2114</span>
+          </div>
+          <div class="swatch" style="background:#4E89B5">
+            <span class="swatch-label">Lagoon</span>
+            <span class="swatch-hex">#4E89B5</span>
+          </div>
+          <div class="swatch" style="background:#1F3A5F">
+            <span class="swatch-label">Midnight</span>
+            <span class="swatch-hex">#1F3A5F</span>
+          </div>
+          <div class="swatch" style="background:#0A1A2E">
+            <span class="swatch-label" style="background:#F4E7CA">Pitch</span>
+            <span class="swatch-hex" style="background:#F4E7CA;color:#0A1A2E">#0A1A2E</span>
+          </div>
+          <div class="swatch grain-foam flex items-center justify-center">
+            <span class="mono-up text-[10px] text-[#0A1A2E]">+ Halftone Grain</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== 02.2 GRADIENTS =============== -->
+      <div class="mt-12">
+        <div class="section-tag mb-4"><span class="num-tag">B</span> 02.2 / Gradients</div>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="card p-0 overflow-hidden">
+            <div class="sunset-ribbon h-44"></div>
+            <div class="flex items-center justify-between px-4 py-3 border-t-2 border-[#0A1A2E]">
+              <span class="label text-[11px] text-[#0A1A2E]">Sunset Ribbon</span>
+              <span class="mono text-[10px] text-[#1F3A5F]">5-stop linear-gradient · 180°</span>
+            </div>
+          </div>
+          <div class="card p-0 overflow-hidden">
+            <div class="sun-disc relative h-44" style="background-color:#F4E7CA">
+              <div class="absolute inset-0 grain-foam mix-blend-multiply opacity-50"></div>
+            </div>
+            <div class="flex items-center justify-between px-4 py-3 border-t-2 border-[#0A1A2E]">
+              <span class="label text-[11px] text-[#0A1A2E]">Sun Disc</span>
+              <span class="mono text-[10px] text-[#1F3A5F]">radial · 3 hard stops · transparent rim</span>
+            </div>
+          </div>
+          <div class="card p-0 overflow-hidden">
+            <div class="card-hero-diagonal h-44"></div>
+            <div class="flex items-center justify-between px-4 py-3 border-t-2 border-[#0A1A2E]">
+              <span class="label text-[11px] text-[#0A1A2E]">Card Hero Diagonal</span>
+              <span class="mono text-[10px] text-[#1F3A5F]">5-stop · 135° · gallery card</span>
+            </div>
+          </div>
+          <div class="card p-0 overflow-hidden">
+            <div class="stripe-tape h-44"></div>
+            <div class="flex items-center justify-between px-4 py-3 border-t-2 border-[#0A1A2E]">
+              <span class="label text-[11px] text-[#0A1A2E]">Stripe Tape</span>
+              <span class="mono text-[10px] text-[#1F3A5F]">4 hard bars · section opener / page border</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== 02.3 TYPOGRAPHY =============== -->
+      <div class="mt-12">
+        <div class="section-tag mb-4"><span class="num-tag">C</span> 02.3 / Typography</div>
+        <div class="card p-6 md:p-8">
+          <div class="grid gap-6 md:grid-cols-[1fr_240px]">
+            <div>
+              <span class="mono-up text-[10px] text-[#1F3A5F]/70">Display · Anton 400 · uppercase · 0.02em</span>
+              <div class="display mt-2 text-7xl text-[#0A1A2E] md:text-8xl">
+                <span class="double-print" data-text="Steamer Lane">Steamer Lane</span>
+              </div>
+            </div>
+            <div class="border-t border-[#0A1A2E]/15 pt-4 md:border-l md:border-t-0 md:pl-6 md:pt-0">
+              <span class="mono-up text-[10px] text-[#1F3A5F]/70">Script accent · Pacifico</span>
+              <p class="mt-2 text-2xl">
+                <span class="script text-[#D6362A]" style="display:inline-block;transform:rotate(-4deg);">eternal summer</span>
+              </p>
+              <p class="mt-2 mono text-[11px] text-[#1F3A5F]/70 leading-relaxed">
+                ≤2 words only · Crimson · slight tilt · never body
+              </p>
+            </div>
+          </div>
+          <hr class="my-6 border-[#0A1A2E]/15" />
+          <div class="grid gap-6 md:grid-cols-3">
+            <div>
+              <span class="mono-up text-[10px] text-[#1F3A5F]/70">Body · Inter 400/500</span>
+              <p class="mt-2 text-base leading-[1.55] text-[#0A1A2E]">
+                Glassy 3-foot peelers down the Point Hook, light offshore out of
+                the north-east, and the channel is empty till the high tide
+                pushes the long-period swell in around 11:20 a.m.
+              </p>
+            </div>
+            <div>
+              <span class="mono-up text-[10px] text-[#1F3A5F]/70">Label · Inter 600 · 0.22em</span>
+              <p class="label mt-2 text-[11px] text-[#0A1A2E]">Heat 3 · Quarterfinal</p>
+              <p class="label mt-1 text-[11px] text-[#D6362A]">Now riding · Wave 14</p>
+              <p class="label mt-1 text-[11px] text-[#1F3A5F]">Wind WSW 6kt</p>
+            </div>
+            <div>
+              <span class="mono-up text-[10px] text-[#1F3A5F]/70">Mono · JetBrains 500 · 0.18em</span>
+              <p class="mono-up mt-2 text-xs text-[#0A1A2E]">
+                ◀ Swell 4–6 ft @ 14s WNW
+              </p>
+              <p class="mono-up mt-1 text-xs text-[#0A1A2E]">Tide 4.2 ft ▲ rising</p>
+              <p class="mono-up mt-1 text-xs text-[#D6362A]">Air 64° · Water 58°</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== 02.4 COMPONENTS =============== -->
+      <div class="mt-12 mb-2">
+        <div class="section-tag mb-4"><span class="num-tag">D</span> 02.4 / Components</div>
+        <div class="grid gap-4 md:grid-cols-2">
+          <!-- Buttons + pills -->
+          <div class="card p-6">
+            <span class="mono-up text-[10px] text-[#1F3A5F]/70">Buttons & links</span>
+            <div class="mt-4 flex flex-wrap gap-4 items-center">
+              <a href="#" class="btn-primary">Add to bag <span>→</span></a>
+              <a href="#" class="btn-secondary">Size guide</a>
+              <a href="#" class="btn-ghost">Shipping &amp; returns <span>→</span></a>
+            </div>
+            <hr class="my-6 border-[#0A1A2E]/15" />
+            <span class="mono-up text-[10px] text-[#1F3A5F]/70">Pills · tags · stamps</span>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <span class="pill"><span class="pill-dot"></span> Shortboard</span>
+              <span class="pill lagoon"><span class="pill-dot"></span> Cold Water</span>
+              <span class="pill marigold"><span class="pill-dot"></span> Summer Drop</span>
+              <span class="stamp">Est. 1970</span>
+              <span class="stamp solid">Grom Approved</span>
+              <span class="stamp crimson">Hand-shaped · CA</span>
+              <span class="stamp dark">№ 04 / Summer '77</span>
+            </div>
+            <hr class="my-6 border-[#0A1A2E]/15" />
+            <span class="mono-up text-[10px] text-[#1F3A5F]/70">Inputs</span>
+            <div class="mt-3 grid gap-4 sm:grid-cols-2">
+              <div>
+                <label class="mono-up text-[10px] text-[#0A1A2E]">Your email</label>
+                <input class="input mt-1" placeholder="paddle@dawnpatrol.surf" />
+              </div>
+              <div>
+                <label class="mono-up text-[10px] text-[#0A1A2E]">Home break</label>
+                <input class="input mt-1" placeholder="Pleasure Pt., Santa Cruz" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Cards & stepper -->
+          <div class="card-sand p-6">
+            <span class="mono-up text-[10px] text-[#1F3A5F]/70">Cards · panels</span>
+            <div class="mt-3 grid gap-4 sm:grid-cols-2">
+              <div class="card p-4">
+                <span class="stamp">Foam card</span>
+                <p class="display mt-3 text-2xl text-[#0A1A2E]">Wax block</p>
+                <p class="mono mt-1 text-xs text-[#1F3A5F]">$4.50 · Cool / 14–22°C</p>
+              </div>
+              <div class="card-midnight p-4">
+                <span class="stamp" style="border-color:#F2BA3D; color:#F2BA3D;">Midnight card</span>
+                <p class="display mt-3 text-2xl">Leash 6'</p>
+                <p class="mono mt-1 text-xs text-[#F2BA3D]">$32 · 7mm urethane</p>
+              </div>
+              <div class="card-lagoon p-4 sm:col-span-2">
+                <span class="stamp solid">Lagoon panel</span>
+                <p class="display mt-2 text-2xl">Traction pad — 3-piece</p>
+                <p class="mono mt-1 text-xs">$48 · Hex grip · Crimson + Foam</p>
+              </div>
+            </div>
+            <hr class="my-6 border-[#0A1A2E]/30" />
+            <span class="mono-up text-[10px] text-[#1F3A5F]/70">Stepper · select · toggle</span>
+            <div class="mt-3 flex flex-wrap items-center gap-4">
+              <div class="qty">
+                <button>−</button><span>1</span><button>+</button>
+              </div>
+              <div class="grid grid-cols-3 gap-0">
+                <button class="opt">FCS II</button>
+                <button class="opt active">Futures</button>
+                <button class="opt">Single</button>
+              </div>
+            </div>
+            <hr class="my-6 border-[#0A1A2E]/30" />
+            <span class="mono-up text-[10px] text-[#1F3A5F]/70">List · divider</span>
+            <ul class="mt-3 divide-y divide-[#0A1A2E]/20 border-y-2 border-[#0A1A2E]">
+              <li class="flex items-center justify-between py-2.5">
+                <span class="mono-up text-[11px] text-[#1F3A5F]">№ 01</span>
+                <span class="text-sm">Channel Islands Rocket Wide</span>
+                <span class="mono text-sm text-[#0A1A2E]">$745</span>
+              </li>
+              <li class="flex items-center justify-between py-2.5">
+                <span class="mono-up text-[11px] text-[#1F3A5F]">№ 02</span>
+                <span class="text-sm">Lost Driver 2.0 — 5'8"</span>
+                <span class="mono text-sm text-[#0A1A2E]">$685</span>
+              </li>
+              <li class="flex items-center justify-between py-2.5">
+                <span class="mono-up text-[11px] text-[#1F3A5F]">№ 03</span>
+                <span class="text-sm">Pyzel Ghost — 6'2"</span>
+                <span class="mono text-sm text-[#0A1A2E]">$795</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- wave divider -->
+      <svg class="wave-divider mt-12" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 22 Q 75 4, 150 22 T 300 22 T 450 22 T 600 22 T 750 22 T 900 22 T 1050 22 T 1200 22" fill="none" stroke="#0A1A2E" stroke-width="1.8"/>
+      </svg>
+    </section>
+
+
+    <!-- =================================================== -->
+    <!-- § 03 — UX APPLICATION 01 — SHOP                     -->
+    <!-- =================================================== -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-10 pb-6">
+      <div class="flex items-end justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <span class="num-chip">03</span>
+          <div>
+            <div class="section-tag mt-1"><span class="tick"></span> Application I · The Shop</div>
+            <h2 class="display mt-2 text-5xl text-[#0A1A2E] md:text-6xl">
+              <span class="double-print" data-text="Hand-Shaped">Hand-shaped</span>
+            </h2>
+          </div>
+        </div>
+        <a href="#" class="btn-ghost hidden md:inline-flex">All boards · 42 <span>→</span></a>
+      </div>
+
+      <p class="mt-4 max-w-xl text-base text-[#0A1A2E]">
+        Small-batch shortboards, hand-shaped between Santa Cruz and Ventura.
+        Each blank gets one shaper, one stamp, one number. Free domestic
+        shipping over <span class="mono">$300</span>.
+      </p>
+
+      <!-- Filter row -->
+      <div class="mt-8 flex flex-wrap items-center gap-2">
+        <span class="pill" style="background:#0A1A2E;color:#F4E7CA;border-color:#0A1A2E;"><span class="pill-dot" style="background:#F2BA3D"></span> All · 42</span>
+        <span class="pill"><span class="pill-dot"></span> Shortboard · 18</span>
+        <span class="pill lagoon"><span class="pill-dot"></span> Fish · 9</span>
+        <span class="pill"><span class="pill-dot" style="background:#1F3A5F"></span> Mid-length · 11</span>
+        <span class="pill marigold"><span class="pill-dot"></span> Longboard · 4</span>
+        <span class="ml-auto mono-up text-[11px] text-[#1F3A5F]">Sort · Newest ▼</span>
+      </div>
+
+      <!-- Product grid -->
+      <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+        <!-- Card 1 -->
+        <article class="card overflow-hidden">
+          <div class="relative aspect-[4/5] grain-sand">
+            <span class="absolute top-3 left-3 stamp">№ 01 / 42</span>
+            <span class="absolute top-3 right-3 stamp solid">New shape</span>
+            <!-- shortboard silhouette -->
+            <svg viewBox="0 0 80 320" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" width="74" height="280" aria-hidden="true">
+              <path d="M40 4 C 60 30, 70 90, 70 170 C 70 240, 58 296, 40 316 C 22 296, 10 240, 10 170 C 10 90, 20 30, 40 4 Z" fill="#0A1A2E"/>
+              <path d="M40 30 C 56 50, 62 100, 62 170 C 62 232, 54 280, 40 296 C 26 280, 18 232, 18 170 C 18 100, 24 50, 40 30 Z" fill="#D6362A"/>
+              <path d="M40 270 L 50 308 L 30 308 Z" fill="#0A1A2E"/>
+              <path d="M37 30 L 43 30 L 43 280 L 37 280 Z" fill="#F2BA3D" opacity="0.7"/>
+            </svg>
+          </div>
+          <div class="flex items-baseline justify-between border-t-2 border-[#0A1A2E] px-4 py-3">
+            <div>
+              <div class="text-sm font-semibold text-[#0A1A2E]">Rocket Wide · 5'10"</div>
+              <div class="mono text-[11px] text-[#1F3A5F]/80">Channel Islands · PU · Futures</div>
+            </div>
+            <div class="mono text-sm text-[#0A1A2E]">$745.00</div>
+          </div>
+        </article>
+
+        <!-- Card 2 (Crimson-back accent — once per row) -->
+        <article class="card overflow-hidden card-pitch-shadow">
+          <div class="relative aspect-[4/5]" style="background:#D6362A">
+            <div class="absolute inset-0 grain-foam mix-blend-multiply opacity-30"></div>
+            <span class="absolute top-3 left-3 stamp dark">№ 02 / 42</span>
+            <span class="absolute top-3 right-3 stamp" style="background:#F4E7CA; color:#8B2114; border-color:#0A1A2E;">Last one</span>
+            <!-- fish silhouette -->
+            <svg viewBox="0 0 100 280" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" width="96" height="240" aria-hidden="true">
+              <path d="M50 6 C 76 30, 88 120, 88 180 C 88 232, 76 260, 60 274 L 50 250 L 40 274 C 24 260, 12 232, 12 180 C 12 120, 24 30, 50 6 Z" fill="#0A1A2E"/>
+              <path d="M50 28 C 70 50, 78 122, 78 180 C 78 220, 70 248, 56 262 L 50 246 L 44 262 C 30 248, 22 220, 22 180 C 22 122, 30 50, 50 28 Z" fill="#F2BA3D"/>
+              <path d="M47 30 L 53 30 L 53 240 L 47 240 Z" fill="#0A1A2E" opacity="0.8"/>
+            </svg>
+          </div>
+          <div class="flex items-baseline justify-between border-t-2 border-[#0A1A2E] px-4 py-3">
+            <div>
+              <div class="text-sm font-semibold text-[#0A1A2E]">Twin Fish · 5'6"</div>
+              <div class="mono text-[11px] text-[#1F3A5F]/80">Album Surf · EPS · Twin keel</div>
+            </div>
+            <div class="mono text-sm text-[#0A1A2E]">$895.00</div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card overflow-hidden">
+          <div class="relative aspect-[4/5] grain-sand">
+            <span class="absolute top-3 left-3 stamp">№ 03 / 42</span>
+            <!-- longboard silhouette -->
+            <svg viewBox="0 0 60 320" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" width="56" height="296" aria-hidden="true">
+              <path d="M30 4 C 46 36, 52 116, 52 200 C 52 264, 44 304, 30 316 C 16 304, 8 264, 8 200 C 8 116, 14 36, 30 4 Z" fill="#0A1A2E"/>
+              <path d="M30 24 C 44 50, 48 124, 48 200 C 48 256, 42 290, 30 302 C 18 290, 12 256, 12 200 C 12 124, 16 50, 30 24 Z" fill="#4E89B5"/>
+              <path d="M27 26 L 33 26 L 33 290 L 27 290 Z" fill="#F4E7CA" opacity="0.85"/>
+            </svg>
+          </div>
+          <div class="flex items-baseline justify-between border-t-2 border-[#0A1A2E] px-4 py-3">
+            <div>
+              <div class="text-sm font-semibold text-[#0A1A2E]">Slipper 9'2"</div>
+              <div class="mono text-[11px] text-[#1F3A5F]/80">Bing Surfboards · Single fin</div>
+            </div>
+            <div class="mono text-sm text-[#0A1A2E]">$1,240.00</div>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="card overflow-hidden">
+          <div class="relative aspect-[4/5] grain-sand">
+            <span class="absolute top-3 left-3 stamp">№ 04 / 42</span>
+            <!-- traction pad mockup -->
+            <div class="absolute inset-x-8 top-12 bottom-20 border-2 border-[#0A1A2E] grid grid-cols-3" style="background:#D6362A;">
+              <div class="border-r-2 border-b-2 border-[#0A1A2E]"></div>
+              <div class="border-r-2 border-b-2 border-[#0A1A2E]" style="background:#F4E7CA"></div>
+              <div class="border-b-2 border-[#0A1A2E]"></div>
+              <div class="border-r-2 border-[#0A1A2E]" style="background:#F4E7CA"></div>
+              <div class="border-r-2 border-[#0A1A2E]"></div>
+              <div class="" style="background:#F4E7CA"></div>
+            </div>
+          </div>
+          <div class="flex items-baseline justify-between border-t-2 border-[#0A1A2E] px-4 py-3">
+            <div>
+              <div class="text-sm font-semibold text-[#0A1A2E]">Hex Grip · 3-piece</div>
+              <div class="mono text-[11px] text-[#1F3A5F]/80">Crimson + Foam · 14-tooth</div>
+            </div>
+            <div class="mono text-sm text-[#0A1A2E]">$48.00</div>
+          </div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="card overflow-hidden">
+          <div class="relative aspect-[4/5]" style="background:#1F3A5F">
+            <div class="absolute inset-0 grain-foam mix-blend-multiply opacity-20"></div>
+            <span class="absolute top-3 left-3 stamp" style="border-color:#F2BA3D; color:#F2BA3D">№ 05 / 42</span>
+            <!-- wax block -->
+            <svg viewBox="0 0 120 120" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" width="160" height="160" aria-hidden="true">
+              <rect x="14" y="20" width="92" height="84" fill="#F4E7CA" stroke="#0A1A2E" stroke-width="2.5"/>
+              <text x="60" y="56" text-anchor="middle" fill="#0A1A2E" font-family="Anton" font-size="18">SURF'S</text>
+              <text x="60" y="76" text-anchor="middle" fill="#D6362A" font-family="Anton" font-size="18">UP</text>
+              <text x="60" y="94" text-anchor="middle" fill="#1F3A5F" font-family="JetBrains Mono" font-size="8">COOL · 14–22°C</text>
+            </svg>
+          </div>
+          <div class="flex items-baseline justify-between border-t-2 border-[#0A1A2E] px-4 py-3">
+            <div>
+              <div class="text-sm font-semibold text-[#0A1A2E]">Cool-water Wax · 3 pack</div>
+              <div class="mono text-[11px] text-[#1F3A5F]/80">Sex Wax dupe · 14–22°C</div>
+            </div>
+            <div class="mono text-sm text-[#0A1A2E]">$13.50</div>
+          </div>
+        </article>
+
+        <!-- Card 6 — the "VIEW MORE" disc accent + last one -->
+        <article class="card overflow-hidden relative">
+          <div class="relative aspect-[4/5] grain-sand">
+            <span class="absolute top-3 left-3 stamp">№ 06 / 42</span>
+            <!-- fins -->
+            <svg viewBox="0 0 160 200" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" width="180" height="220" aria-hidden="true">
+              <path d="M20 170 C 28 130, 42 88, 64 60 L 70 168 Z" fill="#D6362A" stroke="#0A1A2E" stroke-width="2"/>
+              <path d="M70 170 C 78 130, 92 88, 114 60 L 120 168 Z" fill="#1F3A5F" stroke="#0A1A2E" stroke-width="2"/>
+              <path d="M120 170 C 128 130, 142 88, 154 70 L 158 168 Z" fill="#F2BA3D" stroke="#0A1A2E" stroke-width="2"/>
+            </svg>
+            <!-- circular accent disc -->
+            <a href="#" class="absolute right-4 bottom-4 inline-flex h-24 w-24 items-center justify-center rounded-full text-center text-[#F4E7CA]" style="background:#D6362A; border:2px solid #0A1A2E; box-shadow:3px 3px 0 #0A1A2E;">
+              <span class="mono-up text-[10px] leading-tight">Build<br/>your set →</span>
+            </a>
+          </div>
+          <div class="flex items-baseline justify-between border-t-2 border-[#0A1A2E] px-4 py-3">
+            <div>
+              <div class="text-sm font-semibold text-[#0A1A2E]">Thruster Set · M</div>
+              <div class="mono text-[11px] text-[#1F3A5F]/80">FCS II · 12 colorways</div>
+            </div>
+            <div class="mono text-sm text-[#0A1A2E]">$118.00</div>
+          </div>
+        </article>
+      </div>
+
+      <!-- wave divider -->
+      <svg class="wave-divider mt-14" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 22 Q 75 4, 150 22 T 300 22 T 450 22 T 600 22 T 750 22 T 900 22 T 1050 22 T 1200 22" fill="none" stroke="#0A1A2E" stroke-width="1.8"/>
+      </svg>
+    </section>
+
+
+    <!-- =================================================== -->
+    <!-- § 04 — UX APPLICATION 02 — FORECAST                 -->
+    <!-- =================================================== -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-10 pb-6">
+      <div class="flex items-end justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <span class="num-chip">04</span>
+          <div>
+            <div class="section-tag mt-1"><span class="tick"></span> Application II · The Forecast</div>
+            <h2 class="display mt-2 text-5xl text-[#0A1A2E] md:text-6xl">
+              <span class="double-print" data-text="Pleasure Pt.">Pleasure Pt.</span>
+            </h2>
+          </div>
+        </div>
+        <span class="stamp crimson hidden md:inline-flex">Updated · 06:18 PT</span>
+      </div>
+
+      <!-- Top stat row -->
+      <div class="mt-8 grid gap-4 md:grid-cols-4">
+        <div class="card-midnight p-5">
+          <span class="mono-up text-[10px] text-[#F2BA3D]">Swell · Primary</span>
+          <p class="display mt-2 text-5xl text-[#F4E7CA]">4–6<span class="text-2xl text-[#F2BA3D]"> ft</span></p>
+          <p class="mono mt-1 text-xs text-[#F2BA3D]">14s · WNW 287°</p>
+        </div>
+        <div class="card p-5">
+          <span class="mono-up text-[10px] text-[#1F3A5F]/70">Wind</span>
+          <p class="display mt-2 text-5xl text-[#0A1A2E]">6<span class="text-2xl text-[#1F3A5F]"> kt</span></p>
+          <p class="mono mt-1 text-xs text-[#D6362A]">▲ Offshore · NE</p>
+        </div>
+        <div class="card-lagoon p-5">
+          <span class="mono-up text-[10px] text-[#F4E7CA]/80">Water</span>
+          <p class="display mt-2 text-5xl text-[#F4E7CA]">58°<span class="text-2xl text-[#F2BA3D]">F</span></p>
+          <p class="mono mt-1 text-xs text-[#F4E7CA]/85">4/3 fullsuit · booties</p>
+        </div>
+        <div class="card p-5" style="background:#F2BA3D; border-color:#0A1A2E; box-shadow:4px 4px 0 #8B2114;">
+          <span class="mono-up text-[10px] text-[#8B2114]">Rating</span>
+          <p class="display mt-2 text-5xl text-[#0A1A2E]">8.4<span class="text-2xl text-[#8B2114]"> / 10</span></p>
+          <p class="mono mt-1 text-xs text-[#8B2114]">Pumping · 4hr window</p>
+        </div>
+      </div>
+
+      <!-- Tide chart + 7-day strip -->
+      <div class="mt-6 grid gap-4 lg:grid-cols-[2fr_3fr]">
+        <div class="card p-5">
+          <div class="flex items-center justify-between">
+            <span class="label text-[11px] text-[#D6362A]">Tide · 24h</span>
+            <span class="mono-up text-[10px] text-[#1F3A5F]/80">Hi 4.2ft · Lo 1.1ft</span>
+          </div>
+          <div class="tide-row mt-4">
+            <span style="height:32%"></span>
+            <span style="height:46%"></span>
+            <span style="height:64%"></span>
+            <span style="height:82%"></span>
+            <span class="hi" style="height:96%"></span>
+            <span style="height:90%"></span>
+            <span class="now" style="height:74%"></span>
+            <span style="height:58%"></span>
+            <span style="height:40%"></span>
+            <span style="height:26%"></span>
+            <span style="height:18%"></span>
+            <span style="height:34%"></span>
+            <span style="height:58%"></span>
+            <span style="height:78%"></span>
+            <span style="height:90%"></span>
+            <span style="height:82%"></span>
+            <span style="height:62%"></span>
+            <span style="height:40%"></span>
+          </div>
+          <div class="mt-3 flex justify-between mono text-[10px] text-[#1F3A5F]/80">
+            <span>00</span><span>04</span><span>08</span>
+            <span class="text-[#D6362A]">11:20 ◆</span>
+            <span>16</span><span>20</span>
+          </div>
+        </div>
+
+        <div class="card-sand p-5">
+          <div class="flex items-center justify-between">
+            <span class="label text-[11px] text-[#D6362A]">7-day outlook</span>
+            <span class="mono-up text-[10px] text-[#1F3A5F]/80">PT · WNW pulse fades Wed</span>
+          </div>
+          <div class="mt-4 grid grid-cols-7 gap-2">
+            <!-- Each day: ribbon strip + ft + day -->
+            <div class="text-center">
+              <div class="card mx-auto h-24" style="background:#F2BA3D">
+                <div class="h-full bg-gradient-to-b from-[#F2BA3D] via-[#EE7B26] to-[#D6362A]"></div>
+              </div>
+              <p class="display mt-2 text-2xl text-[#0A1A2E]">5'</p>
+              <p class="mono-up text-[9px] text-[#1F3A5F]/80">Mon</p>
+            </div>
+            <div class="text-center">
+              <div class="card mx-auto h-24">
+                <div class="h-full bg-gradient-to-b from-[#EE7B26] via-[#D6362A] to-[#1F3A5F]"></div>
+              </div>
+              <p class="display mt-2 text-2xl text-[#D6362A]">6'</p>
+              <p class="mono-up text-[9px] text-[#1F3A5F]/80">Tue</p>
+            </div>
+            <div class="text-center">
+              <div class="card mx-auto h-24">
+                <div class="h-full bg-gradient-to-b from-[#D6362A] via-[#8B2114] to-[#1F3A5F]"></div>
+              </div>
+              <p class="display mt-2 text-2xl text-[#D6362A]">7'</p>
+              <p class="mono-up text-[9px] text-[#1F3A5F]/80">Wed</p>
+            </div>
+            <div class="text-center">
+              <div class="card mx-auto h-24">
+                <div class="h-full bg-gradient-to-b from-[#EE7B26] to-[#1F3A5F]"></div>
+              </div>
+              <p class="display mt-2 text-2xl text-[#0A1A2E]">4'</p>
+              <p class="mono-up text-[9px] text-[#1F3A5F]/80">Thu</p>
+            </div>
+            <div class="text-center">
+              <div class="card mx-auto h-24">
+                <div class="h-full bg-gradient-to-b from-[#F2BA3D] to-[#4E89B5]"></div>
+              </div>
+              <p class="display mt-2 text-2xl text-[#0A1A2E]">3'</p>
+              <p class="mono-up text-[9px] text-[#1F3A5F]/80">Fri</p>
+            </div>
+            <div class="text-center">
+              <div class="card mx-auto h-24">
+                <div class="h-full bg-gradient-to-b from-[#F4E7CA] to-[#4E89B5]"></div>
+              </div>
+              <p class="display mt-2 text-2xl text-[#1F3A5F]">2'</p>
+              <p class="mono-up text-[9px] text-[#1F3A5F]/80">Sat</p>
+            </div>
+            <div class="text-center">
+              <div class="card mx-auto h-24">
+                <div class="h-full bg-gradient-to-b from-[#F4E7CA] to-[#1F3A5F]"></div>
+              </div>
+              <p class="display mt-2 text-2xl text-[#1F3A5F]">2'</p>
+              <p class="mono-up text-[9px] text-[#1F3A5F]/80">Sun</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spot list -->
+      <div class="mt-6 card">
+        <div class="flex items-center justify-between border-b-2 border-[#0A1A2E] px-5 py-3">
+          <span class="label text-[11px] text-[#D6362A]">Nearby breaks · Central Coast</span>
+          <span class="mono-up text-[10px] text-[#1F3A5F]/80">Within 90 mi</span>
+        </div>
+        <ul class="divide-y divide-[#0A1A2E]/15">
+          <li class="grid grid-cols-12 gap-2 px-5 py-3 items-center">
+            <span class="mono-up text-[11px] text-[#1F3A5F] col-span-1">№ 01</span>
+            <span class="text-sm font-semibold text-[#0A1A2E] col-span-3">Pleasure Pt.</span>
+            <span class="mono text-xs text-[#1F3A5F]/80 col-span-2">Santa Cruz</span>
+            <span class="mono text-xs text-[#0A1A2E] col-span-2">4–6 ft</span>
+            <span class="col-span-3">
+              <div class="score-bar"><div style="width:84%"></div></div>
+            </span>
+            <span class="pill col-span-1 justify-self-end" style="background:#F2BA3D;border-color:#0A1A2E;"><span class="pill-dot"></span> 8.4</span>
+          </li>
+          <li class="grid grid-cols-12 gap-2 px-5 py-3 items-center">
+            <span class="mono-up text-[11px] text-[#1F3A5F] col-span-1">№ 02</span>
+            <span class="text-sm font-semibold text-[#0A1A2E] col-span-3">Steamer Lane</span>
+            <span class="mono text-xs text-[#1F3A5F]/80 col-span-2">Santa Cruz</span>
+            <span class="mono text-xs text-[#0A1A2E] col-span-2">5–7 ft</span>
+            <span class="col-span-3">
+              <div class="score-bar"><div style="width:78%"></div></div>
+            </span>
+            <span class="pill col-span-1 justify-self-end"><span class="pill-dot"></span> 7.8</span>
+          </li>
+          <li class="grid grid-cols-12 gap-2 px-5 py-3 items-center">
+            <span class="mono-up text-[11px] text-[#1F3A5F] col-span-1">№ 03</span>
+            <span class="text-sm font-semibold text-[#0A1A2E] col-span-3">Rincon</span>
+            <span class="mono text-xs text-[#1F3A5F]/80 col-span-2">Carpinteria</span>
+            <span class="mono text-xs text-[#0A1A2E] col-span-2">3–5 ft</span>
+            <span class="col-span-3">
+              <div class="score-bar"><div style="width:62%; background:#EE7B26;"></div></div>
+            </span>
+            <span class="pill col-span-1 justify-self-end" style="background:#EE7B26;border-color:#0A1A2E;"><span class="pill-dot" style="background:#F4E7CA"></span> 6.2</span>
+          </li>
+          <li class="grid grid-cols-12 gap-2 px-5 py-3 items-center">
+            <span class="mono-up text-[11px] text-[#1F3A5F] col-span-1">№ 04</span>
+            <span class="text-sm font-semibold text-[#0A1A2E] col-span-3">Mavericks</span>
+            <span class="mono text-xs text-[#1F3A5F]/80 col-span-2">Half Moon Bay</span>
+            <span class="mono text-xs text-[#0A1A2E] col-span-2">15–22 ft</span>
+            <span class="col-span-3">
+              <div class="score-bar"><div style="width:96%; background:#8B2114;"></div></div>
+            </span>
+            <span class="pill col-span-1 justify-self-end" style="background:#D6362A;border-color:#0A1A2E;color:#F4E7CA"><span class="pill-dot" style="background:#F2BA3D"></span> 9.6</span>
+          </li>
+          <li class="grid grid-cols-12 gap-2 px-5 py-3 items-center">
+            <span class="mono-up text-[11px] text-[#1F3A5F] col-span-1">№ 05</span>
+            <span class="text-sm font-semibold text-[#0A1A2E] col-span-3">Ocean Beach</span>
+            <span class="mono text-xs text-[#1F3A5F]/80 col-span-2">SF</span>
+            <span class="mono text-xs text-[#0A1A2E] col-span-2">6–9 ft</span>
+            <span class="col-span-3">
+              <div class="score-bar"><div style="width:54%; background:#1F3A5F;"></div></div>
+            </span>
+            <span class="pill col-span-1 justify-self-end" style="background:#1F3A5F;border-color:#0A1A2E;color:#F4E7CA"><span class="pill-dot" style="background:#F2BA3D"></span> 5.4</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- wave divider -->
+      <svg class="wave-divider mt-14" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 22 Q 75 4, 150 22 T 300 22 T 450 22 T 600 22 T 750 22 T 900 22 T 1050 22 T 1200 22" fill="none" stroke="#0A1A2E" stroke-width="1.8"/>
+      </svg>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- § 05 — UX APPLICATION 03 — HEAT SHEET               -->
+    <!-- =================================================== -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-10 pb-16">
+      <div class="flex items-end justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <span class="num-chip">05</span>
+          <div>
+            <div class="section-tag mt-1"><span class="tick"></span> Application III · The Heat Sheet</div>
+            <h2 class="display mt-2 text-5xl text-[#0A1A2E] md:text-6xl">
+              <span class="double-print" data-text="Open Pro '77">Open Pro '77</span>
+            </h2>
+          </div>
+        </div>
+        <span class="stamp dark hidden md:inline-flex">Live · Quarter 3 of 4</span>
+      </div>
+
+      <p class="mt-4 max-w-xl text-base text-[#0A1A2E]">
+        Steamer Lane Open Pro — Quarterfinal Heat 3. Two surfers on the
+        clock, 22 minutes left, current best-2-wave score breaks the
+        bracket for the next round at Rincon.
+      </p>
+
+      <!-- Heat scoreboard -->
+      <div class="mt-8 grid gap-4 md:grid-cols-2">
+        <!-- Surfer A -->
+        <article class="card overflow-hidden">
+          <div class="flex items-center justify-between border-b-2 border-[#0A1A2E] px-5 py-3" style="background:#D6362A; color:#F4E7CA;">
+            <span class="label text-[11px]">Singlet · Crimson</span>
+            <span class="mono-up text-[10px]">Heat 3 · QF</span>
+          </div>
+          <div class="px-5 py-4">
+            <div class="flex items-baseline justify-between">
+              <div>
+                <p class="display text-3xl text-[#0A1A2E]">Marlon Chávez</p>
+                <p class="mono-up text-[10px] text-[#1F3A5F]/80 mt-1">San Clemente, CA · Seed 4</p>
+              </div>
+              <p class="display text-6xl text-[#D6362A]">
+                <span class="double-print" data-text="16.84">16.84</span>
+              </p>
+            </div>
+            <div class="mt-4 grid grid-cols-3 gap-2 mono">
+              <div class="border border-[#0A1A2E] p-2 text-center">
+                <div class="mono-up text-[9px] text-[#1F3A5F]">Wave 1</div>
+                <div class="text-lg text-[#0A1A2E]">8.40</div>
+              </div>
+              <div class="border-2 border-[#D6362A] p-2 text-center" style="background:#F2BA3D">
+                <div class="mono-up text-[9px] text-[#8B2114]">Wave 2 ◆</div>
+                <div class="text-lg text-[#0A1A2E]">8.44</div>
+              </div>
+              <div class="border border-[#0A1A2E] p-2 text-center">
+                <div class="mono-up text-[9px] text-[#1F3A5F]">Wave 3</div>
+                <div class="text-lg text-[#0A1A2E]">5.67</div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center justify-between mono-up text-[10px] text-[#1F3A5F]/80">
+                <span>Priority ◆</span>
+                <span>Needs · 1.41</span>
+              </div>
+              <div class="score-bar mt-1.5"><div style="width:84%"></div></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Surfer B -->
+        <article class="card overflow-hidden">
+          <div class="flex items-center justify-between border-b-2 border-[#0A1A2E] px-5 py-3" style="background:#1F3A5F; color:#F4E7CA;">
+            <span class="label text-[11px]">Singlet · Midnight</span>
+            <span class="mono-up text-[10px]">Heat 3 · QF</span>
+          </div>
+          <div class="px-5 py-4">
+            <div class="flex items-baseline justify-between">
+              <div>
+                <p class="display text-3xl text-[#0A1A2E]">Hana Okafor</p>
+                <p class="mono-up text-[10px] text-[#1F3A5F]/80 mt-1">North Shore, HI · Seed 1</p>
+              </div>
+              <p class="display text-6xl text-[#0A1A2E]">
+                <span class="double-print" data-text="15.43">15.43</span>
+              </p>
+            </div>
+            <div class="mt-4 grid grid-cols-3 gap-2 mono">
+              <div class="border border-[#0A1A2E] p-2 text-center">
+                <div class="mono-up text-[9px] text-[#1F3A5F]">Wave 1</div>
+                <div class="text-lg text-[#0A1A2E]">9.17</div>
+              </div>
+              <div class="border border-[#0A1A2E] p-2 text-center">
+                <div class="mono-up text-[9px] text-[#1F3A5F]">Wave 2</div>
+                <div class="text-lg text-[#0A1A2E]">6.26</div>
+              </div>
+              <div class="border border-[#0A1A2E] p-2 text-center">
+                <div class="mono-up text-[9px] text-[#1F3A5F]">Wave 3</div>
+                <div class="text-lg text-[#0A1A2E]">3.10</div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center justify-between mono-up text-[10px] text-[#1F3A5F]/80">
+                <span>Priority</span>
+                <span>Trailing · 1.41</span>
+              </div>
+              <div class="score-bar mt-1.5"><div style="width:77%; background:#1F3A5F;"></div></div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Heat clock + bracket strip -->
+      <div class="mt-6 grid gap-4 md:grid-cols-[1fr_2fr]">
+        <div class="card-midnight p-6">
+          <span class="mono-up text-[10px] text-[#F2BA3D]">Heat clock</span>
+          <p class="display mt-3 text-7xl text-[#F4E7CA] leading-none">
+            <span style="color:#F2BA3D">22</span>:14
+          </p>
+          <p class="mono-up text-[10px] text-[#F4E7CA]/80 mt-2">of 35:00 · running</p>
+          <div class="mt-5 grid grid-cols-4 gap-2">
+            <span class="stamp" style="border-color:#F2BA3D; color:#F2BA3D;">Q1 · ✓</span>
+            <span class="stamp" style="border-color:#F2BA3D; color:#F2BA3D;">Q2 · ✓</span>
+            <span class="stamp solid">Q3 · Now</span>
+            <span class="stamp" style="border-color:#F4E7CA; color:#F4E7CA; opacity:.5">Q4</span>
+          </div>
+        </div>
+
+        <div class="card p-5">
+          <div class="flex items-center justify-between">
+            <span class="label text-[11px] text-[#D6362A]">Bracket · QF → Final</span>
+            <span class="mono-up text-[10px] text-[#1F3A5F]/80">Steamer Lane · 12 May '77</span>
+          </div>
+          <div class="mt-5 grid gap-4 grid-cols-4 items-center">
+            <!-- col 1 -->
+            <div class="space-y-2">
+              <div class="border-2 border-[#0A1A2E] px-2 py-1.5 flex items-center justify-between" style="background:#D6362A; color:#F4E7CA;">
+                <span class="mono-up text-[10px]">Chávez</span><span class="mono text-xs">16.84</span>
+              </div>
+              <div class="border-2 border-[#0A1A2E] px-2 py-1.5 flex items-center justify-between bg-[#F4E7CA]">
+                <span class="mono-up text-[10px] text-[#0A1A2E]">Okafor</span><span class="mono text-xs text-[#0A1A2E]">15.43</span>
+              </div>
+              <div class="border-2 border-[#0A1A2E] px-2 py-1.5 flex items-center justify-between bg-[#F4E7CA]">
+                <span class="mono-up text-[10px] text-[#0A1A2E]">Tahara</span><span class="mono text-xs text-[#0A1A2E]">14.20</span>
+              </div>
+              <div class="border-2 border-[#0A1A2E] px-2 py-1.5 flex items-center justify-between" style="background:#1F3A5F; color:#F4E7CA;">
+                <span class="mono-up text-[10px]">Brennan</span><span class="mono text-xs">14.10</span>
+              </div>
+            </div>
+            <!-- col 2 -->
+            <div class="space-y-6">
+              <div class="border-2 border-[#0A1A2E] px-2 py-1.5 flex items-center justify-between" style="background:#D6362A; color:#F4E7CA;">
+                <span class="mono-up text-[10px]">Chávez</span><span class="mono text-xs">—</span>
+              </div>
+              <div class="border-2 border-[#0A1A2E] px-2 py-1.5 flex items-center justify-between bg-[#F4E7CA]">
+                <span class="mono-up text-[10px] text-[#0A1A2E]">Tahara</span><span class="mono text-xs text-[#0A1A2E]">—</span>
+              </div>
+            </div>
+            <!-- col 3 -->
+            <div class="space-y-12">
+              <div class="border-2 border-[#0A1A2E] px-2 py-1.5 flex items-center justify-between" style="background:#F2BA3D;">
+                <span class="mono-up text-[10px] text-[#0A1A2E]">Final A</span><span class="mono text-xs text-[#0A1A2E]">—</span>
+              </div>
+            </div>
+            <!-- col 4: trophy stamp -->
+            <div>
+              <div class="card-pitch-shadow card text-center py-5" style="background:#0A1A2E; color:#F2BA3D;">
+                <span class="display text-2xl">Rincon</span>
+                <p class="mono-up text-[9px] mt-1">14 May '77</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Newsletter / CTA card -->
+      <div class="mt-8 card-sand p-6 md:p-8 relative overflow-hidden">
+        <div class="absolute right-6 top-6 hidden md:block">
+          <svg viewBox="0 0 40 28" width="56" height="42" aria-hidden="true">
+            <path d="M2 22 C 8 22, 10 8, 22 8 C 30 8, 34 14, 38 14 L 38 22 L 30 22 C 26 22, 24 16, 20 16 C 14 16, 12 22, 6 22 Z" fill="#D6362A"/>
+            <circle cx="32" cy="10" r="3" fill="#F2BA3D"/>
+          </svg>
+        </div>
+        <span class="section-tag"><span class="tick"></span> Sign-up · Dawn patrol report</span>
+        <h3 class="display mt-3 text-4xl md:text-5xl text-[#0A1A2E]">
+          <span class="double-print" data-text="Get the swell">Get the swell</span>
+          <span class="script text-[#D6362A]" style="font-size:0.7em; transform:rotate(-3deg); display:inline-block;">before sun-up</span>
+        </h3>
+        <p class="mt-3 max-w-xl text-base text-[#0A1A2E]">
+          One short email at 4:55 a.m. PT, when the buoy and the tide tables
+          line up. No ads, no algorithm, no "sponsored peaks."
+        </p>
+        <form class="mt-6 flex max-w-xl flex-col gap-4 sm:flex-row sm:items-end">
+          <div class="flex-1">
+            <label class="mono-up text-[10px] text-[#0A1A2E]">Your email</label>
+            <input class="input mt-1" placeholder="grom@steamerlane.surf" />
+          </div>
+          <button type="button" class="btn-primary">Subscribe<span>→</span></button>
+        </form>
+      </div>
+    </section>
+
+    <!-- wave divider -->
+    <svg class="wave-divider" viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 22 Q 75 4, 150 22 T 300 22 T 450 22 T 600 22 T 750 22 T 900 22 T 1050 22 T 1200 22" fill="none" stroke="#0A1A2E" stroke-width="1.8"/>
+    </svg>
+
+    <!-- =================================================== -->
+    <!-- § FOOTER / COLOPHON                                 -->
+    <!-- =================================================== -->
+    <footer class="relative mx-auto max-w-6xl px-6 pb-10 pt-10">
+      <div class="grid gap-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div>
+          <div class="flex items-center gap-3">
+            <svg viewBox="0 0 40 28" width="48" height="34" aria-hidden="true">
+              <path d="M2 22 C 8 22, 10 8, 22 8 C 30 8, 34 14, 38 14 L 38 22 L 30 22 C 26 22, 24 16, 20 16 C 14 16, 12 22, 6 22 Z" fill="#D6362A"/>
+              <circle cx="32" cy="10" r="3" fill="#F2BA3D"/>
+            </svg>
+            <span class="display text-3xl text-[#0A1A2E]">Surf's Up</span>
+          </div>
+          <p class="mt-4 max-w-sm text-sm text-[#0A1A2E]/85">
+            A 1970s screen-print design kit for surf shops, swell forecasts,
+            and heat sheets. Print-grain, wave-cut type, no glow.
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="stamp">Est. 1970</span>
+            <span class="stamp dark">Summer · '77</span>
+            <span class="stamp solid">Grom approved</span>
+            <span class="stamp crimson">Dawn patrol</span>
+          </div>
+        </div>
+        <div>
+          <span class="label text-[11px] text-[#D6362A]">Shop</span>
+          <ul class="mt-3 space-y-1.5 text-sm text-[#0A1A2E]">
+            <li><a href="#" class="hover:text-[#D6362A]">Shortboards · 18</a></li>
+            <li><a href="#" class="hover:text-[#D6362A]">Fish · 9</a></li>
+            <li><a href="#" class="hover:text-[#D6362A]">Mid-length · 11</a></li>
+            <li><a href="#" class="hover:text-[#D6362A]">Longboards · 4</a></li>
+            <li><a href="#" class="hover:text-[#D6362A]">Fins · Wax · Pads</a></li>
+          </ul>
+        </div>
+        <div>
+          <span class="label text-[11px] text-[#D6362A]">Forecast</span>
+          <ul class="mt-3 space-y-1.5 text-sm text-[#0A1A2E]">
+            <li><a href="#" class="hover:text-[#D6362A]">Pleasure Pt.</a></li>
+            <li><a href="#" class="hover:text-[#D6362A]">Steamer Lane</a></li>
+            <li><a href="#" class="hover:text-[#D6362A]">Rincon</a></li>
+            <li><a href="#" class="hover:text-[#D6362A]">Mavericks</a></li>
+            <li><a href="#" class="hover:text-[#D6362A]">Buoy 46028</a></li>
+          </ul>
+        </div>
+        <div>
+          <span class="label text-[11px] text-[#D6362A]">Colophon</span>
+          <ul class="mt-3 space-y-1.5 text-sm text-[#0A1A2E]">
+            <li>Display · <span class="mono">Anton</span></li>
+            <li>Script · <span class="mono">Pacifico</span></li>
+            <li>Body · <span class="mono">Inter</span></li>
+            <li>Mono · <span class="mono">JetBrains Mono</span></li>
+            <li>Grain · 4-layer halftone</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 flex flex-wrap items-center justify-between gap-3 border-t-2 border-[#0A1A2E] pt-5">
+        <span class="mono-up text-[10px] text-[#1F3A5F]/80">© 1977–2026 · Surf's Up Print Co. · Pleasure Pt., CA</span>
+        <span class="mono-up text-[10px] text-[#D6362A]">Screen-printed in two passes · No animations harmed</span>
+        <span class="mono-up text-[10px] text-[#1F3A5F]/80">№ 04 · Edition of 500</span>
+      </div>
+    </footer>
+
+    <!-- Bottom stripe tape -->
+    <div class="stripe-tape h-6 w-full"></div>
+  </body>
+</html>

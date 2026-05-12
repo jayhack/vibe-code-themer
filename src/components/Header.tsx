@@ -66,7 +66,7 @@ export function Header({
             </>
           ) : (
             <Link to="/" className="group flex shrink-0 items-center gap-2.5">
-              <DittoLogo className="h-7 w-7" />
+              <DittoLogo className="h-7 w-10" />
               <span className="text-lg font-bold tracking-tight text-black">
                 Ditto
               </span>
@@ -113,7 +113,7 @@ export function Header({
 function DittoLogo({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 64 64"
+      viewBox="-1.25 0 178.4 126.9"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -122,10 +122,10 @@ function DittoLogo({ className }: { className?: string }) {
       <defs>
         <linearGradient
           id="dittoBlue"
-          x1="10"
-          y1="10"
-          x2="54"
-          y2="56"
+          x1="0"
+          y1="0"
+          x2="175"
+          y2="125"
           gradientUnits="userSpaceOnUse"
         >
           <stop offset="0%" stopColor="#1d4ed8" />
@@ -133,19 +133,10 @@ function DittoLogo({ className }: { className?: string }) {
           <stop offset="100%" stopColor="#0ea5e9" />
         </linearGradient>
       </defs>
-      <g fill="url(#dittoBlue)">
-        <ellipse cx="32" cy="40" rx="26" ry="22" />
-        <circle cx="25" cy="17" r="7" />
-        <circle cx="39" cy="17" r="7" />
-        <ellipse
-          cx="57"
-          cy="28"
-          rx="9"
-          ry="6"
-          transform="rotate(-20 57 28)"
-        />
-        <ellipse cx="7" cy="46" rx="9" ry="6" transform="rotate(15 7 46)" />
-      </g>
+      <path
+        fill="url(#dittoBlue)"
+        d="M173.75 69.65 Q172.15 75.3 167.65 77.65 164.3 79.3 158.45 79.5 152.0 79.4 149.35 79.65 144.9 80.1 143.55 82.6 141.1 87.15 145.15 91.0 147.1 92.85 155.15 97.4 162.45 101.5 164.9 104.75 168.6 109.65 165.55 116.0 162.95 121.5 156.3 121.05 148.95 119.5 146.25 120.0 143.2 120.55 139.3 123.9 135.8 126.9 132.55 126.9 129.6 126.9 126.75 125.2 L121.75 121.45 Q114.9 116.1 106.9 116.4 102.95 116.55 99.75 118.1 L94.5 121.35 Q87.75 125.9 79.5 125.9 71.15 125.9 64.4 119.45 L59.1 114.35 Q55.9 111.7 52.6 110.75 47.55 109.3 41.2 110.75 37.7 111.55 30.45 114.35 24.15 116.75 21.3 117.05 16.95 117.5 14.6 114.5 10.45 109.1 17.3 100.8 L22.05 95.1 Q24.05 92.2 22.9 90.65 21.65 88.9 18.35 88.3 L11.95 87.5 Q3.2 86.25 0.75 79.0 -1.25 73.05 2.35 66.6 5.1 61.75 13.05 53.85 L28.3 38.55 Q37.75 28.45 43.8 18.55 L48.25 10.9 Q50.5 7.0 52.25 5.05 56.65 0.0 64.55 0.0 68.8 0.0 74.55 3.6 80.3 7.15 84.75 7.15 89.9 7.15 98.3 3.9 106.15 0.85 111.15 1.3 117.25 1.85 121.2 5.9 124.1 8.9 126.95 15.3 L132.0 26.45 Q135.4 32.8 139.95 36.3 142.85 38.55 150.55 42.35 159.5 46.7 162.95 48.9 177.15 57.8 173.75 69.65 Z"
+      />
     </svg>
   );
 }
