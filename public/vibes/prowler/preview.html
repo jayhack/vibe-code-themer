@@ -1,0 +1,1421 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prowler — vibe preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --lacquer:       #0E2A2E;
+        --lacquer-deep:  #061418;
+        --lacquer-hi:    #1A3D40;
+        --foliage:       #1F3326;
+        --chrome:        #DDE3E5;
+        --chrome-mid:    #6F7A7E;
+        --halo:          #F0EDDF;
+        --saddle:        #C58A4E;
+        --saddle-hi:     #D69E62;
+        --saddle-deep:   #7A4A1F;
+        --amber:         #E8B73B;
+      }
+      html, body {
+        background: var(--lacquer-deep);
+        color: var(--halo);
+        font-family: "Inter", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .font-display {
+        font-family: "Saira Stencil One", "Oswald", sans-serif;
+        letter-spacing: 0.02em;
+        line-height: 0.95;
+        text-transform: uppercase;
+      }
+      .font-mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+      .italic-atelier {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-weight: 500;
+        color: var(--saddle);
+      }
+      .label {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        font-size: 11px;
+      }
+      .mono-label {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 10.5px;
+      }
+
+      /* --- Surfaces & named gradients --- */
+      .lacquer-body {
+        background: linear-gradient(135deg, #0E2A2E 0%, #1A3D40 38%, #0E2A2E 62%, #061418 100%);
+      }
+      .chrome-strip {
+        background: linear-gradient(180deg, #F0EDDF 0%, #B5BFC2 28%, #6F7A7E 50%, #B5BFC2 72%, #F0EDDF 100%);
+      }
+      .saddle-leather {
+        background: linear-gradient(135deg, #D69E62 0%, #C58A4E 40%, #9C6634 75%, #7A4A1F 100%);
+      }
+      .halo-lamp {
+        background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F0EDDF 18%, #DDE3E5 32%, #1A3D40 70%, #061418 100%);
+      }
+      .villa-courtyard {
+        background: linear-gradient(180deg, #1F3326 0%, #122A2A 50%, #061418 100%);
+      }
+
+      /* --- Pebble grain (page background) --- */
+      .pebble-grain {
+        background-color: var(--lacquer-deep);
+        background-image:
+          radial-gradient(rgba(31, 51, 38, 0.45) 1px, transparent 1px),
+          radial-gradient(rgba(221, 227, 229, 0.05) 1px, transparent 1px);
+        background-size: 5px 5px, 9px 9px;
+        background-position: 0 0, 3px 4px;
+      }
+
+      /* --- Twin hood stripes on a panel (left edge) --- */
+      .twin-stripes {
+        position: relative;
+      }
+      .twin-stripes::before {
+        content: "";
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 28px;
+        width: 6px;
+        background: var(--halo);
+        box-shadow: 20px 0 0 var(--halo);
+        pointer-events: none;
+      }
+
+      /* --- Chrome bezel card --- */
+      .bezel-card {
+        background: var(--lacquer);
+        border: 1.5px solid var(--chrome);
+        box-shadow:
+          inset 0 1px 0 rgba(240, 237, 223, 0.18),
+          4px 4px 0 var(--lacquer-deep);
+      }
+      .bezel-card-foliage {
+        background: var(--foliage);
+        border: 1.5px solid var(--chrome);
+        box-shadow:
+          inset 0 1px 0 rgba(240, 237, 223, 0.18),
+          4px 4px 0 var(--lacquer-deep);
+      }
+      .bezel-card-saddle {
+        background: var(--saddle);
+        color: var(--lacquer-deep);
+        border: 1.5px solid var(--saddle-deep);
+        box-shadow: 4px 4px 0 var(--lacquer-deep);
+      }
+
+      /* --- Corner tag (◉ FIELD / 03) --- */
+      .corner-tag {
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        background: var(--lacquer-deep);
+        color: var(--chrome);
+        padding: 5px 10px 5px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 10px;
+        border-right: 1px solid var(--chrome);
+        border-bottom: 1px solid var(--chrome);
+        z-index: 2;
+        display: inline-flex; align-items: center; gap: 6px;
+      }
+      .corner-tag .lamp-glyph {
+        width: 8px; height: 8px; border-radius: 999px;
+        background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F0EDDF 30%, #1A3D40 75%, #061418 100%);
+        box-shadow: 0 0 0 1px var(--chrome);
+        flex: 0 0 auto;
+      }
+
+      /* --- Buttons --- */
+      .btn-primary {
+        background: linear-gradient(135deg, #D69E62 0%, #C58A4E 40%, #9C6634 75%, #7A4A1F 100%);
+        color: var(--lacquer-deep);
+        border: 1px solid var(--saddle-deep);
+        box-shadow: 4px 4px 0 var(--lacquer-deep), inset 0 1px 0 rgba(255,255,255,0.22);
+        padding: 12px 22px;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 12px;
+        transition: transform .08s ease, box-shadow .08s ease, background .15s ease;
+      }
+      .btn-primary:hover {
+        background: var(--saddle-deep);
+        color: var(--halo);
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 var(--lacquer-deep);
+      }
+      .btn-secondary {
+        background: var(--lacquer);
+        color: var(--halo);
+        border: 1px solid var(--chrome);
+        padding: 12px 22px;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 12px;
+      }
+      .btn-secondary:hover { background: var(--foliage); }
+      .btn-ghost {
+        background: transparent;
+        color: var(--saddle);
+        border: none;
+        padding: 12px 22px;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 12px;
+        border-bottom: 1px solid transparent;
+      }
+      .btn-ghost:hover { border-bottom-color: var(--saddle); }
+
+      /* --- Inputs --- */
+      .input-prowler {
+        background: var(--lacquer);
+        border: none;
+        border-bottom: 1px solid var(--chrome);
+        padding: 10px 10px;
+        color: var(--halo);
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        width: 100%;
+        outline: none;
+      }
+      .input-prowler:focus { border-bottom-color: var(--saddle); }
+      .input-prowler::placeholder { color: rgba(240, 237, 223, 0.35); }
+
+      /* --- Pills --- */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px 5px;
+        border: 1px solid var(--chrome);
+        border-radius: 999px;
+        background: transparent;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        font-size: 10px;
+        color: var(--halo);
+      }
+      .pill-dot {
+        width: 6px; height: 6px; border-radius: 999px; flex: 0 0 auto;
+      }
+
+      /* --- Saddle-stitch divider --- */
+      .stitch-rule {
+        height: 1px;
+        background-image: repeating-linear-gradient(
+          90deg,
+          #C58A4E 0px,
+          #C58A4E 6px,
+          transparent 6px,
+          transparent 12px
+        );
+        position: relative;
+      }
+      .stitch-rule::before,
+      .stitch-rule::after {
+        content: "×";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--saddle-deep);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        background: var(--lacquer-deep);
+        padding: 0 6px;
+      }
+      .stitch-rule::before { left: 8%; }
+      .stitch-rule::after { right: 8%; }
+
+      /* --- VIN plate --- */
+      .vin-plate {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 18px;
+        background: linear-gradient(180deg, #F0EDDF 0%, #C8CFD2 50%, #F0EDDF 100%);
+        color: var(--lacquer-deep);
+        border: 1px solid var(--lacquer-deep);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+      .vin-plate::before,
+      .vin-plate::after,
+      .vin-plate .bolt-tr,
+      .vin-plate .bolt-br {
+        content: "";
+        position: absolute;
+        width: 4px; height: 4px; border-radius: 999px;
+        background: var(--lacquer-deep);
+      }
+      .vin-plate::before { top: 4px; left: 4px; }
+      .vin-plate::after  { bottom: 4px; left: 4px; }
+      .vin-plate .bolt-tr { top: 4px; right: 4px; }
+      .vin-plate .bolt-br { bottom: 4px; right: 4px; }
+
+      /* --- Diagnostic terminal --- */
+      .obd {
+        background: var(--lacquer-deep);
+        color: var(--halo);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        padding: 22px 24px 18px;
+        border: 1px solid var(--chrome);
+      }
+      .obd .prompt { color: var(--saddle); }
+      .obd .ok    { color: var(--halo); }
+      .obd .info  { color: var(--chrome); }
+      .obd .warn  { color: var(--amber); }
+      .obd .muted { color: rgba(240, 237, 223, 0.45); }
+      .obd .cursor {
+        display: inline-block;
+        width: 8px; height: 14px;
+        background: var(--saddle);
+        margin-left: 2px;
+        vertical-align: -2px;
+        animation: blink 1.1s steps(2) infinite;
+      }
+      @keyframes blink { 50% { opacity: 0; } }
+
+      /* --- Hood-card (twin stripes baked in) --- */
+      .hood-card {
+        position: relative;
+        background: linear-gradient(135deg, #0E2A2E 0%, #1A3D40 38%, #0E2A2E 62%, #061418 100%);
+        border: 1.5px solid var(--chrome);
+        box-shadow: 4px 4px 0 var(--lacquer-deep), inset 0 1px 0 rgba(240, 237, 223, 0.18);
+        overflow: hidden;
+      }
+      .hood-card::before,
+      .hood-card::after {
+        content: "";
+        position: absolute;
+        top: 0; bottom: 0;
+        width: 6px;
+        background: var(--halo);
+        opacity: 0.94;
+      }
+      .hood-card::before { left: 32px; }
+      .hood-card::after  { left: 52px; }
+
+      /* --- Monogram plaque (quad-halo) --- */
+      .monogram {
+        position: relative;
+        width: 88px; height: 44px;
+        background: var(--lacquer);
+        border: 1.5px solid var(--chrome);
+        box-shadow: 4px 4px 0 var(--lacquer-deep), inset 0 1px 0 rgba(240, 237, 223, 0.22);
+        display: flex; align-items: center; justify-content: center;
+        gap: 6px;
+      }
+      .lamp-mini {
+        width: 14px; height: 14px; border-radius: 999px;
+        background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F0EDDF 18%, #DDE3E5 32%, #1A3D40 70%, #061418 100%);
+        box-shadow: 0 0 0 1px var(--chrome);
+        flex: 0 0 auto;
+      }
+
+      /* --- Halo lamp (inline glyph) --- */
+      .lamp {
+        width: 18px; height: 18px; border-radius: 999px;
+        background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F0EDDF 18%, #DDE3E5 32%, #1A3D40 70%, #061418 100%);
+        box-shadow: 0 0 0 1px var(--chrome);
+        flex: 0 0 auto;
+        display: inline-block;
+        vertical-align: -3px;
+      }
+
+      /* --- Number badge --- */
+      .num-marker {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px; height: 26px;
+        background: var(--amber);
+        color: var(--lacquer-deep);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 11px;
+        border: 1px solid var(--lacquer-deep);
+        flex: 0 0 auto;
+      }
+
+      /* --- Active row --- */
+      .row-active { background: rgba(197, 138, 78, 0.10); }
+
+      /* --- Inner glow under nav rule diamond --- */
+      .rule-with-diamond {
+        position: relative;
+        height: 1px;
+        background: var(--chrome);
+      }
+      .rule-with-diamond::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 9px; height: 9px;
+        background: var(--halo);
+        border: 1px solid var(--chrome);
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      /* --- Gauge dial styling --- */
+      .gauge-needle {
+        transform-origin: 60px 60px;
+      }
+    </style>
+  </head>
+
+  <body class="relative min-h-screen overflow-x-hidden pebble-grain">
+
+    <!-- =================================================================== -->
+    <!-- Reusable SVG defs                                                   -->
+    <!-- =================================================================== -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <!-- Quad-halo cluster: 4 halo lamps in a horizontal row -->
+        <symbol id="quad-halo" viewBox="0 0 96 24">
+          <radialGradient id="lampGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"  stop-color="#FFFFFF"/>
+            <stop offset="18%" stop-color="#F0EDDF"/>
+            <stop offset="32%" stop-color="#DDE3E5"/>
+            <stop offset="70%" stop-color="#1A3D40"/>
+            <stop offset="100%" stop-color="#061418"/>
+          </radialGradient>
+          <circle cx="12" cy="12" r="9" fill="url(#lampGrad)" stroke="#DDE3E5" stroke-width="1"/>
+          <circle cx="36" cy="12" r="9" fill="url(#lampGrad)" stroke="#DDE3E5" stroke-width="1"/>
+          <circle cx="60" cy="12" r="9" fill="url(#lampGrad)" stroke="#DDE3E5" stroke-width="1"/>
+          <circle cx="84" cy="12" r="9" fill="url(#lampGrad)" stroke="#DDE3E5" stroke-width="1"/>
+          <circle cx="12" cy="12" r="1.4" fill="#FFFFFF"/>
+          <circle cx="36" cy="12" r="1.4" fill="#FFFFFF"/>
+          <circle cx="60" cy="12" r="1.4" fill="#FFFFFF"/>
+          <circle cx="84" cy="12" r="1.4" fill="#FFFFFF"/>
+        </symbol>
+
+        <!-- Single halo lamp (large, can be sized) -->
+        <symbol id="lamp-svg" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="11" fill="url(#lampGrad)" stroke="#DDE3E5" stroke-width="1"/>
+          <circle cx="12" cy="12" r="2" fill="#FFFFFF"/>
+        </symbol>
+
+        <!-- Gauge dial (used in workshop dashboard) -->
+        <symbol id="gauge" viewBox="0 0 120 120">
+          <!-- bezel -->
+          <circle cx="60" cy="60" r="56" fill="none" stroke="#DDE3E5" stroke-width="2"/>
+          <circle cx="60" cy="60" r="52" fill="#0E2A2E"/>
+          <!-- tick marks -->
+          <g stroke="#F0EDDF" stroke-width="1.2" stroke-linecap="round">
+            <line x1="60" y1="12"  x2="60" y2="20"/>
+            <line x1="96" y1="24"  x2="92" y2="30"/>
+            <line x1="108" y1="60" x2="100" y2="60"/>
+            <line x1="96" y1="96"  x2="92" y2="90"/>
+            <line x1="60" y1="108" x2="60" y2="100"/>
+            <line x1="24" y1="96"  x2="28" y2="90"/>
+            <line x1="12" y1="60"  x2="20" y2="60"/>
+            <line x1="24" y1="24"  x2="28" y2="30"/>
+          </g>
+          <!-- minor ticks -->
+          <g stroke="#DDE3E5" stroke-width="0.7" opacity="0.7">
+            <line x1="78" y1="16"  x2="76" y2="22"/>
+            <line x1="42" y1="16"  x2="44" y2="22"/>
+            <line x1="104" y1="42" x2="98" y2="44"/>
+            <line x1="16" y1="42"  x2="22" y2="44"/>
+            <line x1="104" y1="78" x2="98" y2="76"/>
+            <line x1="16" y1="78"  x2="22" y2="76"/>
+            <line x1="78" y1="104" x2="76" y2="98"/>
+            <line x1="42" y1="104" x2="44" y2="98"/>
+          </g>
+          <!-- redline tick (amber) -->
+          <line x1="96" y1="24" x2="92" y2="30" stroke="#E8B73B" stroke-width="2"/>
+        </symbol>
+
+        <!-- × Cross-stitch -->
+        <symbol id="cross" viewBox="0 0 10 10">
+          <line x1="1" y1="1" x2="9" y2="9" stroke="#7A4A1F" stroke-width="1.4"/>
+          <line x1="9" y1="1" x2="1" y2="9" stroke="#7A4A1F" stroke-width="1.4"/>
+        </symbol>
+      </defs>
+    </svg>
+
+    <!-- =================================================================== -->
+    <!-- § IDENTITY                                                           -->
+    <!-- =================================================================== -->
+    <section class="relative isolate overflow-hidden">
+      <!-- Foliage backdrop wash -->
+      <div class="absolute inset-0 pointer-events-none"
+           style="background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(31, 51, 38, 0.85) 0%, transparent 70%);"></div>
+
+      <nav class="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-5 z-10">
+        <div class="flex items-center gap-4">
+          <div class="monogram">
+            <svg width="68" height="20" viewBox="0 0 96 24"><use href="#quad-halo"/></svg>
+          </div>
+          <div>
+            <div class="font-display text-2xl" style="color: var(--halo)">PROWLER</div>
+            <div class="mono-label" style="color: var(--saddle)">GARDEN SERIES · MMXXVI · № 038/100</div>
+          </div>
+        </div>
+        <div class="hidden md:flex items-center gap-7">
+          <a href="#" class="mono-label" style="color: var(--chrome)">ATELIER</a>
+          <a href="#" class="mono-label" style="color: var(--chrome)">REGISTRY</a>
+          <a href="#" class="mono-label" style="color: var(--chrome)">MANUAL</a>
+          <a href="#" class="mono-label" style="color: var(--chrome)">DISPATCH</a>
+          <a href="#" class="btn-primary">Book inspection</a>
+        </div>
+      </nav>
+
+      <div class="relative max-w-6xl mx-auto px-6 z-10">
+        <div class="rule-with-diamond"></div>
+      </div>
+
+      <!-- Hero -->
+      <div class="relative mx-auto max-w-6xl px-6 pt-14 pb-20 z-10">
+        <div class="flex items-start gap-6">
+          <span class="num-marker mt-3">38</span>
+          <div class="flex-1">
+            <div class="mono-label" style="color: var(--saddle)">
+              ◉ BUILD 038/100 · GARDEN COUPÉ · VIN PROW·23·038·M
+            </div>
+            <h1 class="font-display mt-3"
+                style="color: var(--halo); font-size: clamp(3.5rem, 9vw, 7.5rem);">
+              GARDEN<br>
+              <span class="italic-atelier"
+                    style="font-size: 0.85em; letter-spacing: 0; text-transform: none; line-height: 1;">prowling</span>
+              UNDER<br>
+              WISTERIA
+            </h1>
+            <div class="stitch-rule mt-8" style="max-width: 540px"></div>
+            <p class="mt-6 max-w-xl text-base md:text-lg" style="color: var(--chrome); opacity: 0.9">
+              A coachbuilt restomod aesthetic for surfaces that should
+              feel hand-numbered out of 100. Lacquered teal-green
+              panels, twin off-white hood stripes, four chrome halo
+              lamps, and saddle cognac leather running through
+              the cabin. Built for build configurators, owner's
+              manuals, garage diagnostics, and any product that wants
+              to feel quietly expensive.
+            </p>
+            <div class="mt-8 flex flex-wrap items-center gap-3">
+              <a href="#" class="btn-primary">Open order sheet →</a>
+              <a href="#" class="btn-secondary">Inspect kit</a>
+              <span class="pill"><span class="pill-dot" style="background: var(--amber)"></span>Bay 04 · live</span>
+              <span class="vin-plate"><span class="bolt-tr"></span><span class="bolt-br"></span>№ 038 / 100 · MMXXVI · CARRARA</span>
+            </div>
+
+            <!-- Hero gauge cluster strip -->
+            <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px"
+                 style="background: var(--chrome); border: 1px solid var(--chrome)">
+              <div class="bezel-card p-4" style="box-shadow:none; border:none; border-radius:0">
+                <div class="mono-label" style="color: var(--saddle)">POWER</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--halo)">557<span class="text-base ml-1" style="color: var(--chrome)">hp</span></div>
+                <div class="mono-label mt-1" style="color: var(--chrome); opacity:.65">415 kW · 8,400 rpm</div>
+              </div>
+              <div class="bezel-card p-4" style="box-shadow:none; border:none; border-radius:0">
+                <div class="mono-label" style="color: var(--saddle)">TORQUE</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--halo)">612<span class="text-base ml-1" style="color: var(--chrome)">Nm</span></div>
+                <div class="mono-label mt-1" style="color: var(--chrome); opacity:.65">@ 5,200 rpm</div>
+              </div>
+              <div class="bezel-card p-4" style="box-shadow:none; border:none; border-radius:0">
+                <div class="mono-label" style="color: var(--saddle)">0—100 KM/H</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--halo)">3.4<span class="text-base ml-1" style="color: var(--chrome)">s</span></div>
+                <div class="mono-label mt-1" style="color: var(--chrome); opacity:.65">Launch · Track</div>
+              </div>
+              <div class="bezel-card p-4" style="box-shadow:none; border:none; border-radius:0">
+                <div class="mono-label" style="color: var(--amber)">◆ FAULTS</div>
+                <div class="font-display text-3xl mt-1" style="color: var(--amber)">01</div>
+                <div class="mono-label mt-1" style="color: var(--chrome); opacity:.65">Coolant sensor B</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subtle dune-courtyard fade -->
+      <div class="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
+           style="background: linear-gradient(180deg, transparent 0%, rgba(6, 20, 24, 0.85) 100%)"></div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- § 01 / THEME SPECIFICATION                                           -->
+    <!-- =================================================================== -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-16 pb-6">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div class="flex items-baseline gap-3">
+          <span class="num-marker">01</span>
+          <div>
+            <div class="mono-label" style="color: var(--saddle)">§ 01 / Theme specification</div>
+            <h2 class="font-display text-5xl mt-2" style="color: var(--halo)">
+              THE <span class="italic-atelier" style="font-size: 0.85em; text-transform: none; letter-spacing: 0;">design</span> KIT
+            </h2>
+          </div>
+        </div>
+        <p class="font-mono max-w-md text-sm" style="color: var(--chrome); opacity: 0.85">
+          &gt; PALETTE · GRADIENTS · TYPE · COMPONENTS — exactly what
+          prompt.md prescribes, rendered.
+        </p>
+      </div>
+      <div class="stitch-rule mt-8"></div>
+    </section>
+
+    <!-- 01.1 — PALETTE -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-14">
+      <div class="mb-4 flex items-center justify-between">
+        <div class="mono-label" style="color: var(--saddle)">◉ 01.1 / Palette</div>
+        <span class="mono-label" style="color: var(--chrome); opacity:.7">08 swatches</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-px"
+           style="background: var(--chrome); border: 1px solid var(--chrome)">
+        <div class="p-4" style="background:#0E2A2E; color: var(--halo)">
+          <div class="font-display text-sm">LACQUER</div>
+          <div class="font-mono text-xs mt-1" style="color: var(--chrome); opacity:.7">#0E2A2E</div>
+          <div class="mono-label mt-3" style="color: var(--chrome); opacity:.5">BODY</div>
+        </div>
+        <div class="p-4" style="background:#061418; color: var(--halo)">
+          <div class="font-display text-sm">LACQUER DEEP</div>
+          <div class="font-mono text-xs mt-1" style="color: var(--chrome); opacity:.7">#061418</div>
+          <div class="mono-label mt-3" style="color: var(--chrome); opacity:.5">PAGE BG</div>
+        </div>
+        <div class="p-4" style="background:#1F3326; color: var(--halo)">
+          <div class="font-display text-sm">FOLIAGE</div>
+          <div class="font-mono text-xs mt-1" style="color: var(--chrome); opacity:.7">#1F3326</div>
+          <div class="mono-label mt-3" style="color: var(--chrome); opacity:.5">ALT PANEL</div>
+        </div>
+        <div class="p-4" style="background:#DDE3E5; color: var(--lacquer-deep)">
+          <div class="font-display text-sm">CHROME</div>
+          <div class="font-mono text-xs mt-1 opacity-70">#DDE3E5</div>
+          <div class="mono-label mt-3 opacity-50">TRIM · LINES</div>
+        </div>
+        <div class="p-4" style="background:#F0EDDF; color: var(--lacquer-deep)">
+          <div class="font-display text-sm">HALO</div>
+          <div class="font-mono text-xs mt-1 opacity-70">#F0EDDF</div>
+          <div class="mono-label mt-3 opacity-50">STRIPE · TEXT</div>
+        </div>
+        <div class="p-4" style="background:#C58A4E; color: var(--lacquer-deep)">
+          <div class="font-display text-sm">SADDLE</div>
+          <div class="font-mono text-xs mt-1 opacity-80">#C58A4E</div>
+          <div class="mono-label mt-3 opacity-70">LEATHER · CTA</div>
+        </div>
+        <div class="p-4" style="background:#7A4A1F; color: var(--halo)">
+          <div class="font-display text-sm">SADDLE DEEP</div>
+          <div class="font-mono text-xs mt-1" style="color: var(--halo); opacity:.7">#7A4A1F</div>
+          <div class="mono-label mt-3" style="color: var(--halo); opacity:.5">STITCH</div>
+        </div>
+        <div class="p-4" style="background:#E8B73B; color: var(--lacquer-deep)">
+          <div class="font-display text-sm">AMBER</div>
+          <div class="font-mono text-xs mt-1 opacity-80">#E8B73B</div>
+          <div class="mono-label mt-3 opacity-70">INDICATOR</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.2 — GRADIENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-14">
+      <div class="mb-4 mono-label" style="color: var(--saddle)">◉ 01.2 / Required gradients</div>
+      <div class="grid gap-3 md:grid-cols-3">
+        <div class="bezel-card">
+          <div class="h-24 lacquer-body"></div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--halo)">LACQUER BODY · 135°</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--chrome); opacity:.7">hero · card hero · key panels</div>
+          </div>
+        </div>
+        <div class="bezel-card">
+          <div class="h-24 chrome-strip"></div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--halo)">CHROME STRIP · 180°</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--chrome); opacity:.7">bezels · trim · button rim</div>
+          </div>
+        </div>
+        <div class="bezel-card">
+          <div class="h-24 saddle-leather"></div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--halo)">SADDLE LEATHER · 135°</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--chrome); opacity:.7">primary CTA · cognac panels</div>
+          </div>
+        </div>
+        <div class="bezel-card">
+          <div class="h-24 flex items-center justify-center" style="background: var(--lacquer-deep)">
+            <div class="w-20 h-20 rounded-full halo-lamp"
+                 style="box-shadow: 0 0 0 2px var(--chrome)"></div>
+          </div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--halo)">HALO LAMP · RADIAL</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--chrome); opacity:.7">logo eye · signal indicator</div>
+          </div>
+        </div>
+        <div class="bezel-card">
+          <div class="h-24 villa-courtyard"></div>
+          <div class="p-3">
+            <div class="mono-label" style="color: var(--halo)">VILLA COURTYARD · 180°</div>
+            <div class="font-mono text-xs mt-1" style="color: var(--chrome); opacity:.7">footer · full-bleed sections</div>
+          </div>
+        </div>
+        <div class="bezel-card-saddle p-4 flex flex-col justify-between">
+          <div class="mono-label" style="color: var(--lacquer-deep); opacity:.85">DISCIPLINE</div>
+          <p class="font-mono text-sm mt-2 leading-relaxed" style="color: var(--lacquer-deep)">
+            Saddle leather lives at <b>&lt; 12%</b> of any surface.
+            Amber is a single warning blinker — never a decoration.
+            The paint is the page; the leather is the touch.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.3 — TYPOGRAPHY -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-14">
+      <div class="mb-4 mono-label" style="color: var(--saddle)">◉ 01.3 / Typography</div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <div class="bezel-card p-6">
+          <div class="mono-label" style="color: var(--saddle)">DISPLAY · SAIRA STENCIL ONE 400</div>
+          <p class="font-display text-6xl mt-3" style="color: var(--halo)">PROWLER</p>
+          <p class="font-mono text-xs mt-3" style="color: var(--chrome); opacity:.7">
+            uppercase · letter-spacing 0.02em · line-height 0.95<br>
+            hero size clamp(3.5rem, 9vw, 7.5rem)
+          </p>
+        </div>
+        <div class="bezel-card p-6">
+          <div class="mono-label" style="color: var(--saddle)">BODY · INTER 400–800</div>
+          <p class="text-2xl mt-3" style="color: var(--halo); font-weight:500">
+            Hand-built, hand-numbered. One of one hundred.
+          </p>
+          <p class="text-base mt-2" style="color: var(--chrome); opacity:.85">
+            Sentence case for paragraphs. Labels in 700 uppercase at
+            11–12px, tracking 0.22em, in Chrome or Saddle.
+          </p>
+        </div>
+        <div class="bezel-card p-6">
+          <div class="mono-label" style="color: var(--saddle)">MONO · JETBRAINS MONO 400–700</div>
+          <p class="font-mono text-xl mt-3" style="color: var(--halo)">
+            $ obd connect bay-04 · vin prow·23·038·m<br>
+            <span style="color: var(--amber)">◆ FAULT P0118 · COOLANT SENSOR B</span>
+          </p>
+          <p class="font-mono text-xs mt-3" style="color: var(--chrome); opacity:.7">
+            VIN · gauges · build line items · timestamps · OBD
+          </p>
+        </div>
+        <div class="bezel-card p-6">
+          <div class="mono-label" style="color: var(--saddle)">ATELIER ITALIC · PLAYFAIR DISPLAY</div>
+          <p class="italic-atelier text-3xl mt-3">prowling · garden · by hand</p>
+          <p class="text-base mt-3" style="color: var(--chrome); opacity:.85">
+            ≤3-word inserts inside display headlines and the bottom-of-page
+            atelier signature. Always Saddle.
+            <span class="italic-atelier">Never</span> for body copy.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01.4 — COMPONENTS -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-20">
+      <div class="mb-4 mono-label" style="color: var(--saddle)">◉ 01.4 / Components</div>
+      <div class="grid gap-3 md:grid-cols-2">
+        <!-- Buttons & pills -->
+        <div class="relative bezel-card p-6 pt-12">
+          <span class="corner-tag"><span class="lamp-glyph"></span>BTN / 01</span>
+          <div class="mono-label" style="color: var(--halo)">Buttons</div>
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <button class="btn-primary">Confirm build</button>
+            <button class="btn-secondary">Inspect</button>
+            <button class="btn-ghost">Save sheet</button>
+          </div>
+          <div class="mono-label mt-6" style="color: var(--halo)">Pills & badges</div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill"><span class="pill-dot" style="background:var(--halo)"></span>READY</span>
+            <span class="pill"><span class="pill-dot" style="background:var(--saddle)"></span>IN PAINT</span>
+            <span class="pill"><span class="pill-dot" style="background:var(--amber)"></span>FLAG</span>
+            <span class="pill"><span class="pill-dot" style="background:var(--chrome)"></span>SCHEDULED</span>
+          </div>
+          <div class="mono-label mt-6" style="color: var(--halo)">Bullets (halo lamp)</div>
+          <ul class="mt-3 space-y-2 text-sm" style="color: var(--chrome)">
+            <li class="flex items-start gap-2"><span class="lamp" style="width:14px;height:14px"></span> Halo lamp as list bullet — used everywhere</li>
+            <li class="flex items-start gap-2"><span class="lamp" style="width:14px;height:14px"></span> Replaces every check, arrow, or dot</li>
+            <li class="flex items-start gap-2"><span class="lamp" style="width:14px;height:14px"></span> Never use ✓, ➜, or emoji checkmarks</li>
+          </ul>
+          <div class="mono-label mt-6" style="color: var(--halo)">Dividers</div>
+          <div class="mt-3 stitch-rule"></div>
+        </div>
+
+        <!-- Inputs & form -->
+        <div class="relative bezel-card p-6 pt-12">
+          <span class="corner-tag"><span class="lamp-glyph"></span>FORM / 02</span>
+          <div class="mono-label" style="color: var(--halo)">Inputs</div>
+          <label class="mono-label mt-4 block" style="color: var(--saddle)">OWNER CALLSIGN</label>
+          <input class="input-prowler" placeholder="m. carrara" value="m. carrara" />
+          <label class="mono-label mt-4 block" style="color: var(--saddle)">DELIVERY DEPOT</label>
+          <input class="input-prowler" placeholder="modena · officina 04" value="modena · officina 04" />
+          <label class="mono-label mt-4 block" style="color: var(--saddle)">PAINT FINISH</label>
+          <div class="mt-2 flex gap-2 flex-wrap">
+            <label class="pill cursor-pointer" style="background: var(--lacquer)"><input type="radio" name="p" class="hidden" checked><span class="pill-dot" style="background:var(--saddle)"></span>LACQUER 7A</label>
+            <label class="pill cursor-pointer"><input type="radio" name="p" class="hidden"><span class="pill-dot" style="background:var(--halo)"></span>BIANCO TUFO</label>
+            <label class="pill cursor-pointer"><input type="radio" name="p" class="hidden"><span class="pill-dot" style="background:var(--chrome)"></span>ARGENTO</label>
+          </div>
+          <div class="mt-6 flex gap-3">
+            <button class="btn-primary">Lock build</button>
+            <button class="btn-secondary">Save draft</button>
+          </div>
+        </div>
+
+        <!-- Cards layout -->
+        <div class="relative bezel-card-foliage p-6 pt-12 md:col-span-2">
+          <span class="corner-tag"><span class="lamp-glyph"></span>CARD / 03</span>
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="bezel-card p-4">
+              <div class="mono-label" style="color: var(--saddle)">VOL. I · CH. 02</div>
+              <h4 class="font-display text-2xl mt-1" style="color: var(--halo)">CALIBRATING THE LAMP</h4>
+              <p class="text-sm mt-2" style="color: var(--chrome); opacity:.9">Aligning the chrome bezel ring around the LED halo cluster.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <span class="mono-label" style="color: var(--saddle)">14 MIN</span>
+                <span class="lamp"></span>
+              </div>
+            </div>
+            <div class="bezel-card p-4">
+              <div class="mono-label" style="color: var(--saddle)">VOL. I · CH. 03</div>
+              <h4 class="font-display text-2xl mt-1" style="color: var(--halo)">DRESSING THE CABIN</h4>
+              <p class="text-sm mt-2" style="color: var(--chrome); opacity:.9">14-needle saddle stitch on Carrara cognac. By hand.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <span class="mono-label" style="color: var(--saddle)">22 MIN</span>
+                <span class="lamp"></span>
+              </div>
+            </div>
+            <div class="bezel-card p-4">
+              <div class="mono-label" style="color: var(--saddle)">VOL. I · CH. 04</div>
+              <h4 class="font-display text-2xl mt-1" style="color: var(--halo)">SETTING THE STRIPES</h4>
+              <p class="text-sm mt-2" style="color: var(--chrome); opacity:.9">Twin hood stripes — 6mm Halo, 20mm gap. Masked, sprayed, sanded.</p>
+              <div class="mt-3 flex items-center justify-between">
+                <span class="mono-label" style="color: var(--saddle)">9 MIN</span>
+                <span class="lamp"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- § 02 / UX APPLICATIONS                                               -->
+    <!-- =================================================================== -->
+    <section class="relative mx-auto max-w-6xl px-6 pt-8 pb-6">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div class="flex items-baseline gap-3">
+          <span class="num-marker">02</span>
+          <div>
+            <div class="mono-label" style="color: var(--saddle)">§ 02 / UX applications</div>
+            <h2 class="font-display text-5xl mt-2" style="color: var(--halo)">
+              IN THE <span class="italic-atelier" style="font-size: 0.85em; text-transform: none; letter-spacing: 0;">workshop</span>
+            </h2>
+          </div>
+        </div>
+        <p class="font-mono max-w-md text-sm" style="color: var(--chrome); opacity: 0.85">
+          &gt; ORDER SHEET · WORKSHOP DIAGNOSTICS · OWNER'S MANUAL —
+          three coachbuilder surfaces built from the kit above.
+        </p>
+      </div>
+      <div class="stitch-rule mt-8"></div>
+    </section>
+
+    <!-- 02.1 — BUILD ORDER SHEET -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="mono-label" style="color: var(--saddle)">◉ 02.1 / UX — Build order sheet</div>
+          <h3 class="font-display text-4xl mt-2" style="color: var(--halo)">ORDER № 038 · CARRARA, M.</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="pill"><span class="pill-dot" style="background:var(--amber)"></span>BAY 04 · IN PAINT</span>
+          <span class="pill"><span class="pill-dot" style="background:var(--halo)"></span>ETA OCT 14</span>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-[1.6fr_1fr]">
+        <!-- Order line items as a hood-card -->
+        <div class="hood-card relative">
+          <span class="corner-tag"><span class="lamp-glyph"></span>ORDER SHEET · 038/100</span>
+
+          <div class="pt-12 px-8 pb-7 pl-20">
+            <div class="flex items-baseline justify-between">
+              <div>
+                <div class="mono-label" style="color: var(--saddle)">CHASSIS · GARDEN COUPÉ</div>
+                <h4 class="font-display text-3xl mt-1" style="color: var(--halo)">
+                  PROW <span style="color: var(--saddle)">·</span> 23 <span style="color: var(--saddle)">·</span> 038 <span style="color: var(--saddle)">·</span> M
+                </h4>
+              </div>
+              <span class="vin-plate"><span class="bolt-tr"></span><span class="bolt-br"></span>SIGNED · M.C.</span>
+            </div>
+
+            <div class="stitch-rule mt-6"></div>
+
+            <ul class="mt-5 space-y-3 text-sm" style="color: var(--halo)">
+              <li class="grid grid-cols-12 gap-3 items-center py-1.5 border-b border-[color:var(--chrome)]/15">
+                <span class="col-span-1 mono-label" style="color: var(--saddle)">01</span>
+                <span class="col-span-5 font-display text-base">EXTERIOR · LACQUER 7A</span>
+                <span class="col-span-4 text-sm" style="color: var(--chrome); opacity:.85">Hand-polished, 38h, two-stage, twin Halo stripes</span>
+                <span class="col-span-2 text-right font-mono" style="color: var(--halo)">€ 28,400</span>
+              </li>
+              <li class="grid grid-cols-12 gap-3 items-center py-1.5 border-b border-[color:var(--chrome)]/15">
+                <span class="col-span-1 mono-label" style="color: var(--saddle)">02</span>
+                <span class="col-span-5 font-display text-base">CABIN · CARRARA SADDLE</span>
+                <span class="col-span-4 text-sm" style="color: var(--chrome); opacity:.85">14-needle contrast stitch, perforated bolsters</span>
+                <span class="col-span-2 text-right font-mono" style="color: var(--halo)">€ 19,200</span>
+              </li>
+              <li class="grid grid-cols-12 gap-3 items-center py-1.5 border-b border-[color:var(--chrome)]/15">
+                <span class="col-span-1 mono-label" style="color: var(--saddle)">03</span>
+                <span class="col-span-5 font-display text-base">LAMPS · QUAD-HALO LED</span>
+                <span class="col-span-4 text-sm" style="color: var(--chrome); opacity:.85">4× 5000K rings, polished chrome bezels</span>
+                <span class="col-span-2 text-right font-mono" style="color: var(--halo)">€ 6,840</span>
+              </li>
+              <li class="grid grid-cols-12 gap-3 items-center py-1.5 border-b border-[color:var(--chrome)]/15">
+                <span class="col-span-1 mono-label" style="color: var(--saddle)">04</span>
+                <span class="col-span-5 font-display text-base">WHEELS · MAGNESIO 18"</span>
+                <span class="col-span-4 text-sm" style="color: var(--chrome); opacity:.85">Cross-spoke, gunmetal centre, polished lip</span>
+                <span class="col-span-2 text-right font-mono" style="color: var(--halo)">€ 11,920</span>
+              </li>
+              <li class="grid grid-cols-12 gap-3 items-center py-1.5 border-b border-[color:var(--chrome)]/15">
+                <span class="col-span-1 mono-label" style="color: var(--saddle)">05</span>
+                <span class="col-span-5 font-display text-base">DRIVETRAIN · OFF.04</span>
+                <span class="col-span-4 text-sm" style="color: var(--chrome); opacity:.85">2.0L bi-turbo · 557 hp · 6-spd manual</span>
+                <span class="col-span-2 text-right font-mono" style="color: var(--halo)">€ 64,500</span>
+              </li>
+              <li class="grid grid-cols-12 gap-3 items-center py-1.5 border-b border-[color:var(--chrome)]/15">
+                <span class="col-span-1 mono-label" style="color: var(--amber)">06</span>
+                <span class="col-span-5 font-display text-base" style="color: var(--amber)">◆ DELETE · STEREO HEAD</span>
+                <span class="col-span-4 text-sm" style="color: var(--chrome); opacity:.85">Owner request · radio-delete plate, no DAB</span>
+                <span class="col-span-2 text-right font-mono" style="color: var(--amber)">−€ 2,200</span>
+              </li>
+              <li class="grid grid-cols-12 gap-3 items-center py-1.5">
+                <span class="col-span-1 mono-label" style="color: var(--saddle)">07</span>
+                <span class="col-span-5 font-display text-base">PLATE · № 038 / 100</span>
+                <span class="col-span-4 text-sm" style="color: var(--chrome); opacity:.85">Hand-stamped, dash + sill + engine bay</span>
+                <span class="col-span-2 text-right font-mono" style="color: var(--halo)">incl.</span>
+              </li>
+            </ul>
+
+            <div class="mt-5 flex items-baseline justify-between border-t border-[color:var(--chrome)] pt-4">
+              <span class="mono-label" style="color: var(--saddle)">SUBTOTAL · EX VAT</span>
+              <span class="font-display text-3xl" style="color: var(--halo)">€ 128,660</span>
+            </div>
+            <div class="mt-1 flex items-baseline justify-between">
+              <span class="mono-label" style="color: var(--saddle)">DEPOSIT · 30%</span>
+              <span class="font-mono" style="color: var(--chrome)">€ 38,598 · WIRED 12 SEP 26</span>
+            </div>
+
+            <div class="mt-6 flex flex-wrap gap-3">
+              <button class="btn-primary">Confirm spec</button>
+              <button class="btn-secondary">Print order</button>
+              <button class="btn-ghost">Email Marco</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar: spec gauge cluster + atelier note -->
+        <div class="grid gap-3 content-start">
+          <div class="relative bezel-card p-6 pt-12">
+            <span class="corner-tag"><span class="lamp-glyph"></span>SPEC · LIVE</span>
+            <div class="grid grid-cols-2 gap-5">
+              <div class="flex flex-col items-center">
+                <svg width="92" height="92" viewBox="0 0 120 120">
+                  <use href="#gauge"/>
+                  <line x1="60" y1="60" x2="92" y2="32" stroke="#C58A4E" stroke-width="2.6" stroke-linecap="round" class="gauge-needle"/>
+                  <circle cx="60" cy="60" r="4.5" fill="#DDE3E5" stroke="#061418" stroke-width="1"/>
+                </svg>
+                <div class="mono-label mt-2" style="color: var(--saddle)">RPM · ×1,000</div>
+                <div class="font-display text-xl" style="color: var(--halo)">7.2</div>
+              </div>
+              <div class="flex flex-col items-center">
+                <svg width="92" height="92" viewBox="0 0 120 120">
+                  <use href="#gauge"/>
+                  <line x1="60" y1="60" x2="30" y2="84" stroke="#C58A4E" stroke-width="2.6" stroke-linecap="round" class="gauge-needle"/>
+                  <circle cx="60" cy="60" r="4.5" fill="#DDE3E5" stroke="#061418" stroke-width="1"/>
+                </svg>
+                <div class="mono-label mt-2" style="color: var(--saddle)">BOOST · BAR</div>
+                <div class="font-display text-xl" style="color: var(--halo)">1.4</div>
+              </div>
+              <div class="flex flex-col items-center">
+                <svg width="92" height="92" viewBox="0 0 120 120">
+                  <use href="#gauge"/>
+                  <line x1="60" y1="60" x2="76" y2="20" stroke="#E8B73B" stroke-width="2.6" stroke-linecap="round" class="gauge-needle"/>
+                  <circle cx="60" cy="60" r="4.5" fill="#DDE3E5" stroke="#061418" stroke-width="1"/>
+                </svg>
+                <div class="mono-label mt-2" style="color: var(--amber)">COOL · °C</div>
+                <div class="font-display text-xl" style="color: var(--amber)">112</div>
+              </div>
+              <div class="flex flex-col items-center">
+                <svg width="92" height="92" viewBox="0 0 120 120">
+                  <use href="#gauge"/>
+                  <line x1="60" y1="60" x2="44" y2="22" stroke="#C58A4E" stroke-width="2.6" stroke-linecap="round" class="gauge-needle"/>
+                  <circle cx="60" cy="60" r="4.5" fill="#DDE3E5" stroke="#061418" stroke-width="1"/>
+                </svg>
+                <div class="mono-label mt-2" style="color: var(--saddle)">FUEL · L</div>
+                <div class="font-display text-xl" style="color: var(--halo)">48</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative bezel-card-saddle p-6 pt-12">
+            <span class="corner-tag" style="background: var(--saddle); color: var(--lacquer-deep); border-color: var(--lacquer-deep)"><span class="lamp-glyph"></span>ATELIER · NOTE</span>
+            <p class="italic-atelier text-lg" style="color: var(--lacquer-deep)">
+              "Stripes laid this morning. Paint cured 38 hours under
+              warm air. We will not rush the lamp alignment — Marco's
+              car deserves the second sanding."
+            </p>
+            <div class="mono-label mt-3" style="color: var(--lacquer-deep); opacity:.7">— OFFICINA · CARRARA · 09 OCT 26</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.2 — WORKSHOP DIAGNOSTIC DASHBOARD -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-16">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="mono-label" style="color: var(--saddle)">◉ 02.2 / UX — Workshop diagnostics</div>
+          <h3 class="font-display text-4xl mt-2" style="color: var(--halo)">OFFICINA · BAY 04 · LIVE</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="pill"><span class="pill-dot" style="background:var(--amber)"></span>1 FAULT</span>
+          <span class="pill"><span class="pill-dot" style="background:var(--halo)"></span>4 CARS ACTIVE</span>
+        </div>
+      </div>
+
+      <!-- Top stats row -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-px mb-4"
+           style="background: var(--chrome); border: 1px solid var(--chrome)">
+        <div class="p-5" style="background: var(--lacquer)">
+          <div class="mono-label" style="color: var(--saddle)">BUILDS DELIVERED</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--halo)">037</div>
+          <div class="mono-label mt-2" style="color: var(--halo); opacity:.7">OF 100 · GARDEN</div>
+        </div>
+        <div class="p-5" style="background: var(--lacquer)">
+          <div class="mono-label" style="color: var(--saddle)">ACTIVE BUILDS</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--halo)">04</div>
+          <div class="mono-label mt-2" style="color: var(--halo); opacity:.7">BAY 02 · 04 · 07 · 09</div>
+        </div>
+        <div class="p-5" style="background: var(--lacquer)">
+          <div class="mono-label" style="color: var(--saddle)">AVG. BUILD TIME</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--halo)">142<span class="text-base ml-1" style="color: var(--chrome)">d</span></div>
+          <div class="mono-label mt-2" style="color: var(--halo); opacity:.7">↓ 4d vs Q2</div>
+        </div>
+        <div class="p-5" style="background: var(--lacquer)">
+          <div class="mono-label" style="color: var(--amber)">◆ OPEN FAULTS</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--amber)">01</div>
+          <div class="mono-label mt-2" style="color: var(--amber); opacity:.85">P0118 · COOLANT B</div>
+        </div>
+        <div class="p-5" style="background: var(--lacquer)">
+          <div class="mono-label" style="color: var(--saddle)">WAITLIST</div>
+          <div class="font-display text-4xl mt-1" style="color: var(--halo)">312</div>
+          <div class="mono-label mt-2" style="color: var(--halo); opacity:.7">2027 · CLOSED</div>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-[2fr_1fr]">
+        <!-- OBD terminal -->
+        <div class="relative bezel-card p-0 overflow-hidden">
+          <span class="corner-tag"><span class="lamp-glyph"></span>OBD · BAY 04 · VIN PROW·23·038·M</span>
+          <div class="obd pt-11">
+            <div><span class="prompt">$</span> obd connect <span class="info">bay-04</span> --vin <span class="info">prow·23·038·m</span></div>
+            <div class="muted">// link established · 14 sensors · 2.1 kBaud · 03 oct 26 · 14:22</div>
+            <div>&nbsp;</div>
+            <div><span class="ok">◉</span> BAY 04 · GARDEN COUPÉ · BUILD DAY 121 / 142</div>
+            <div><span class="prompt">&gt;</span> reading <span class="info">ECU · module 03</span> — drivetrain</div>
+            <div><span class="ok">✓</span> BANK 1 LAMBDA · 0.98 · CLOSED LOOP</div>
+            <div><span class="ok">✓</span> BOOST · 1.4 bar · WITHIN SPEC</div>
+            <div><span class="ok">✓</span> OIL TEMP · 92°C · WITHIN SPEC</div>
+            <div><span class="prompt">&gt;</span> reading <span class="info">ECU · module 07</span> — thermal</div>
+            <div>&nbsp;</div>
+            <div><span class="warn">◆ FAULT P0118</span> <span class="info">coolant sensor B</span> at <span class="muted">harness pin 14</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="muted">// reading 4.97V (open) — sensor likely unseated</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="muted">// suggested fix: re-seat connector · or replace pn 38-201</span></div>
+            <div>&nbsp;</div>
+            <div><span class="prompt">&gt;</span> queue patch &amp; re-scan? [<span class="warn">y</span>/N] <span class="cursor"></span></div>
+            <div>&nbsp;</div>
+            <div class="muted">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+            <div class="muted">SESSION 04:18 · MODULES 12/14 OK · FAULTS 01 · LIVE</div>
+          </div>
+        </div>
+
+        <!-- Gauge cluster + actions -->
+        <div class="grid gap-3 content-start">
+          <div class="relative bezel-card p-5 pt-12">
+            <span class="corner-tag"><span class="lamp-glyph"></span>CLUSTER · LIVE</span>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="flex flex-col items-center">
+                <svg width="100" height="100" viewBox="0 0 120 120">
+                  <use href="#gauge"/>
+                  <line x1="60" y1="60" x2="84" y2="28" stroke="#C58A4E" stroke-width="3" stroke-linecap="round"/>
+                  <circle cx="60" cy="60" r="4.5" fill="#DDE3E5" stroke="#061418" stroke-width="1"/>
+                </svg>
+                <div class="mono-label mt-2" style="color: var(--saddle)">RPM</div>
+                <div class="font-display text-2xl" style="color: var(--halo)">6,400</div>
+              </div>
+              <div class="flex flex-col items-center">
+                <svg width="100" height="100" viewBox="0 0 120 120">
+                  <use href="#gauge"/>
+                  <line x1="60" y1="60" x2="78" y2="20" stroke="#E8B73B" stroke-width="3" stroke-linecap="round"/>
+                  <circle cx="60" cy="60" r="4.5" fill="#DDE3E5" stroke="#061418" stroke-width="1"/>
+                </svg>
+                <div class="mono-label mt-2" style="color: var(--amber)">COOL · °C</div>
+                <div class="font-display text-2xl" style="color: var(--amber)">112</div>
+              </div>
+            </div>
+            <div class="stitch-rule mt-5"></div>
+            <div class="mt-5">
+              <div class="mono-label mb-2" style="color: var(--halo)">BUILD PROGRESS · DAY 121/142</div>
+              <div class="h-2 w-full" style="background: var(--lacquer-deep); border: 1px solid var(--chrome)">
+                <div class="h-full" style="width: 85.2%; background: linear-gradient(90deg, #C58A4E 0%, #7A4A1F 100%)"></div>
+              </div>
+              <div class="flex justify-between mt-2 font-mono text-xs" style="color: var(--chrome); opacity:.8">
+                <span>CHASSIS</span><span>PAINT</span><span>CABIN</span><span>SIGN-OFF</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative bezel-card-saddle p-5 pt-12">
+            <span class="corner-tag" style="background: var(--saddle); color: var(--lacquer-deep); border-color: var(--lacquer-deep)"><span class="lamp-glyph"></span>FOREMAN · SIGNAL</span>
+            <p class="italic-atelier text-base" style="color: var(--lacquer-deep)">
+              "Re-seat sensor B before the road test. I want the warm-up
+              run done before 17:00 — wisteria's blooming, light's gone
+              soft, we'll roll her out for photos."
+            </p>
+            <div class="mono-label mt-3" style="color: var(--lacquer-deep); opacity:.75">— G. ROSSI · 14:24 CEST</div>
+            <div class="mt-4 flex gap-2">
+              <button class="btn-primary" style="background: var(--lacquer-deep); color: var(--halo); border-color: var(--lacquer-deep); box-shadow: 4px 4px 0 var(--saddle-deep)">Apply patch</button>
+              <button class="btn-secondary" style="background: transparent; color: var(--lacquer-deep); border-color: var(--lacquer-deep)">Defer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active builds table -->
+      <div class="relative bezel-card overflow-hidden mt-4">
+        <span class="corner-tag"><span class="lamp-glyph"></span>ACTIVE BUILDS · GARDEN SERIES</span>
+        <div class="pt-11">
+          <div class="grid grid-cols-12 gap-3 px-5 py-3 mono-label border-b border-[color:var(--chrome)]/30"
+               style="color: var(--saddle)">
+            <span class="col-span-1">BAY</span>
+            <span class="col-span-2">VIN</span>
+            <span class="col-span-3">OWNER</span>
+            <span class="col-span-2">SPEC</span>
+            <span class="col-span-1 text-right">DAY</span>
+            <span class="col-span-1 text-right">FAULTS</span>
+            <span class="col-span-2 text-right">STATUS</span>
+          </div>
+          <ul class="divide-y divide-[color:var(--chrome)]/15">
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3 row-active">
+              <span class="col-span-1 font-mono text-sm flex items-center gap-2" style="color: var(--halo)"><span class="lamp" style="width:12px;height:12px"></span>04</span>
+              <span class="col-span-2 font-mono text-sm" style="color: var(--saddle)">PROW·23·038·M</span>
+              <span class="col-span-3 text-sm" style="color: var(--halo)">Carrara, M. · Modena</span>
+              <span class="col-span-2 text-sm" style="color: var(--chrome); opacity:.85">Lacquer 7A · Saddle</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--halo)">121</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--amber)">01</span>
+              <span class="col-span-2 text-right"><span class="pill"><span class="pill-dot" style="background:var(--amber)"></span>IN PAINT</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--halo)">02</span>
+              <span class="col-span-2 font-mono text-sm" style="color: var(--saddle)">PROW·23·036·B</span>
+              <span class="col-span-3 text-sm" style="color: var(--halo)">Bellanova, F. · Roma</span>
+              <span class="col-span-2 text-sm" style="color: var(--chrome); opacity:.85">Bianco Tufo · Pelle</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--halo)">089</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--chrome); opacity:.6">—</span>
+              <span class="col-span-2 text-right"><span class="pill"><span class="pill-dot" style="background:var(--halo)"></span>CABIN FIT</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--halo)">07</span>
+              <span class="col-span-2 font-mono text-sm" style="color: var(--saddle)">PROW·23·039·T</span>
+              <span class="col-span-3 text-sm" style="color: var(--halo)">Thalberg, A. · Wien</span>
+              <span class="col-span-2 text-sm" style="color: var(--chrome); opacity:.85">Argento · Nero</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--halo)">044</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--chrome); opacity:.6">—</span>
+              <span class="col-span-2 text-right"><span class="pill"><span class="pill-dot" style="background:var(--chrome)"></span>CHASSIS</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--halo)">09</span>
+              <span class="col-span-2 font-mono text-sm" style="color: var(--saddle)">PROW·23·040·O</span>
+              <span class="col-span-3 text-sm" style="color: var(--halo)">Okada, R. · Kyoto</span>
+              <span class="col-span-2 text-sm" style="color: var(--chrome); opacity:.85">Lacquer 7A · Cuoio</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--halo)">012</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--chrome); opacity:.6">—</span>
+              <span class="col-span-2 text-right"><span class="pill"><span class="pill-dot" style="background:var(--chrome)"></span>SCHEDULED</span></span>
+            </li>
+            <li class="grid grid-cols-12 gap-3 items-center px-5 py-3">
+              <span class="col-span-1 font-mono text-sm" style="color: var(--halo)">—</span>
+              <span class="col-span-2 font-mono text-sm" style="color: var(--saddle)">PROW·23·037·V</span>
+              <span class="col-span-3 text-sm" style="color: var(--halo)">Vahid, N. · Genève</span>
+              <span class="col-span-2 text-sm" style="color: var(--chrome); opacity:.85">Lacquer 7A · Saddle</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--halo)">142</span>
+              <span class="col-span-1 text-right font-mono text-sm" style="color: var(--chrome); opacity:.6">—</span>
+              <span class="col-span-2 text-right"><span class="pill"><span class="pill-dot" style="background:var(--saddle)"></span>DELIVERED · 02 OCT</span></span>
+            </li>
+          </ul>
+          <div class="px-5 py-3 border-t border-[color:var(--chrome)]/30 flex items-center justify-between">
+            <span class="mono-label" style="color: var(--saddle)">SHOWING 05 OF 41 · GARDEN '26 — '27</span>
+            <div class="flex items-center gap-2">
+              <button class="btn-ghost py-1">← Prev</button>
+              <button class="btn-secondary py-2">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02.3 — OWNER'S MANUAL CODEX -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-20">
+      <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="mono-label" style="color: var(--saddle)">◉ 02.3 / UX — Owner's manual codex</div>
+          <h3 class="font-display text-4xl mt-2" style="color: var(--halo)">MANUAL · GARDEN COUPÉ · VOL. I</h3>
+        </div>
+        <span class="italic-atelier text-xl">a workshop manual, by hand</span>
+      </div>
+
+      <div class="grid gap-px md:grid-cols-[280px_1fr]"
+           style="background: var(--chrome); border: 1px solid var(--chrome)">
+        <!-- TOC sidebar -->
+        <aside class="bg-[color:var(--foliage)] p-6">
+          <div class="mono-label" style="color: var(--halo)">TABLE OF CONTENTS</div>
+          <div class="stitch-rule mt-4"></div>
+          <ul class="mt-5 space-y-3">
+            <li>
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-atelier text-base">I.</div>
+                  <div class="text-sm font-semibold" style="color: var(--halo)">First start</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--saddle)">p. 02</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--chrome)]/20 pt-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-atelier text-base">II.</div>
+                  <div class="text-sm font-semibold" style="color: var(--halo)">Lacquer care</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--saddle)">p. 14</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--chrome)]/20 pt-3">
+              <div class="flex items-center justify-between row-active -mx-2 px-2 py-1">
+                <div class="flex items-center gap-2">
+                  <span class="lamp" style="width:14px;height:14px"></span>
+                  <div>
+                    <div class="italic-atelier text-base">III.</div>
+                    <div class="text-sm font-bold" style="color: var(--saddle)">Halo calibration</div>
+                  </div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--saddle)">p. 28</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--chrome)]/20 pt-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-atelier text-base">IV.</div>
+                  <div class="text-sm font-semibold" style="color: var(--halo)">Cabin &amp; saddle</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--saddle)">p. 41</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--chrome)]/20 pt-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-atelier text-base">V.</div>
+                  <div class="text-sm font-semibold" style="color: var(--halo)">Drivetrain</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--saddle)">p. 58</span>
+              </div>
+            </li>
+            <li class="border-t border-[color:var(--chrome)]/20 pt-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="italic-atelier text-base">App.</div>
+                  <div class="text-sm font-semibold" style="color: var(--halo)">Fault codes</div>
+                </div>
+                <span class="font-mono text-xs" style="color: var(--saddle)">p. 72</span>
+              </div>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- Main article -->
+        <article class="bg-[color:var(--lacquer-deep)] p-8 md:p-12 relative">
+          <div class="relative">
+            <div class="flex items-baseline gap-3">
+              <span class="num-marker">III</span>
+              <div class="mono-label" style="color: var(--saddle)">CHAPTER · HALO CALIBRATION</div>
+            </div>
+            <h4 class="font-display text-5xl mt-3" style="color: var(--halo)">
+              CALIBRATING<br>
+              THE <span class="italic-atelier" style="font-size: 0.85em; text-transform: none; letter-spacing: 0;">four</span> HALOES
+            </h4>
+            <div class="stitch-rule mt-6"></div>
+
+            <p class="mt-6 text-base leading-relaxed" style="color: var(--halo); opacity: 0.92">
+              The four halo lamps are not decoration. Each is a 5000K
+              ring of 38 individually-bonded LEDs sitting behind a
+              polished chrome bezel. The driver-side inner lamp carries
+              the high-beam projector; the outer three carry low-beam,
+              cornering, and signature. <em>Do not align by eye.</em>
+              Use the jig.
+            </p>
+
+            <div class="mt-6 italic-atelier text-2xl leading-snug border-l-2 pl-4" style="border-color: var(--saddle)">
+              "The car arrives lit from inside. Set the lamps to nod, not
+              to stare."
+              <span class="block mono-label mt-2" style="color: var(--saddle)">— FOREMAN'S RULE · G. ROSSI · 1998</span>
+            </div>
+
+            <div class="mt-6 mono-label" style="color: var(--saddle)">III.2 · ALIGNING THE BEZEL</div>
+            <p class="mt-2 text-base leading-relaxed" style="color: var(--halo); opacity: 0.9">
+              The bezel ring sits 1.4mm proud of the body panel.
+              Anything more reads as fitment error from 3m; anything
+              less collects road grit at the joint. Use the calliper
+              and the torque sheet — never thumb-feel.
+            </p>
+
+            <!-- Code block as specification specimen -->
+            <div class="mt-5 relative">
+              <span class="corner-tag"><span class="lamp-glyph"></span>SPECIMEN / 14</span>
+              <pre class="obd pt-11 overflow-x-auto text-xs leading-relaxed"><span class="muted">// manual/calibrate-halo.ts</span>
+<span class="info">import</span> { HaloRing } <span class="info">from</span> <span class="warn">"@prowler/lamp"</span>
+
+<span class="info">export const</span> <span class="ok">calibrate</span> = (bay: <span class="warn">number</span>) =&gt; {
+  <span class="info">const</span> jig = <span class="ok">HaloRing</span>.<span class="ok">align</span>({
+    ring:    <span class="warn">"chrome-bezel-38mm"</span>,
+    leds:    <span class="ok">38</span>,         <span class="muted">// per lamp</span>
+    kelvin:  <span class="ok">5000</span>,
+    proud:   <span class="ok">1.4</span>,        <span class="muted">// mm above panel</span>
+    torque:  <span class="ok">8.4</span>,        <span class="muted">// Nm · ± 0.2</span>
+  })
+  <span class="info">return</span> jig.<span class="ok">seat</span>(bay)
+}</pre>
+            </div>
+
+            <!-- Field illustration: hood-card + halo specimen -->
+            <div class="mt-6 grid gap-3 md:grid-cols-2">
+              <figure>
+                <div class="hood-card relative h-44"></div>
+                <figcaption class="mt-2 italic-atelier text-sm" style="color: var(--saddle)">fig. 14 — twin hood stripes, masked at 6mm/20mm.</figcaption>
+              </figure>
+              <figure>
+                <div class="relative h-44 flex items-center justify-center"
+                     style="background: var(--lacquer); border: 1px solid var(--chrome)">
+                  <div class="w-28 h-28 rounded-full halo-lamp"
+                       style="box-shadow: 0 0 0 2px var(--chrome)"></div>
+                </div>
+                <figcaption class="mt-2 italic-atelier text-sm" style="color: var(--saddle)">fig. 15 — halo lamp, post-alignment, 1.4mm proud.</figcaption>
+              </figure>
+            </div>
+
+            <div class="stitch-rule mt-10"></div>
+            <div class="mt-6 flex items-center justify-between font-mono text-xs" style="color: var(--chrome); opacity: 0.8">
+              <span>← II. Lacquer care</span>
+              <span class="italic-atelier text-base">— p. 28 —</span>
+              <span style="color: var(--saddle)">IV. Cabin &amp; saddle →</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- FOOTER / COLOPHON                                                    -->
+    <!-- =================================================================== -->
+    <footer class="relative villa-courtyard mt-8">
+      <div class="relative mx-auto max-w-6xl px-6 py-12">
+        <div class="flex flex-wrap items-start justify-between gap-8">
+          <div>
+            <div class="flex items-center gap-4">
+              <div class="monogram">
+                <svg width="68" height="20" viewBox="0 0 96 24"><use href="#quad-halo"/></svg>
+              </div>
+              <div>
+                <div class="font-display text-2xl" style="color: var(--halo)">PROWLER</div>
+                <div class="mono-label" style="color: var(--saddle)">GARDEN SERIES · MMXXVI</div>
+              </div>
+            </div>
+            <p class="italic-atelier text-xl mt-5 max-w-md">
+              "Built by hand, signed by name, numbered out of one
+              hundred — under wisteria, in Carrara."
+            </p>
+            <div class="mono-label mt-3" style="color: var(--halo); opacity:.6">— OFFICINA CARRARA · MMXXVI</div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-10">
+            <div>
+              <div class="mono-label" style="color: var(--halo)">ATELIER</div>
+              <ul class="mt-3 space-y-2 text-sm" style="color: var(--chrome); opacity:.9">
+                <li>Order sheet</li>
+                <li>Configurator</li>
+                <li>Build registry</li>
+                <li>Waitlist · 2027</li>
+              </ul>
+            </div>
+            <div>
+              <div class="mono-label" style="color: var(--halo)">WORKSHOP</div>
+              <ul class="mt-3 space-y-2 text-sm" style="color: var(--chrome); opacity:.9">
+                <li>Diagnostics</li>
+                <li>Bay status</li>
+                <li>Foreman radio</li>
+                <li>Fault codes</li>
+              </ul>
+            </div>
+            <div>
+              <div class="mono-label" style="color: var(--halo)">SIGNAL</div>
+              <ul class="mt-3 space-y-2 text-sm" style="color: var(--chrome); opacity:.9">
+                <li>Status · 14:24 CEST</li>
+                <li>Changelog</li>
+                <li>Press</li>
+                <li>Manual · Vol. I</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="stitch-rule mt-10"></div>
+        <div class="mt-5 flex flex-wrap items-center justify-between gap-3 font-mono text-xs"
+             style="color: var(--chrome); opacity:.8">
+          <span>© MMXXVI · OFFICINA CARRARA · GARDEN SERIES · VIN PROW·23·038·M</span>
+          <span class="flex items-center gap-3">
+            <span class="lamp" style="width:12px;height:12px"></span>
+            <span>·</span>
+            <span style="color: var(--saddle)">◉</span>
+            <span>·</span>
+            <span>×</span>
+            <span>·</span>
+            <span style="color: var(--amber)">◆</span>
+          </span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
