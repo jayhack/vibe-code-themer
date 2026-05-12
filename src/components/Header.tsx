@@ -80,13 +80,13 @@ export function Header({
           ) : !onDetail ? (
             <>
               <a
-                href="https://github.com/jayhack/vibe-code-themer#contributing"
+                href="https://github.com/jayhack/ditto#contributing"
                 className="hidden rounded-full px-3 py-1.5 text-black/70 hover:bg-black/[0.04] hover:text-black sm:inline"
               >
                 Submit a vibe
               </a>
               <a
-                href="https://github.com/jayhack/vibe-code-themer"
+                href="https://github.com/jayhack/ditto"
                 aria-label="View on GitHub"
                 className="inline-flex items-center gap-1.5 rounded-full bg-black px-3 py-1.5 text-white transition hover:bg-black/85"
               >
@@ -96,7 +96,7 @@ export function Header({
             </>
           ) : (
             <a
-              href="https://github.com/jayhack/vibe-code-themer"
+              href="https://github.com/jayhack/ditto"
               aria-label="View on GitHub"
               className="inline-flex items-center gap-1.5 rounded-full bg-black px-3 py-1.5 text-white transition hover:bg-black/85"
             >

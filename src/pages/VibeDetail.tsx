@@ -105,7 +105,7 @@ export function VibeDetail() {
               )}
             </button>
             <a
-              href="https://github.com/jayhack/vibe-code-themer"
+              href="https://github.com/jayhack/ditto"
               aria-label="View on GitHub"
               className="inline-flex items-center gap-1.5 rounded-full bg-black/[0.06] px-3 py-1.5 font-medium text-black/70 transition hover:bg-black/[0.1] hover:text-black"
             >

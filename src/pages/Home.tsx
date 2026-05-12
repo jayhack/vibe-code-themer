@@ -26,7 +26,7 @@ export function Home() {
 
           <div className="flex shrink-0 items-center gap-3">
             <a
-              href="https://github.com/jayhack/vibe-code-themer#contributing"
+              href="https://github.com/jayhack/ditto#contributing"
               className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-black hover:bg-black/[0.04]"
             >
               <PlusIcon /> Submit a vibe
@@ -68,7 +68,7 @@ function PlusIcon() {
 function ComingSoonCard() {
   return (
     <a
-      href="https://github.com/jayhack/vibe-code-themer#contributing"
+      href="https://github.com/jayhack/ditto#contributing"
       className="group relative flex min-h-[320px] flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-black/15 bg-white/60 p-6 text-center transition hover:border-black/35 hover:bg-white"
     >
       <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black/[0.04] text-black/70 group-hover:bg-black/[0.08]">
@@ -94,7 +94,7 @@ function Footer() {
         <p className="flex items-center gap-2">
           <span>MIT licensed.</span>
           <a
-            href="https://github.com/jayhack/vibe-code-themer"
+            href="https://github.com/jayhack/ditto"
             className="font-medium text-black/75 underline-offset-4 hover:underline"
           >
             View on GitHub

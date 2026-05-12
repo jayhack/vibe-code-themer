@@ -24,7 +24,7 @@ export function NotFound() {
             Back to the board
           </Link>
           <a
-            href="https://github.com/jayhack/vibe-code-themer#contributing"
+            href="https://github.com/jayhack/ditto#contributing"
             className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-black hover:bg-black/[0.04]"
           >
             Contribute a vibe

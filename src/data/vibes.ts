@@ -69,8 +69,8 @@ export const VIBES: Vibe[] = [
     previewHtml: "vibes/automata/preview.html",
     promptMarkdown: "vibes/automata/prompt.md",
     author: {
-      name: "Vibe Code Themer",
-      url: "https://github.com/jayhack/vibe-code-themer",
+      name: "Ditto",
+      url: "https://github.com/jayhack/ditto",
     },
   },
   {
@@ -246,8 +246,8 @@ export const VIBES: Vibe[] = [
     previewHtml: "vibes/nightwave/preview.html",
     promptMarkdown: "vibes/nightwave/prompt.md",
     author: {
-      name: "Vibe Code Themer",
-      url: "https://github.com/jayhack/vibe-code-themer",
+      name: "Ditto",
+      url: "https://github.com/jayhack/ditto",
     },
   },
   {
@@ -307,8 +307,8 @@ export const VIBES: Vibe[] = [
     previewHtml: "vibes/dune/preview.html",
     promptMarkdown: "vibes/dune/prompt.md",
     author: {
-      name: "Vibe Code Themer",
-      url: "https://github.com/jayhack/vibe-code-themer",
+      name: "Ditto",
+      url: "https://github.com/jayhack/ditto",
     },
   },
   {
@@ -367,8 +367,8 @@ export const VIBES: Vibe[] = [
     previewHtml: "vibes/conserva/preview.html",
     promptMarkdown: "vibes/conserva/prompt.md",
     author: {
-      name: "Vibe Code Themer",
-      url: "https://github.com/jayhack/vibe-code-themer",
+      name: "Ditto",
+      url: "https://github.com/jayhack/ditto",
     },
   },
   {
@@ -417,8 +417,8 @@ export const VIBES: Vibe[] = [
     previewHtml: "vibes/swiss-editorial/preview.html",
     promptMarkdown: "vibes/swiss-editorial/prompt.md",
     author: {
-      name: "Vibe Code Themer",
-      url: "https://github.com/jayhack/vibe-code-themer",
+      name: "Ditto",
+      url: "https://github.com/jayhack/ditto",
     },
   },
   {
@@ -478,7 +478,7 @@ export const VIBES: Vibe[] = [
     promptMarkdown: "vibes/mirage/prompt.md",
     author: {
       name: "After an underrated spirit of the dunes",
-      url: "https://github.com/jayhack/vibe-code-themer",
+      url: "https://github.com/jayhack/ditto",
     },
   },
   {
@@ -539,7 +539,7 @@ export const VIBES: Vibe[] = [
     promptMarkdown: "vibes/surfs-up/prompt.md",
     author: {
       name: "After a 1970s surf-print poster",
-      url: "https://github.com/jayhack/vibe-code-themer",
+      url: "https://github.com/jayhack/ditto",
     },
   },
   {
@@ -598,8 +598,8 @@ export const VIBES: Vibe[] = [
     previewHtml: "vibes/prowler/preview.html",
     promptMarkdown: "vibes/prowler/prompt.md",
     author: {
-      name: "Vibe Code Themer",
-      url: "https://github.com/jayhack/vibe-code-themer",
+      name: "Ditto",
+      url: "https://github.com/jayhack/ditto",
     },
   },
   {
@@ -652,8 +652,8 @@ export const VIBES: Vibe[] = [
     previewHtml: "vibes/vaporwave/preview.html",
     promptMarkdown: "vibes/vaporwave/prompt.md",
     author: {
-      name: "Vibe Code Themer",
-      url: "https://github.com/jayhack/vibe-code-themer",
+      name: "Ditto",
+      url: "https://github.com/jayhack/ditto",
     },
   },
 ];

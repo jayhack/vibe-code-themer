@@ -1,4 +1,4 @@
-# Vibe Code Themer
+# Ditto
 
 > Muzli for coding agents — a curated, ever-growing wall of design aesthetics
 > packaged as ready-to-use prompts.
@@ -7,7 +7,7 @@ Each card on the board is a **vibe**: a single HTML showcase plus a
 prescriptive `prompt.md` that another coding agent (Cursor, Claude, Codex,
 etc.) can paste in to immediately produce on-vibe UI.
 
-Live site: <https://jayhack.github.io/vibe-code-themer/>
+Live site: <https://jayhack.github.io/ditto/>
 
 ## What's in a vibe?
 

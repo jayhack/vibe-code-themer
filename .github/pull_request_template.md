@@ -1,6 +1,6 @@
 <!--
 Thanks for adding a new vibe! Read AGENTS.md first if you haven't:
-https://github.com/jayhack/vibe-code-themer/blob/main/AGENTS.md
+https://github.com/jayhack/ditto/blob/main/AGENTS.md
 -->
 
 ## Vibe
